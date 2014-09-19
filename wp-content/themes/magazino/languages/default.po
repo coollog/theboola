@@ -1,0 +1,868 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Magazino\n"
+"POT-Creation-Date: 2014-03-24 15:15+0800\n"
+"PO-Revision-Date: 2014-03-24 15:15+0800\n"
+"Last-Translator: ed cardinal <lizardking67@gmail.com>\n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: C:\\xampp\\htdocs\\wordpress\\wp-content\\themes"
+"\\magazino\n"
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/404.php:9
+msgid "Error 404 - Page Not Found"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/404.php:14
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching, or one of the links below, can help."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/404.php:20
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/search.php:51
+msgid "Most Used Categories"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/404.php:28
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/search.php:59
+#, php-format
+msgid "Try looking in the monthly archives. %1$s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/alt-homepage.php:66
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/alt-homepage.php:100
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/full-width-homepage.php:66
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/full-width-homepage.php:100
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/index.php:62
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/index.php:96
+msgid "No featured image set for this post."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/alt-homepage.php:85
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/full-width-homepage.php:85
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/index.php:81
+msgid "Previous"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/alt-homepage.php:85
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/full-width-homepage.php:85
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/index.php:81
+msgid "&#9664;"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/alt-homepage.php:86
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/full-width-homepage.php:86
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/index.php:82
+msgid "Next"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/alt-homepage.php:86
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-archive.php:24
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-home.php:24
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/full-width-homepage.php:86
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/index.php:82
+msgid "&#9654;"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/alt-homepage.php:126
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-aside.php:14
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:47
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-image.php:9
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-page.php:10
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:62
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:25
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:78
+msgid "Pages:"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/alt-homepage.php:128
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-aside.php:24
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:81
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-image.php:18
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-page.php:12
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:48
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:95
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:59
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:26
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:92
+msgid "Edit"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/archive.php:15
+#, php-format
+msgid "Daily Archives: %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/archive.php:17
+#, php-format
+msgid "Monthly Archives: %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/archive.php:19
+#, php-format
+msgid "Yearly Archives: %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/archive.php:21
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:103
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/sidebar.php:59
+msgid "Archives"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/archive.php:53
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/author.php:59
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/category.php:49
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/index.php:162
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/search.php:39
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/tag.php:52
+msgid "Nothing Found"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/archive.php:57
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/author.php:63
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/category.php:53
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/index.php:166
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/tag.php:56
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/author.php:21
+#, php-format
+msgid "Author Archives: %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/category.php:13
+#, php-format
+msgid "Category Archives: %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/comments.php:17
+msgid ""
+"This post is password protected. Enter the password to view any comments."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/comments.php:49
+msgid "Comment navigation"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/comments.php:50
+msgid "&larr; Older Comments"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/comments.php:51
+msgid "Newer Comments &rarr;"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/comments.php:61
+msgid "Comments are closed."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-archive.php:14
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-home.php:14
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:586
+#, php-format
+msgid "%s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-aside.php:13
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:25
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-image.php:8
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:24
+msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-aside.php:22
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:77
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-image.php:16
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:91
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:55
+msgid "Leave a comment"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-aside.php:22
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:77
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-image.php:16
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:91
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:55
+msgid "1 Comment"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-aside.php:22
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:77
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-image.php:16
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:91
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:55
+msgid "% Comments"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:55
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:66
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:21
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:69
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:80
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:33
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:44
+msgid ", "
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:59
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:73
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:37
+#, php-format
+msgid "Posted in %1$s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-gallery.php:70
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:84
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content.php:48
+#, php-format
+msgid "Tagged %1$s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:3
+#, php-format
+msgid ""
+"<span class=\"sep\"> by </span> <span class=\"author vcard\"><a class=\"url "
+"fn n\" href=\"%1$s\" title=\"%2$s\" rel=\"author\">%3$s</a></span>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:5
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:626
+#, php-format
+msgid "View all posts by %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:11
+#, php-format
+msgid ""
+"<span class=\"sep\">on </span><a href=\"%1$s\" title=\"%2$s\" rel=\"bookmark"
+"\"><time class=\"entry-date\" datetime=\"%3$s\">%4$s</time></a>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:22
+#, php-format
+msgid "under %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:32
+#, php-format
+msgid "tagged %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/content-single.php:40
+#, php-format
+msgid ""
+"&#8734; <a href=\"%1$s\" title=\"Permalink to %2$s\" rel=\"bookmark"
+"\">Permalink</a>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/footer.php:5
+msgid "&copy; "
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/footer.php:7
+msgid "- Powered by "
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/footer.php:7
+msgid "http://wordpress.org/"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/footer.php:7
+msgid "WordPress"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/footer.php:8
+msgid " and "
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/footer.php:8
+msgid "http://wpthemes.co.nz/"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/footer.php:8
+msgid "WPThemes.co.nz"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:33
+msgid "Primary Menu"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:100
+msgid "Category"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:101
+msgid "Tag"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:102
+msgid "Author"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:108
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:112
+msgid "Page "
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:145
+msgid "Theme Color Scheme"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:153
+msgid "Site Logo"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:155
+msgid "Upload a logo to replace the default site name in the header"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:163
+msgid ""
+"Choose your logo (ideal width is 100-300px and ideal height is 40-100px)"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:171
+msgid "Social Media Icons"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:173
+msgid "Optional media icons in the header"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:181
+msgid "Enter your Facebook url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:192
+msgid "Enter your Twitter url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:203
+msgid "Enter your Google+ url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:214
+msgid "Enter your Pinterest url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:225
+msgid "Enter your Linkedin url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:236
+msgid "Enter your Youtube url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:247
+msgid "Enter your Tumblr url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:258
+msgid "Enter your Instagram url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:269
+msgid "Enter your Flickr url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:280
+msgid "Enter your Vimeo url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:291
+msgid "Enter your Yelp url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:302
+msgid "Enter your RSS url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:313
+msgid "Enter your Mailto url"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:322
+msgid "Slider Options"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:324
+msgid "Adjust the behavior of the image slider."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:335
+msgid "Select Effect:"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:351
+msgid "Autoplay Speed in Seconds (0 for Manual)"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:362
+msgid "Enable pager"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:370
+msgid "Date Format Options"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:372
+msgid "Adjust the date format."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:383
+msgid "Select Format:"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:519
+msgid "Footer Sidebar"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:540
+msgid "Post navigation"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:550
+msgid "<span class=\"meta-nav\">&larr;</span> Older posts"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:554
+msgid "Newer posts <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:576
+msgid "Pingback:"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:576
+msgid "(Edit)"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:589
+msgid "Your comment is awaiting moderation."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:597
+#, php-format
+msgid "%1$s at %2$s <span class=\"bsep\">&bull;</span> "
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:599
+msgid "(Edit) <span class=\"bsep\">&bull;</span> "
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:620
+#, php-format
+msgid ""
+"<span class=\"sep\">Posted on </span><a href=\"%1$s\" title=\"%2$s\" rel="
+"\"bookmark\"><time class=\"entry-date\" datetime=\"%3$s\">%4$s</time></"
+"a><span class=\"byline\"> <span class=\"sep\"> by </span> <span class="
+"\"author vcard\"><a class=\"url fn n\" href=\"%5$s\" title=\"%6$s\" rel="
+"\"author\">%7$s</a></span></span>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:709
+#, php-format
+msgid "<div class=\"pagination\"><span>Page %1$s of %2$s</span>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:710
+#, php-format
+msgid "<a href=\"%1$s\">&laquo; First</a>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:711
+#, php-format
+msgid "<a href=\"%1$s\">&lsaquo; Previous</a>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:721
+#, php-format
+msgid "<a href=\"%1$s\">Next &rsaquo;</a>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:722
+#, php-format
+msgid "<a href=\"%1$s\">Last &raquo;</a>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:760
+msgid "Untitled"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:866
+msgid "Install Recommended Plugins"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:867
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:146
+msgid "Install Plugins"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:868
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:147
+#, php-format
+msgid "Installing Plugin: %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:869
+msgid "Something went wrong with the plugin API."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:880
+msgid "Return to Recommended Plugins Installer"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:881
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:160
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1546
+msgid "Plugin activated successfully."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:882
+#, php-format
+msgid "All plugins installed and activated successfully. %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/functions.php:894
+msgid "Secondary Image for Grid"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:20
+msgid "x"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:38
+msgid "Facebook"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:42
+msgid "Twitter"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:46
+msgid "Google+"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:50
+msgid "Pinterest"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:54
+msgid "Linkedin"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:58
+msgid "Youtube"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:62
+msgid "Tumblr"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:66
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:70
+msgid "Instagram"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:74
+msgid "Vimeo"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:78
+msgid "Yelp"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:82
+msgid "RSS"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:86
+msgid "mailto:"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:86
+msgid "Email"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:96
+msgid "Main menu"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/header.php:97
+msgid "Skip to content"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:16
+#, php-format
+msgid ""
+"Published <span class=\"entry-date\"><abbr class=\"published\" title=\"%1$s"
+"\">%2$s</abbr></span> at <a href=\"%3$s\" title=\"Link to full-size image\">"
+"%4$s &times; %5$s</a> in <a href=\"%6$s\" title=\"Return to %7$s\" rel="
+"\"gallery\">%7$s</a>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:30
+msgid "&larr; Previous"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:31
+msgid "Next &rarr;"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:84
+#, php-format
+msgid ""
+"<a class=\"comment-link\" href=\"#respond\" title=\"Post a comment\">Post a "
+"comment</a> or leave a trackback: <a class=\"trackback-link\" href=\"%s\" "
+"title=\"Trackback URL for your post\" rel=\"trackback\">Trackback URL</a>."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:86
+#, php-format
+msgid ""
+"Comments are closed, but you can leave a trackback: <a class=\"trackback-link"
+"\" href=\"%s\" title=\"Trackback URL for your post\" rel=\"trackback"
+"\">Trackback URL</a>."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:88
+msgid ""
+"Trackbacks are closed, but you can <a class=\"comment-link\" href=\"#respond"
+"\" title=\"Post a comment\">post a comment</a>."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/image.php:90
+msgid "Both comments and trackbacks are currently closed."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:145
+msgid "Install Required Plugins"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:148
+msgid "Something went wrong."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:159
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:414
+msgid "Return to Required Plugins Installer"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:161
+#, php-format
+msgid "All plugins installed and activated successfully. %1$s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:438
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1720
+msgid "Return to the Dashboard"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:462
+#, php-format
+msgid "The following plugin was activated successfully: %s."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:601
+msgid "Dismiss this notice"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:918
+msgid "External Link"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:923
+msgid "Private Repository"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:926
+msgid "Pre-Packaged"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:930
+msgid "WordPress Repository"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:932
+msgid "Required"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:932
+msgid "Recommended"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:934
+msgid "Not Installed"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:936
+msgid "Installed But Not Activated"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1084
+#, php-format
+msgid ""
+"No plugins to install or activate. <a href=\"%1$s\" title=\"Return to the "
+"Dashboard\">Return to the Dashboard</a>"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1097
+msgid "Plugin"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1098
+msgid "Source"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1099
+msgid "Type"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1100
+msgid "Status"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1114
+msgid "Install"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1115
+msgid "Activate"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1532
+msgid "Install package not available."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1533
+#, php-format
+msgid "Downloading install package from <span class=\"code\">%s</span>&#8230;"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1534
+msgid "Unpacking the package&#8230;"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1535
+msgid "Installing the plugin&#8230;"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1536
+msgid "Plugin install failed."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1537
+msgid "Plugin installed successfully."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1545
+msgid "Plugin activation failed."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1636
+msgid ""
+"The installation and activation process is starting. This process may take a "
+"while on some hosts, so please be patient."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1637
+#, php-format
+msgid "%1$s installed and activated successfully."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1637
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1646
+msgid "Show Details"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1637
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1646
+msgid "Hide Details"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1638
+msgid "All installations and activations have been completed."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1639
+#, php-format
+msgid "Installing and Activating Plugin %1$s (%2$d/%3$d)"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1643
+msgid ""
+"The installation process is starting. This process may take a while on some "
+"hosts, so please be patient."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1644
+#, php-format
+msgid "An error occurred while installing %1$s: <strong>%2$s</strong>."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1645
+#, php-format
+msgid "The installation of %1$s failed."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1646
+#, php-format
+msgid "%1$s installed successfully."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1647
+msgid "All installations have been completed."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/library/class/class-tgm-plugin-activation.php:1648
+#, php-format
+msgid "Installing Plugin %1$s (%2$d/%3$d)"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/search.php:16
+#, php-format
+msgid "Search Results for: %s"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/search.php:43
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/search.php:46
+msgid "Or you can try these links below."
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/sidebar.php:12
+msgid "Categories"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/sidebar.php:22
+msgid "Recent Posts"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/sidebar.php:30
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/sidebar.php:50
+msgid "View Post"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/sidebar.php:39
+msgid "Popular Posts"
+msgstr ""
+
+#: C:\xampp\htdocs\wordpress\wp-content\themes\magazino/tag.php:13
+#, php-format
+msgid "Tag Archives: %s"
+msgstr ""

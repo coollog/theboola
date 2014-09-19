@@ -1,0 +1,22 @@
+v1.1 (June 28th, 2014)
+-----------------------------
+Added Right to Left(RTL) Language Support.
+Added New Improved Options Panel.
+Theme is now compatible with Child themes.
+Removed Google Plus Badge Widget
+Removed Tab Widget.
+Added Option to show full posts on homepage.
+Added Support for WP Review Plugin to show average review value on homepage.
+Added WP Tab Widget Plugin.
+Added WP Shortcode Plugin.
+Added Google Plus Badge Widget Plugin.
+Optimized Theme Images(56% size reduction!)
+Removed modernizr Script.
+Replaced Superfish script with lightweight code.
+Removed Unused jQuery Code.
+Optimized Code.
+Fixed other small bugs.
+
+v1.0
+-----------------------------
+Theme Released
