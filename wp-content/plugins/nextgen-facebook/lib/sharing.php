@@ -159,12 +159,12 @@ jQuery("#ngfb-sidebar").click( function(){
 					'save_options' => 2,		// update the sharing css file
 					'option_type' => 2,		// identify option type for sanitation
 					'post_cache_transients' => 4,	// flush transients on post save
-					'status_gpl_features' => 1,	// include sharing, shortcode, and widget status
 					'tooltip_side' => 2,		// tooltip messages for side boxes
 					'tooltip_plugin' => 2,		// tooltip messages for advanced settings
 					'tooltip_postmeta' => 3,	// tooltip messages for post social settings
 				) );
 				$this->p->util->add_plugin_filters( $this, array( 
+					'status_gpl_features' => 3,	// include sharing, shortcode, and widget status
 					'status_pro_features' => 3,	// include social file cache status
 				), 10, 'ngfb' );			// hook into the extension name instead
 			}
@@ -270,23 +270,23 @@ jQuery("#ngfb-sidebar").click( function(){
 
 				$transients['NgfbSharing::get_buttons'] = array();
 				foreach( self::$cf['sharing']['show_on'] as $type_id => $type_name )
-					$transients['NgfbSharing::get_buttons'][$type_id] = 'lang:'.$lang.'_obj:'.$post_id.'_type:'.$type_id;
+					$transients['NgfbSharing::get_buttons'][$type_id] = 'lang:'.$lang.'_type:'.$type_id.'_post:'.$post_id;
 			}
 			return $transients;
 		}
 
-		public function filter_status_gpl_features( $features ) {
-			if ( ! empty( $this->p->cf['*']['lib']['submenu']['sharing'] ) )
-				$features['Sharing Buttons'] = array( 'class' => $this->p->cf['lca'].'Sharing' );
+		public function filter_status_gpl_features( $features, $lca, $info ) {
+			if ( ! empty( $info['lib']['submenu']['sharing'] ) )
+				$features['Sharing Buttons'] = array( 'classname' => $lca.'Sharing' );
 
-			if ( ! empty( $this->p->cf['*']['lib']['shortcode']['sharing'] ) )
-				$features['Sharing Shortcode'] = array( 'class' => $this->p->cf['lca'].'ShortcodeSharing' );
+			if ( ! empty( $info['lib']['shortcode']['sharing'] ) )
+				$features['Sharing Shortcode'] = array( 'classname' => $lca.'ShortcodeSharing' );
 
-			if ( ! empty( $this->p->cf['*']['lib']['submenu']['style'] ) )
+			if ( ! empty( $info['lib']['submenu']['style'] ) )
 				$features['Sharing Stylesheet'] = array( 'status' => $this->p->options['buttons_use_social_css'] ? 'on' : 'off' );
 
-			if ( ! empty( $this->p->cf['*']['lib']['widget']['sharing'] ) )
-				$features['Sharing Widget'] = array( 'class' => $this->p->cf['lca'].'WidgetSharing' );
+			if ( ! empty( $info['lib']['widget']['sharing'] ) )
+				$features['Sharing Widget'] = array( 'classname' => $lca.'WidgetSharing' );
 
 			return $features;
 		}
@@ -613,18 +613,18 @@ jQuery("#ngfb-sidebar").click( function(){
 				return $text;
 			}
 
-			// get the post id for the transient cache salt
-			if ( ( $obj = $this->p->util->get_post_object( $use_post ) ) === false ) {
-				$this->p->debug->log( 'exiting early: invalid object type' );
-				return $text;
-			}
-
+			$lca = $this->p->cf['lca'];
+			$obj = $this->p->util->get_post_object( $use_post );
+			$post_id = empty( $obj->ID ) || empty( $obj->post_type ) || 
+				( ! is_singular() && $use_post === false ) ? 0 : $obj->ID;
+			$sharing_url = $this->p->util->get_sharing_url( $use_post );
 			$html = false;
+
 			if ( $this->p->is_avail['cache']['transient'] ) {
-				// if the post id is 0, then add the sharing url to ensure a unique salt string
-				$cache_salt = __METHOD__.'(lang:'.SucomUtil::get_locale().'_obj:'.$obj->ID.'_type:'.$type.
-					( empty( $obj->ID ) ? '_url:'.$this->p->util->get_sharing_url( true ) : '' ).')';
-				$cache_id = $this->p->cf['lca'].'_'.md5( $cache_salt );
+				$cache_salt = __METHOD__.'('.apply_filters( $lca.'_buttons_cache_salt', 
+					'lang:'.SucomUtil::get_locale().'_type:'.$type.'_post:'.$post_id.
+					( empty( $post_id ) ? '_url:'.$sharing_url : '' ), $type, $use_post ).')';
+				$cache_id = $lca.'_'.md5( $cache_salt );
 				$cache_type = 'object cache';
 				$this->p->debug->log( $cache_type.': transient salt '.$cache_salt );
 				$html = get_transient( $cache_id );
@@ -647,11 +647,11 @@ jQuery("#ngfb-sidebar").click( function(){
 
 				$buttons_html = $this->get_html( $sorted_ids, $atts, $this->p->options );
 				if ( ! empty( $buttons_html ) ) {
-					$html = '<!-- '.$this->p->cf['lca'].' '.$css_type.' begin --><div '.
-						( $use_post ? 'class' : 'id' ).'="'.$this->p->cf['lca'].'-'.$css_type.'">'.
-						$buttons_html.'</div><!-- '.$this->p->cf['lca'].' '.$css_type.' end -->';
+					$html = '<!-- '.$lca.' '.$css_type.' begin --><div '.
+						( $use_post ? 'class' : 'id' ).'="'.$lca.'-'.$css_type.'">'.
+						$buttons_html.'</div><!-- '.$lca.' '.$css_type.' end -->';
 
-					if ( ! empty( $cache_id ) ) {
+					if ( $this->p->is_avail['cache']['transient'] ) {
 						set_transient( $cache_id, $html, $this->p->cache->object_expire );
 						$this->p->debug->log( $cache_type.': '.$type.' html saved to transient '.
 							$cache_id.' ('.$this->p->cache->object_expire.' seconds)' );

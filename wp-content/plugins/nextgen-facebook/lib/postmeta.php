@@ -40,11 +40,9 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 		}
 
 		public function add_metaboxes() {
-			// get the current object / post type
-			if ( ( $obj = $this->p->util->get_post_object() ) === false ) {
-				$this->p->debug->log( 'exiting early: invalid object type' );
-				return;
-			}
+			if ( ( $obj = $this->p->util->get_post_object() ) === false ||
+				empty( $obj->post_type ) )
+					return;
 			$post_type = get_post_type_object( $obj->post_type );
 			if ( ! empty( $this->p->options[ 'plugin_add_to_'.$post_type->name ] ) )
 				add_meta_box( NGFB_META_NAME, 'Social Settings', array( &$this, 'show_metabox_postmeta' ), $post_type->name, 'advanced', 'high' );
@@ -52,12 +50,11 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 
 		public function set_header_tags() {
 			if ( $this->p->is_avail['opengraph'] && empty( $this->header_tags ) ) {
-				if ( ( $obj = $this->p->util->get_post_object() ) === false ) {
-					$this->p->debug->log( 'exiting early: invalid object type' );
+				if ( ( $obj = $this->p->util->get_post_object() ) === false )
 					return;
-				}
-				if ( isset( $obj->ID ) && isset( $obj->post_type ) && $obj->post_status === 'publish' && $obj->filter === 'edit' ) {
-					$this->header_tags = $this->p->head->get_header_array( $obj->ID );
+				$post_id = empty( $obj->ID ) || empty( $obj->post_type ) ? 0 : $obj->ID;
+				if ( ! empty( $post_id ) && $obj->post_status === 'publish' && $obj->filter === 'edit' ) {
+					$this->header_tags = $this->p->head->get_header_array( $post_id );
 					$this->p->debug->show_html( null, 'debug log' );
 					foreach ( $this->header_tags as $tag ) {
 						if ( isset ( $tag[3] ) && $tag[3] === 'og:type' ) {
@@ -80,10 +77,14 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 			wp_nonce_field( $this->get_nonce(), NGFB_NONCE );
 
 			$metabox = 'meta';
-			$tabs = apply_filters( $this->p->cf['lca'].'_'.$metabox.'_tabs', array( 
-				'header' => 'Header Meta Tags', 
-				'tools' => 'Validation Tools',
-				'tags' => 'Header Tags Preview' ) );
+			$tabs = apply_filters( $this->p->cf['lca'].'_'.$metabox.'_tabs', 
+				array( 
+					'header' => 'Title and Descriptions', 
+					'media' => 'Image and Video', 
+					'tags' => 'Header Preview',
+					'tools' => 'Validation Tools'
+				)
+			);
 
 			if ( empty( $this->p->is_avail['opengraph'] ) )
 				unset( $tabs['tags'] );

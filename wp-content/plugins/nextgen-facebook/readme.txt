@@ -1,4 +1,4 @@
-=== NextGEN Facebook: Advanced Sharing Optimization for All Social Websites ===
+=== NextGEN Facebook: Complete Social SEO for Facebook, Google+, Twitter, Pinterest, etc. ===
 Contributors: jsmoriss
 Donate Link: http://surniaulula.com/extend/plugins/nextgen-facebook/
 Tags: nextgen gallery, featured, attached, open graph, meta tags, buttons, like, share, facebook, google, google+, g+, twitter, linkedin, social, seo, pinterest, rich pins, tumblr, stumbleupon, widget, multilingual, shortcode, object cache, transient cache, wp_cache, nggalbum, nggallery, singlepic, imagebrowser, gallery, twitter cards, photo card, gallery card, player card, summary card, easy digital downloads, woocommerce, marketpress, e-commerce, multisite, hashtags, bbpress, buddypress, jetpack, photon, slideshare, vimeo, wistia, youtube, polylang
@@ -6,7 +6,7 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
 Requires At Least: 3.0
 Tested Up To: 4.0
-Stable Tag: 7.6.7
+Stable Tag: 7.6.8
 
 Display your content in the best possible way on Facebook, Google+, Twitter, Pinterest, etc. - no matter how your webpage is shared!
 
@@ -362,6 +362,7 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 		</ul></li>
 		<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/notes/developer/sharing-buttons-function/">Sharing Buttons Function</a></li>
 	</ul></li>
+	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/notes/inline-variables/">Inline Variables</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/notes/multisite-network-support/">Multisite / Network Support</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/notes/ngfb-shortcode/">NGFB Shortcode</a></li> 
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/notes/performance-tuning/">Performance Tuning</a></li>
@@ -392,6 +393,15 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 
 == Changelog ==
 
+= Version 7.6.8 =
+
+* **Bugfixes**
+	* Added a merge feature for post meta options, to retain hidden / excluded options from the Social Settings form (Pro version).
+* **Enhancements**
+	* Added an 'ngfb_buttons_cache_salt' filter to modify the sharing buttons cache salt string.
+	* Renamed / changed the 'Header Tags' tab in the Social Settings metabox for 'Title and Description' and 'Image and Video'.
+	* Moved the 'Google+ / Schema Description' option in the Social Settings to the All Options view (hidden in the Basic Options view).
+
 = Version 7.6.7 =
 
 * **Bugfixes**
@@ -403,6 +413,10 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 	* Added the SucomUtil class `get_inline_vars()`, `get_inline_vals()`, and `replace_inline_vars()` methods to retrieve and convert inline variables -- the `%%post_id%%`, `%%request_url%%`, and `%%sharing_url%%` variables will be expanded if/when found in any meta tag value.
 
 == Upgrade Notice ==
+
+= 7.6.8 =
+
+Simplifies the Social Settings metabox, and includes a small fix to retain hidden / excluded options from the Social Settings metabox as well.
 
 = 7.6.7 =
 
