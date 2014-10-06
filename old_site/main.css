@@ -1,0 +1,239 @@
+body, html {
+	margin: 0;
+	height: 100%;
+}
+a {
+	color: #4c4c4c;
+	text-decoration: none;
+}
+a:visited {
+	color: #4c4c4c;
+}
+a:hover {
+	text-decoration: underline;
+}
+b {
+	font-weight: 700;
+}
+.sidebar {
+	font: 400 20px/30px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-variant: small-caps;
+	padding: 20px 40px 0 40px;
+	width: 220px;
+	position: fixed;
+}
+	.sidebarin {
+	}
+.logo {
+	font: 800 30px/40px 'Open Sans', sans-serif;
+	margin-bottom: 35px;
+	cursor: pointer;
+	opacity: 0.3;
+	transition: opacity 0.5s ease-in-out;
+	-webkit-transition: opacity 0.5s ease-in-out;
+	
+	height: 3em;
+	width: 9em;
+	background: url('logo2.png') no-repeat left center;
+	background-size: contain;
+}
+	.logo:hover {
+		opacity: 1;
+	}
+.logomain {
+	color: #62638c;
+	text-transform: uppercase;
+	font-size: 50px;
+}
+.dropdown {
+	height: 15px;
+	background: url('down.png') no-repeat center center;
+	background-size: contain;
+	opacity: 0;
+	margin-top: -15px;
+}
+.menu {
+	display: none;
+}
+.menu-cat {
+	text-decoration: underline;
+}
+.menu-article {
+	font-size: 16px;
+	line-height: 20px;
+	margin-top: 10px;
+}
+a.menu-link {
+	cursor: pointer;
+	display: block;
+}
+a.menu-link:hover {
+	font-weight: 700;
+}
+.clickable {
+	cursor: pointer;
+}
+.clickable:hover {
+	font-weight: 700;
+}
+.content {
+	margin-left: 300px;
+	padding: 50px;
+	font: 400 18px/1.5em "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	width: 66%;
+}
+@media (min-width: 1000px) {
+	.sidebar {
+		height: 100%;
+		float: left;
+	}
+}
+@media (max-width: 1000px) {
+	.content {
+		margin: 0 auto;
+		width: 100%;
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+	}
+	.sidebar {
+		clear: both;
+		position: relative;
+	}
+}
+.content h1 {
+	font-weight: 700;
+	font-variant: small-caps;
+	font-size: 50px;
+	line-height: 50px;
+	margin: 0px 0px 75px 0px;
+}
+.content h2 {
+	font-weight: 700;
+	font-variant: small-caps;
+	font-size: 50px;
+	line-height: 75px;
+	margin: 0px 0px 30px 0px;
+}
+.content h3 {
+	font-weight: 700;
+	font-size: 50px;
+	line-height: 75px;
+	margin: 0;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+.content h4 {
+	font-weight: 700;
+	font-size: 30px;
+	line-height: 50px;
+	font-variant: small-caps;
+	letter-spacing: 1px;
+	margin: 0;
+	border-bottom: 1px solid #111;
+	width: 75%;
+}
+.content input {
+	height: 30px;
+	margin: 5px 0;
+	padding: 0 5px;
+	border: 1px solid black;
+	width: 200px;
+}
+
+.content .pic {
+	background: #8c8c8c no-repeat top center;
+	background-size: cover;
+	width: 180px;
+	height: 180px;
+	display: inline-block;
+	margin-right: 20px;
+	border-radius: 90px;
+}
+.content .article {
+	background: #8c8c8c no-repeat center center;
+	background-size: cover;
+	width: 300px;
+	height: 200px;
+	display: inline-block;
+	margin: 20px;
+	position: relative;
+	overflow: hidden;
+}
+	.content .article:hover {
+		opacity: 0.8;
+	}
+.content .article .title {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	font: 300 16px/25px 'Lato', sans-serif;
+	background: rgba(255, 255, 255, 1);
+	padding: 10px 20px;
+	color: #111;
+	font-weight: inherit;
+	height: 50px;
+}
+.content .article .author {
+	margin-top: 10px;
+	font: 300 12px/20px 'Lato', sans-serif;
+	color: #7c7c7c;
+	position: absolute;
+	text-align: right;
+	bottom: 10px;
+	right: 20px;
+}
+.content .basicinfo {
+	font-size: 20px;
+	font-variant: small-caps;
+	display: inline-block;
+	letter-spacing: 1px;
+}
+.content .basicinfo b {
+	font-size: 25px;
+}
+.content .text {
+	width: 75%;
+}
+.content .info {
+	text-transform: uppercase;
+	font-family: "Open Sans", sans-serif;
+}
+.content .articletext {
+	width: 75%;
+	margin: 0 auto;
+}
+.content .articletext img {
+	max-width: 100%;
+}
+.content .articletext small {
+	font-size: 15px;
+}
+.content .articletext big {
+	font-size: 22px;
+}
+.content .quote {
+	font-size: 22px;
+	font-weight: 600;
+	letter-spacing: 2px;
+	text-align: right;
+	margin: 50px 0;
+	color: #9c9c9c;
+}
+.content .quote-author {
+	font-weight: 300;
+	font-variant: small-caps;
+}
+
+.alert {
+	font: 400 20px/30px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	position: absolute;
+	text-align: center;
+	width: 700px;
+	left: 50%;
+	top: 1em;
+	margin-left: -350px;
+	padding: 1em;
+	border: 1px solid #111;
+	background: #fff;
+}

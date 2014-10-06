@@ -19,7 +19,7 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 			'update_check_hours' => 24,
 			'plugin' => array(
 				'ngfb' => array(
-					'version' => '7.6.8',		// plugin version
+					'version' => '7.6.9.1',		// plugin version
 					'short' => 'NGFB',		// short plugin name
 					'name' => 'NextGEN Facebook (NGFB)',
 					'desc' => 'Display your content in the best possible way on Facebook, Google+, Twitter, Pinterest, etc. - no matter how your webpage is shared!',
@@ -30,18 +30,18 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 						'icon-medium' => '//ps.w.org/nextgen-facebook/assets/icon-256x256.jpg?rev=',
 					),
 					'url' => array(
-						'download' => 'http://wordpress.org/plugins/nextgen-facebook/',
+						'download' => 'https://wordpress.org/plugins/nextgen-facebook/',
 						'update' => 'http://update.surniaulula.com/extend/plugins/nextgen-facebook/update/',
 						'purchase' => 'http://surniaulula.com/extend/plugins/nextgen-facebook/',
-						'review' => 'http://wordpress.org/support/view/plugin-reviews/nextgen-facebook#postform',
-						'readme' => 'http://plugins.svn.wordpress.org/nextgen-facebook/trunk/readme.txt',
-						'setup' => 'http://plugins.svn.wordpress.org/nextgen-facebook/trunk/setup.html',
+						'review' => 'https://wordpress.org/support/view/plugin-reviews/nextgen-facebook#postform',
+						'readme' => 'https://plugins.svn.wordpress.org/nextgen-facebook/trunk/readme.txt',
+						'setup' => 'https://plugins.svn.wordpress.org/nextgen-facebook/trunk/setup.html',
 						'changelog' => 'http://surniaulula.com/extend/plugins/nextgen-facebook/changelog/',
 						'codex' => 'http://surniaulula.com/codex/plugins/nextgen-facebook/',
 						'faq' => 'http://surniaulula.com/codex/plugins/nextgen-facebook/faq/',
 						'notes' => 'http://surniaulula.com/codex/plugins/nextgen-facebook/notes/',
 						'feed' => 'http://surniaulula.com/category/application/wordpress/wp-plugins/ngfb/feed/',
-						'wp_support' => 'http://wordpress.org/support/plugin/nextgen-facebook',
+						'wp_support' => 'https://wordpress.org/support/plugin/nextgen-facebook',
 						'pro_support' => 'http://support.ngfb.surniaulula.com/',
 						'pro_ticket' => 'http://ticket.ngfb.surniaulula.com/',
 					),
@@ -52,16 +52,16 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 						'submenu' => array (
 							'general' => 'General',
 							'advanced' => 'Advanced',
-							'sharing' => 'Buttons',
-							'style' => 'Styles',
-							'licenses' => 'Licenses',
+							'sharing' => 'Sharing Buttons',
+							'style' => 'Sharing Styles',
+							'licenses' => 'Pro Licenses',
 							'readme' => 'Read Me',
 							'setup' => 'Setup Guide',
 							'whatsnew' => 'What\'s New',
 						),
 						'sitesubmenu' => array(
 							'siteadvanced' => 'Advanced',
-							'sitelicenses' => 'Licenses',
+							'sitelicenses' => 'Pro Licenses',
 							'sitereadme' => 'Read Me',
 							'sitesetup' => 'Setup Guide',
 							'sitewhatsnew' => 'What\'s New',
@@ -163,7 +163,7 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 				),
 			),
 			'opt' => array(				// options
-				'version' => 300,		// increment when changing default options
+				'version' => 301,		// increment when changing default options
 				'defaults' => array(
 					'options_filtered' => false,
 					'options_version' => '',
@@ -187,6 +187,7 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 					'og_img_crop' => 1,
 					'og_img_max' => 1,
 					'og_vid_max' => 1,
+					'og_vid_prev_img' => 1,
 					'og_vid_https' => 1,
 					'og_def_img_id_pre' => 'wp',
 					'og_def_img_id' => '',

@@ -45,9 +45,9 @@ if ( ! class_exists( 'NgfbOpengraph' ) && class_exists( 'SucomOpengraph' ) ) {
 			$obj = $this->p->util->get_post_object( $use_post );
 			$post_id = empty( $obj->ID ) || empty( $obj->post_type ) ? 0 : $obj->ID;
 			$post_type = '';
-			$has_video_image = false;
+			$video_images = 0;
 			$og_max = $this->p->util->get_max_nums( $post_id );
-			$og = apply_filters( $this->p->cf['lca'].'_og_seed', $og, $use_post );
+			$og = apply_filters( $this->p->cf['lca'].'_og_seed', $og, $use_post, $obj );
 
 			if ( ! isset( $og['fb:admins'] ) )
 				$og['fb:admins'] = $this->p->options['fb_admins'];
@@ -163,11 +163,12 @@ if ( ! class_exists( 'NgfbOpengraph' ) && class_exists( 'SucomOpengraph' ) ) {
 				else {
 					$og['og:video'] = $this->get_all_videos( $og_max['og_vid_max'], $post_id );
 					if ( is_array( $og['og:video'] ) ) {
-						foreach ( $og['og:video'] as $val ) {
-							if ( is_array( $val ) && ! empty( $val['og:image'] ) ) {
-								$this->p->debug->log( 'og:image found in og:video array (no default image required)' );
-								$has_video_image = true;
-							}
+						foreach ( $og['og:video'] as $val )
+							if ( is_array( $val ) && ! empty( $val['og:image'] ) )
+								$video_images++;
+						if ( $video_images > 0 ) {
+							$og_max['og_img_max'] -= $video_images;
+							$this->p->debug->log( $video_images.' video preview images found (og_img_max adjusted to '.$og_max['og_img_max'].')' );
 						}
 					}
 				} 
@@ -181,7 +182,7 @@ if ( ! class_exists( 'NgfbOpengraph' ) && class_exists( 'SucomOpengraph' ) ) {
 					$og['og:image'] = $this->get_all_images( $og_max['og_img_max'], $this->size_name, $post_id );
 
 					// if there's no image, and no video preview image, then add the default image for non-index webpages
-					if ( empty( $og['og:image'] ) && $has_video_image === false &&
+					if ( empty( $og['og:image'] ) && $video_images === 0 &&
 						( is_singular() || $use_post !== false ) )
 							$og['og:image'] = $this->p->media->get_default_image( $og_max['og_img_max'], $this->size_name );
 				} 
@@ -202,7 +203,7 @@ if ( ! class_exists( 'NgfbOpengraph' ) && class_exists( 'SucomOpengraph' ) ) {
 			}
 
 			// twitter cards are hooked into this filter to use existing open graph values
-			return apply_filters( $this->p->cf['lca'].'_og', $og, $use_post );
+			return apply_filters( $this->p->cf['lca'].'_og', $og, $use_post, $obj );
 		}
 
 		public function get_all_videos( $num = 0, $post_id, $check_dupes = true ) {
@@ -260,6 +261,7 @@ if ( ! class_exists( 'NgfbOpengraph' ) && class_exists( 'SucomOpengraph' ) ) {
 				( ! empty( $this->p->options['og_def_img_on_author'] ) && is_author() ) ||
 				( ! empty( $this->p->options['og_def_img_on_search'] ) && is_search() ) ) {
 
+				$this->p->debug->log( 'default image is forced' );
 				$num_remains = $this->p->media->num_remains( $og_ret, $num );
 				$og_ret = array_merge( $og_ret, $this->p->media->get_default_image( $num_remains, $size_name, $check_dupes ) );
 				return $og_ret;	// stop here and return the image array

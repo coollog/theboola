@@ -1,0 +1,20 @@
+[01-Mar-2014 11:08:12 America/Denver] PHP Warning:  file_get_contents(article/8-Studying-Tips-From-Phi-Beta-Kappa/contents.json): failed to open stream: No such file or directory in /home3/theboola/public_html/dev/article.php on line 3
+[01-Mar-2014 11:08:12 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 4
+[01-Mar-2014 11:08:14 America/Denver] PHP Warning:  file_get_contents(article/8-Studying-Tips-From-Phi-Beta-Kappa/contents.json): failed to open stream: No such file or directory in /home3/theboola/public_html/dev/article.php on line 3
+[01-Mar-2014 11:08:14 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 4
+[01-Mar-2014 11:09:02 America/Denver] PHP Warning:  file_get_contents(article/8-Studying-Tips-From-Phi-Beta-Kappa/contents.json): failed to open stream: No such file or directory in /home3/theboola/public_html/dev/article.php on line 3
+[01-Mar-2014 11:09:02 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 4
+[01-Mar-2014 11:10:08 America/Denver] PHP Warning:  file_get_contents(article/8-Studying-Tips-From-Phi-Beta-Kappa/contents.json): failed to open stream: No such file or directory in /home3/theboola/public_html/dev/article.php on line 3
+[01-Mar-2014 11:10:08 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[01-Mar-2014 11:11:07 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[01-Mar-2014 12:59:45 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[01-Mar-2014 13:00:34 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[01-Mar-2014 13:00:51 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[01-Mar-2014 13:00:54 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[01-Mar-2014 13:01:17 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[01-Mar-2014 13:01:39 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[01-Mar-2014 13:02:11 America/Denver] PHP Notice:  Trying to get property of non-object in /home3/theboola/public_html/dev/article.php on line 5
+[11-Mar-2014 22:01:53 America/Denver] PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/php/54/usr/lib64/php/modules/mongo.so' - /usr/php/54/usr/lib64/php/modules/mongo.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[11-Mar-2014 22:01:53 America/Denver] PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/php/54/usr/lib64/php/modules/php_mongo.dll' - /usr/php/54/usr/lib64/php/modules/php_mongo.dll: cannot open shared object file: No such file or directory in Unknown on line 0
+[14-Mar-2014 19:58:28 America/Denver] PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/php/54/usr/lib64/php/modules/mongo.so' - /usr/php/54/usr/lib64/php/modules/mongo.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[14-Mar-2014 19:58:28 America/Denver] PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/php/54/usr/lib64/php/modules/php_mongo.dll' - /usr/php/54/usr/lib64/php/modules/php_mongo.dll: cannot open shared object file: No such file or directory in Unknown on line 0

@@ -142,6 +142,7 @@ if ( ! class_exists( 'NgfbHead' ) ) {
 		}
 
 		public function get_header_array( $use_post = false, $read_cache = true, &$meta_og = array() ) {
+			$this->p->debug->mark();
 			$lca = $this->p->cf['lca'];
 			$short_aop = $this->p->cf['plugin'][$lca]['short'].
 				( $this->p->is_avail['aop'] ? ' Pro' : '' );
@@ -184,6 +185,9 @@ if ( ! class_exists( 'NgfbHead' ) ) {
 				! is_search() && ! empty( $this->p->options['seo_def_author_on_index'] ) && ! empty( $this->p->options['seo_def_author_id'] ) ) || 
 				( is_search() && ! empty( $this->p->options['seo_def_author_on_search'] ) && ! empty( $this->p->options['seo_def_author_id'] ) ) )
 					$author_id = $this->p->options['seo_def_author_id'];
+
+			if ( $author_id !== false )
+				$this->p->debug->log( 'author_id value set to '.$author_id );
 
 			/**
 			 * Open Graph, Twitter Card
@@ -283,16 +287,12 @@ if ( ! class_exists( 'NgfbHead' ) ) {
 			$attr = $tag === 'link' ? 'href' : 'content';
 			$log_pre = $tag.' '.$type.' '.$name;
 
-			if ( empty( $this->p->options['add_'.$tag.'_'.$type.'_'.$name] ) ) {
-				$this->p->debug->log( $log_pre.' is disabled (skipped)' );
+			if ( $value === '' || $value === null ) {	// allow for 0
+				$this->p->debug->log( $log_pre.' value is empty (skipped)' );
 				return $ret;
 
 			} elseif ( $value === -1 ) {	// -1 is reserved, meaning use the defaults - exclude, just in case
 				$this->p->debug->log( $log_pre.' value is -1 (skipped)' );
-				return $ret;
-
-			} elseif ( $value === '' || $value === null ) {	// allow for 0
-				$this->p->debug->log( $log_pre.' value is empty (skipped)' );
 				return $ret;
 
 			} elseif ( is_array( $value ) ) {
@@ -313,22 +313,24 @@ if ( ! class_exists( 'NgfbHead' ) ) {
 			$comment_html = empty( $comment ) ? '' : '<!-- '.$comment.' -->';
 
 			// add an additional secure_url meta tag for open graph images and videos
-			if ( $tag === 'meta' && $type === 'property' &&
+			if ( $tag === 'meta' && $type === 'property' && 
 				( $name === 'og:image' || $name === 'og:video' ) && 
-				strpos( $value, 'https:' ) === 0 && 
-				! empty( $this->p->options['add_'.$tag.'_'.$type.'_'.$name.':secure_url'] ) ) {
+				strpos( $value, 'https:' ) === 0 ) {
 
 				$secure_url = $value;
 				$value = preg_replace( '/^https:/', 'http:', $value );
 
-				$ret[] = array( 
+				if ( empty( $this->p->options['add_'.$tag.'_'.$type.'_'.$name.':secure_url'] ) )
+					$this->p->debug->log( $log_pre.':secure_url is disabled (skipped)' );
+				else $ret[] = array( 
 					$comment_html.'<'.$tag.' '.$type.'="'.$name.':secure_url" '.$attr.'="'.$secure_url.'" />'."\n",
 					$tag, $type, $name.':secure_url', $attr, $secure_url, $comment
 				);
-
 			} 
 			
-			$ret[] = array( 
+			if ( empty( $this->p->options['add_'.$tag.'_'.$type.'_'.$name] ) )
+				$this->p->debug->log( $log_pre.' is disabled (skipped)' );
+			else $ret[] = array( 
 				$comment_html.'<'.$tag.' '.$type.'="'.$name.'" '.$attr.'="'.$value.'" />'."\n",
 				$tag, $type, $name, $attr, $value, $comment
 			);

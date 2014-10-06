@@ -43,7 +43,7 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							break;
 						case 'tooltip-side-non-persistant-cache':
 							$text = $short.' saves filtered / rendered content to a non-persistant cache
-							(aka <a href="http://codex.wordpress.org/Class_Reference/WP_Object_Cache" target="_blank">WP Object Cache</a>) 
+							(aka <a href="https://codex.wordpress.org/Class_Reference/WP_Object_Cache" target="_blank">WP Object Cache</a>) 
 							for re-use within the same page load. You can disable the use of non-persistant cache (not recommended)
 							using one of the available <a href="http://surniaulula.com/codex/plugins/nextgen-facebook/notes/constants/" 
 							target="_blank">constants</a>.';
@@ -55,12 +55,12 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							break;
 						case 'tooltip-side-pro-update-check':
 							$text = 'When a Pro version Authentication ID is entered in the '.
-							$this->p->util->get_admin_url( 'licenses', 'Licenses settings' ).',
-							a check is scheduled every 24 hours to see if an update is available.';
+							$this->p->util->get_admin_url( 'licenses', 'Pro Licenses' ).',
+							settings, a check is scheduled every 24 hours to see if an update is available.';
 							break;
 						case 'tooltip-side-transient-cache':
 							$text = $short.' saves Facebook / Open Graph, Pinterest Rich Pin, Twitter Card meta tags, etc. to a persistant
-							(aka <a href="http://codex.wordpress.org/Transients_API" target="_blank">Transient</a>) cache for '.
+							(aka <a href="https://codex.wordpress.org/Transients_API" target="_blank">Transient</a>) cache for '.
 							$this->p->options['plugin_object_cache_exp'].' seconds (default is '.$this->p->opt->get_defaults( 'plugin_object_cache_exp' ).
 							' seconds). You can adjust the Transient / Object Cache expiration value in the '.
 							$this->p->util->get_admin_url( 'advanced', 'Advanced settings' ).', or disable it completely using an available
@@ -341,6 +341,9 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							and Pinterest Rich Pin meta tags. If you select \'0\', then no videos will be listed in the facebook / Open Graph 
 							and Pinterest Rich Pin meta tags.';
 							break;
+						case 'tooltip-og_vid_prev_img':
+							$text = 'Include video preview images in the meta tags (default is checked).';
+							break;
 						case 'tooltip-og_vid_https':
 							$text = 'Use an HTTPS connection whenever possible to retrieve information about videos from YouTube, Vimeo, Wistia, 
 							etc. (default is checked).';
@@ -546,9 +549,9 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 						 */
 						case 'tooltip-plugin_object_cache_exp':
 							$text = $short.' saves filtered and rendered content to a non-persistant cache 
-							(aka <a href="http://codex.wordpress.org/Class_Reference/WP_Object_Cache" target="_blank">WP Object Cache</a>), 
+							(aka <a href="https://codex.wordpress.org/Class_Reference/WP_Object_Cache" target="_blank">WP Object Cache</a>), 
 							and Facebook / Open Graph, Pinterest Rich Pin, and Twitter Card meta tags to a persistant 
-							(aka <a href="http://codex.wordpress.org/Transients_API" target="_blank">Transient</a>) cache. 
+							(aka <a href="https://codex.wordpress.org/Transients_API" target="_blank">Transient</a>) cache. 
 							The default is '.$this->p->opt->get_defaults( 'plugin_object_cache_exp' ).' seconds, 
 							and the minimum value is 1 second (such a low value is not recommended).';
 							break;
@@ -655,7 +658,8 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							$text = 'If you have a <a href="http://www.google.com/+/business/" target="_blank">Google+ business page for your website</a>, 
 							you may use it\'s URL as the Publisher Link URL. For example, the Publisher Link URL for 
 							<a href="http://surniaulula.com/" target="_blank">Surnia Ulula</a> is 
-							<a href="https://plus.google.com/+SurniaUlula/" target="_blank">https://plus.google.com/+SurniaUlula/</a>.';
+							<a href="https://plus.google.com/+SurniaUlula/" target="_blank">https://plus.google.com/+SurniaUlula/</a>.
+							Google Search may use this information to display publisher details in its search results.';
 							break;
 						/*
 						 * Other settings
@@ -823,7 +827,7 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							<p>After purchasing Pro version license(s), an email is sent with a unique Authentication 
 							ID and installation / activation instructions. 
 							Enter the Authentication ID here to define a value for all sites within the network, 
-							or enter the Authentication ID(s) individually on each site\'s Licenses settings page.
+							or enter the Authentication ID(s) individually on each site\'s Pro Licenses settings page.
 							<strong>Please note that the <em>default</em> site/blog must be licensed in order to update
 							the plugin from the Network admin interface</strong>. ';
 							if ( empty( $this->p->is_avail['aop'] ) )
@@ -866,7 +870,7 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							'<strong>You should not modify the <em>Contact Field Name</em> unless you have a very good reason to do so.</strong>
 							The <em>Profile Contact Label</em> on the other hand is for <strong>display purposes only</strong>, and its text can be changed as you wish.
 							Although the following contact fields may be shown on user profile pages, your theme is responsible for using 
-							and displaying their values appropriately (see <a href="http://codex.wordpress.org/Function_Reference/get_the_author_meta" 
+							and displaying their values appropriately (see <a href="https://codex.wordpress.org/Function_Reference/get_the_author_meta" 
 							target="_blank">get_the_author_meta()</a> for examples).</p>
 							<p><center><strong>DO NOT ENTER YOUR CONTACT INFORMATION HERE &ndash; THESE ARE CONTACT FIELD LABELS ONLY.</strong><br/>
 							Enter your contact information on the <a href="'.get_admin_url( null, 'profile.php' ).'">user profile page</a>.</p>
@@ -907,7 +911,7 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 						$text = '<p><strong>The '.$short.' Authentication ID option value is empty.</strong><br/>
 						To enable Pro version features, and allow the plugin to authenticate itself for updates,<br/>
 						<strong>please '.$this->p->util->get_admin_url( 'licenses', 'enter the unique Authentication ID you received 
-						by email in the Licenses settings' ).'.</strong></p>';
+						by email in the Pro Licenses settings' ).'.</strong></p>';
 					}
 					break;
 				case 'side-purchase':
@@ -930,8 +934,8 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 			}
 			if ( is_array( $atts ) && ! empty( $atts['is_locale'] ) )
 				$text .= ' This option is localized &mdash; you may change the WordPress admin locale with 
-				<a href="http://wordpress.org/plugins/polylang/" target="_blank">Polylang</a>,
-				<a href="http://wordpress.org/plugins/wp-native-dashboard/" target="_blank">WP Native Dashboard</a>, 
+				<a href="https://wordpress.org/plugins/polylang/" target="_blank">Polylang</a>,
+				<a href="https://wordpress.org/plugins/wp-native-dashboard/" target="_blank">WP Native Dashboard</a>, 
 				etc., to define alternate values for different languages.';
 
 			if ( strpos( $idx, 'tooltip-' ) !== false && ! empty( $text ) )
