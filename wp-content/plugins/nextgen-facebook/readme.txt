@@ -6,14 +6,14 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
 Requires At Least: 3.0
 Tested Up To: 4.0
-Stable Tag: 7.6.9.1
+Stable Tag: 7.6.10
 
 Display your content in the best possible way on Facebook, Google+, Twitter, Pinterest, etc. - no matter how your webpage is shared!
 
 == Description ==
 
 <table><tr><td valign="top">
-<p><img src="//ps.w.org/nextgen-facebook/assets/icon-256x256.jpg?rev=" width="256" height="256" style="max-width:none;border:1px solid #ddd;margin-right:30px;border-radius:3px;" /></p>
+<p><img src="https://ps.w.org/nextgen-facebook/assets/icon-256x256.png?rev=" width="256" height="256" style="max-width:none;margin-right:40px;" /></p>
 </td><td valign="top">
 
 <p><strong>Make sure social websites present your content in the best possible way, no matter <em>how</em> your webpage is shared</strong> &mdash; from sharing buttons on the webpage, browser add-ons and extensions, or URLs pasted directly on social websites.</p>
@@ -42,9 +42,10 @@ Display your content in the best possible way on Facebook, Google+, Twitter, Pin
 * Includes the author's name for Pinterest Rich Pins.
 * Uses object and transient caches to provide incredibly fast execution speeds.
 * Includes a Google / SEO description meta tag if a known SEO plugin is not detected.
+* Fallback to the image alt value if the content and except do not include any text.
 * Provides Facebook, Google+ and Twitter URL profile contact fields.
 * Validation tools and special meta tag preview tabs on admin edit pages.
-* Customizable *multilingual* Site Title and (default) Description texts.
+* Customizable *multilingual* Site Title and Site Description texts.
 * Contextual help for *every* plugin option and [comprehensive online documentation](http://surniaulula.com/codex/plugins/nextgen-facebook/).
 * Default stylesheets for each social sharing button location.
 * Social sharing buttons for the content, excerpt, in a widget, as a shortcode, floating sidebar, and/or PHP function.
@@ -65,8 +66,22 @@ Display your content in the best possible way on Facebook, Google+, Twitter, Pin
 
 **Pro / Power-User Version**
 
-* <strong>No Risk 30 Day Refund Policy</strong>
-* Twitter Card meta tags (Summary, Large Image, Photo, Gallery, Player, and Product).
+* **No Risk 30 Day Refund Policy**
+* Twitter Card meta tags:
+	* *Product Card* &mdash; Product information from a supported e-commerce plugins:
+		* Easy Digital Downloads
+		* MarketPress
+		* WooCommerce
+		* WP e-Commerce
+	* *Player Card* &mdash; An embedded video in the content from:
+		* Slideshare
+		* Vimeo
+		* Wistia
+		* YouTube
+	* *Gallery Card* &mdash; A WordPress Media Library gallery or NextGEN Gallery shortcode.
+	* *Photo Card* &mdash; A WordPress Attachment page or NextGEN Gallery ImageBrowser webpage.
+	* *Large Image Summary Card* &mdash; An image entered in the custom Social Settings, a Featured, Attached, or NextGEN Gallery singlepic image.
+	* *Summary Card* &mdash; All other webpages.
 * Customizable image dimensions for each Twitter Card type.
 * Configurable title and description lengths for different contexts (Open Graph, Twitter Card, SEO).
 * Additional profile contact fields with configurable label and field names.
@@ -78,7 +93,7 @@ Display your content in the best possible way on Facebook, Google+, Twitter, Pin
 * URL shortening with Bitly or Google for URLs in Tweet texts.
 * Ability to include / exclude sharing buttons by post type.
 * Selection of preset button options by location (content, excerpt, shortcode, widget, etc.).
-* Integrates with 3rd party plugins and services for additional image, video, product, and content information (see [About Pro Addons](http://surniaulula.com/codex/plugins/nextgen-facebook/notes/addons/) and [Integration Notes](http://surniaulula.com/codex/plugins/nextgen-facebook/installation/integration/) for details):
+* **Integrates with 3rd party plugins and services for additional image, video, product, and content information** (see [About Pro Addons](http://surniaulula.com/codex/plugins/nextgen-facebook/notes/addons/) and [Integration Notes](http://surniaulula.com/codex/plugins/nextgen-facebook/installation/integration/) for details):
 	* Plugins
 		* All in One SEO Pack
 		* bbPress
@@ -393,6 +408,13 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 
 == Changelog ==
 
+= Version 7.6.10 =
+
+* **Bugfixes**
+	* *None*
+* **Enhancements**
+	* Added a new "Use Image(s) Alt if No Content" option to include img alt text if/when the content text is empty.
+
 = Version 7.6.9.1 =
 
 * **Bugfixes**
@@ -411,16 +433,11 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 	* Added a new 'Include Video Preview Image' option in the NGFB General settings page (Pro version).
 	* Added a check for the 'auto-draft' post status when displaying the Social Settings metabox (Free version).
 
-= Version 7.6.8 =
-
-* **Bugfixes**
-	* Added a merge feature for post meta options, to retain hidden / excluded options from the Social Settings form (Pro version).
-* **Enhancements**
-	* Added an 'ngfb_buttons_cache_salt' filter to modify the sharing buttons cache salt string.
-	* Renamed / changed the 'Header Tags' tab in the Social Settings metabox for 'Title and Description' and 'Image and Video'.
-	* Moved the 'Google+ / Schema Description' option in the Social Settings to the All Options view (hidden in the Basic Options view).
-
 == Upgrade Notice ==
+
+= 7.6.10 =
+
+Added a new "Use Image(s) Alt if No Content" option to include img alt text if/when the content text is empty.
 
 = 7.6.9.1 =
 
@@ -429,8 +446,4 @@ Fix to allow the og:image meta tag to be disabled, without disabling the og:imag
 = 7.6.9 =
 
 Updates the wordpress.org URLs to HTTPS, adds a check for the number of returned video preview images, and includes a new 'Include Video Preview Image' option.
-
-= 7.6.8 =
-
-Simplifies the Social Settings metabox, and includes a small fix to retain hidden / excluded options from the Social Settings metabox as well.
 

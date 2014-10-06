@@ -1,3 +1,7 @@
+/* 
+* Plugin Name: WP Review
+* Plugin URI: http://mythemeshop.com/plugins/wp-review/
+*/
 .wp-review-field label { width: 15%; display: inline-block; *display: inline; *zoom: 1; }
 .wp-review-field select { width: 15em }
 .wp-review-field .wp-color-result { margin: 0 }

@@ -19,10 +19,10 @@ add_action('wp_ajax_mts_review_get_review', 'mts_review_get_review');
 add_action('wp_ajax_nopriv_mts_review_get_review', 'mts_review_get_review');
 
 /* Show with shortcode */
-add_shortcode('wp-review', 'wp_review_get_data');
+add_shortcode('wp-review', 'wp_review_shortcode');
 add_shortcode('wp-review-total', 'wp_review_total_shortcode');
 // aliases
-add_shortcode('wp_review', 'wp_review_get_data');
+add_shortcode('wp_review', 'wp_review_shortcode');
 add_shortcode('wp_review_total', 'wp_review_total_shortcode');
 
 // image sizes for the widgets
@@ -35,36 +35,39 @@ add_image_size( 'wp_review_small', 65, 65, true );
  * @since 1.0
  * 
  */
-function wp_review_get_data() {
+function wp_review_get_data( $post_id = null ) {
 	global $post;
 	global $blog_id;
     $options = get_option('wp_review_options');
 
+	if (empty($post_id))
+    	$post_id = $post->ID;
+
 	/* Retrieve the meta box data. */
-	$heading     = get_post_meta( $post->ID, 'wp_review_heading', true );
-	$desc_title  = get_post_meta( $post->ID, 'wp_review_desc_title', true );
+	$heading     = get_post_meta( $post_id, 'wp_review_heading', true );
+	$desc_title  = get_post_meta( $post_id, 'wp_review_desc_title', true );
 	if ( ! $desc_title ) $desc_title = __('Summary', 'wp-review');
-	$desc        = get_post_meta( $post->ID, 'wp_review_desc', true );
-	$items       = get_post_meta( $post->ID, 'wp_review_item', true );
-	$type        = get_post_meta( $post->ID, 'wp_review_type', true );
-	$total       = get_post_meta( $post->ID, 'wp_review_total', true );
-	$hide_desc   = get_post_meta( $post->ID, 'wp_review_hide_desc', true );
-	$allowUsers  = get_post_meta( $post->ID, 'wp_review_userReview', true );
+	$desc        = get_post_meta( $post_id, 'wp_review_desc', true );
+	$items       = get_post_meta( $post_id, 'wp_review_item', true );
+	$type        = get_post_meta( $post_id, 'wp_review_type', true );
+	$total       = get_post_meta( $post_id, 'wp_review_total', true );
+	$hide_desc   = get_post_meta( $post_id, 'wp_review_hide_desc', true );
+	$allowUsers  = get_post_meta( $post_id, 'wp_review_userReview', true );
 	
 	$colors = array();
-	$colors['custom_colors'] = get_post_meta( $post->ID, 'wp_review_custom_colors', true );
-	$colors['color'] = get_post_meta( $post->ID, 'wp_review_color', true );
-	$colors['type']  = get_post_meta( $post->ID, 'wp_review_type', true );
-	$colors['fontcolor'] = get_post_meta( $post->ID, 'wp_review_fontcolor', true );
-	$colors['bgcolor1']  = get_post_meta( $post->ID, 'wp_review_bgcolor1', true );
-	$colors['bgcolor2']  = get_post_meta( $post->ID, 'wp_review_bgcolor2', true );
-	$colors['bordercolor']  = get_post_meta( $post->ID, 'wp_review_bordercolor', true );
-	$colors['total'] = get_post_meta( $post->ID, 'wp_review_total', true );
+	$colors['custom_colors'] = get_post_meta( $post_id, 'wp_review_custom_colors', true );
+	$colors['color'] = get_post_meta( $post_id, 'wp_review_color', true );
+	$colors['type']  = get_post_meta( $post_id, 'wp_review_type', true );
+	$colors['fontcolor'] = get_post_meta( $post_id, 'wp_review_fontcolor', true );
+	$colors['bgcolor1']  = get_post_meta( $post_id, 'wp_review_bgcolor1', true );
+	$colors['bgcolor2']  = get_post_meta( $post_id, 'wp_review_bgcolor2', true );
+	$colors['bordercolor']  = get_post_meta( $post_id, 'wp_review_bordercolor', true );
+	$colors['total'] = get_post_meta( $post_id, 'wp_review_total', true );
     
     if (!$colors['custom_colors'] && !empty($options['colors']) && is_array($options['colors'])) {
 		$colors = array_merge($colors, $options['colors']);
 	}
-    $colors = apply_filters('wp_review_colors', $colors, $post->ID);
+    $colors = apply_filters('wp_review_colors', $colors, $post_id);
     $color = $colors['color'];
 
 	/* Define a custom class for bar type. */
@@ -88,9 +91,9 @@ function wp_review_get_data() {
 	 * make sure the hook only apply on allowed post types
 	 */
 	if ( $type != '' && is_singular($allowed_post_types) && is_main_query() ) {
-	//if ( $type != '' && is_main_query() && in_array(get_post_type($post->ID), $allowed_post_types)) {	
+	//if ( $type != '' && is_main_query() && in_array(get_post_type($post_id), $allowed_post_types)) {	
 	// using this second if() instead of the first will allow reviews to be displayed on archive pages, but it may mess up excerpts
-			$review = '<div id="review" class="review-wrapper wp-review-'.$post->ID.' ' . $class . ' delay-animation" >';
+			$review = '<div id="review" class="review-wrapper wp-review-'.$post_id.' ' . $class . ' delay-animation" >';
 
 				/* Review title. */
 				if( $heading != '' ){
@@ -99,6 +102,16 @@ function wp_review_get_data() {
 
 
 				/* Review item. */
+				if ( 'star' == $type ) {
+					$bestresult = '<meta itemprop="best" content="5"/>';
+					$best = '5';
+				} elseif( 'point' == $type ) {
+					$bestresult = '<meta itemprop="best" content="10"/>';
+					$best = '10';
+				} else { // percentage
+					$bestresult = '<meta itemprop="best" content="100"/>';
+					$best = '100';
+				}
 				if ( $items ) {
 					$review .= '<ul class="review-list">';
 						foreach( $items as $item ) {
@@ -108,16 +121,10 @@ function wp_review_get_data() {
 
 							if ( 'star' == $type ) {
 								$result = $item['wp_review_item_star'] * 20;
-								$bestresult = '<meta itemprop="best" content="5"/>';
-								$best = '5';
 							} elseif( 'point' == $type ) {
 								$result = $item['wp_review_item_star'] * 10;
-								$bestresult = '<meta itemprop="best" content="10"/>';
-								$best = '10';
 							} else { // percentage
 								$result = $item['wp_review_item_star'] * 100 / 100;
-								$bestresult = '<meta itemprop="best" content="100"/>';
-								$best = '100';
 							}
 
 							$review .= '<li>';
@@ -218,10 +225,10 @@ function wp_review_get_data() {
 				* USERS REVIEW AREA
 				*/
 
-				if( is_array( $allowUsers ) && $allowUsers[0] == 1 ){								
+				if( is_array( $allowUsers ) && $allowUsers[0] == 1 && $post_id == $post->ID ){								
 					$allowedClass = 'allowed-to-rate';
 					$hasNotRatedClass = 'has-not-rated-yet';
-					$postReviews = mts_get_post_reviews( $post->ID );
+					$postReviews = mts_get_post_reviews( $post_id );
 					$userTotal = $postReviews[0]->reviewsAvg;
 					$usersReviewsCount = $postReviews[0]->reviewsNum;
 					
@@ -241,7 +248,7 @@ function wp_review_get_data() {
 					if ( is_user_logged_in() ) { $user_id = get_current_user_id(); }
 					//echo $blog_id;
 					$review .= '<input type="hidden" id="blog_id" value="'.$blog_id.'">';
-					$review .= '<input type="hidden" id="post_id" value="'.$post->ID.'">';
+					$review .= '<input type="hidden" id="post_id" value="'.$post_id.'">';
 					$review .= '<input type="hidden" id="user_id" value="'.$user_id.'">';
 					$review .= '<input type="hidden" id="token" value="'.wp_create_nonce( "wp-review-security" ).'">';	
                     
@@ -250,7 +257,7 @@ function wp_review_get_data() {
 					$review .= '<div class="user-total-wrapper"><span class="user-review-title">'.__('User Rating','wp-review').': </span><span class="review-total-box"><span id="mts-user-reviews-total">' . $userTotal . '</span> ';
 					$review.= '<small>(<span id="mts-user-reviews-counter" >'.$usersReviewsCount.'</span> '.__('votes', 'wp-review').')</small></span></div>';
 					
-					if( hasPreviousReview( $post->ID, $user_id, $ip )) {
+					if( hasPreviousReview( $post_id, $user_id, $ip )) {
 						$hasNotRatedClass = '';						
 					}
 
@@ -288,9 +295,9 @@ function wp_review_get_data() {
 
 				$review .= '</div><!-- #review -->';
                 
-                $review = apply_filters('wp_review_get_data', $review, $post->ID, $type, $total, $items);
+                $review = apply_filters('wp_review_get_data', $review, $post_id, $type, $total, $items);
 
-                return $review . wp_review_color_output(); // add color CSS to output
+                return $review . wp_review_color_output($post_id); // add color CSS to output
 	} else {
 		return '';
 	}
@@ -307,7 +314,7 @@ function wp_review_inject_data( $content ) {
     
 	$location = apply_filters('wp_review_location', $location, $post->ID);
 
-    if (empty($location) || $location == 'custom') {
+    if (empty($location) || $location == 'custom' || ! is_main_query() || ! in_the_loop()) {
         return $content;
     }
     $review = wp_review_get_data();
@@ -336,36 +343,38 @@ function wp_review_inject_data( $content ) {
  * @since 1.0
  * 
  */
-function wp_review_show_total($echo = true, $class = 'review-total-only') {
+function wp_review_show_total($echo = true, $class = 'review-total-only', $post_id = null) {
     global $post;
+    if (empty($post_id))
+    	$post_id = $post->ID;
 
-    $type = get_post_meta( $post->ID, 'wp_review_type', true );
-	$total = get_post_meta( $post->ID, 'wp_review_total', true );
+    $type = get_post_meta( $post_id, 'wp_review_type', true );
+	$total = get_post_meta( $post_id, 'wp_review_total', true );
     $review = '';
     
 	$options = get_option('wp_review_options');
     $colors = array();
-	$colors['custom_location'] = get_post_meta( $post->ID, 'wp_review_custom_location', true );
-	$colors['custom_colors'] = get_post_meta( $post->ID, 'wp_review_custom_colors', true );
-	$colors['custom_width'] = get_post_meta( $post->ID, 'wp_review_custom_width', true );
+	$colors['custom_location'] = get_post_meta( $post_id, 'wp_review_custom_location', true );
+	$colors['custom_colors'] = get_post_meta( $post_id, 'wp_review_custom_colors', true );
+	$colors['custom_width'] = get_post_meta( $post_id, 'wp_review_custom_width', true );
 
-	$colors['color'] = get_post_meta( $post->ID, 'wp_review_color', true );
-	$colors['type']  = get_post_meta( $post->ID, 'wp_review_type', true );
-	$colors['fontcolor'] = get_post_meta( $post->ID, 'wp_review_fontcolor', true );
-	$colors['bgcolor1']  = get_post_meta( $post->ID, 'wp_review_bgcolor1', true );
-	$colors['bgcolor2']  = get_post_meta( $post->ID, 'wp_review_bgcolor2', true );
-	$colors['bordercolor']  = get_post_meta( $post->ID, 'wp_review_bordercolor', true );
-	$colors['total'] = get_post_meta( $post->ID, 'wp_review_total', true );
+	$colors['color'] = get_post_meta( $post_id, 'wp_review_color', true );
+	$colors['type']  = get_post_meta( $post_id, 'wp_review_type', true );
+	$colors['fontcolor'] = get_post_meta( $post_id, 'wp_review_fontcolor', true );
+	$colors['bgcolor1']  = get_post_meta( $post_id, 'wp_review_bgcolor1', true );
+	$colors['bgcolor2']  = get_post_meta( $post_id, 'wp_review_bgcolor2', true );
+	$colors['bordercolor']  = get_post_meta( $post_id, 'wp_review_bordercolor', true );
+	$colors['total'] = get_post_meta( $post_id, 'wp_review_total', true );
     
     if (!$colors['custom_colors'] && !empty($options['colors']) && is_array($options['colors'])) {
 		$colors = array_merge($colors, $options['colors']);
 	}
-    $colors = apply_filters('wp_review_colors', $colors, $post->ID);
+    $colors = apply_filters('wp_review_colors', $colors, $post_id);
 
     if (!empty($type) && (!empty($total) || $total === '0')) {
         wp_enqueue_style( 'wp_review-style', trailingslashit( WP_REVIEW_ASSETS ) . 'css/wp-review.css', array(), WP_REVIEW_PLUGIN_VERSION, 'all' );
 
-        $review = '<div class="review-type-'.$type.' '.esc_attr($class).' wp-review-show-total wp-review-total-'.$post->ID.'"> ';
+        $review = '<div class="review-type-'.$type.' '.esc_attr($class).' wp-review-show-total wp-review-total-'.$post_id.'"> ';
     	
     	if ( 'percentage' == $type ) {
     		$review .= '<span class="review-total-box"><span>' . $total . '</span> <i class="percentage-icon">%</i>' . '</span>';
@@ -394,7 +403,7 @@ function wp_review_show_total($echo = true, $class = 'review-total-only') {
         $review .= '</div>';
     }
     
-    $review = apply_filters('wp_review_show_total', $review, $post->ID, $type, $total);
+    $review = apply_filters('wp_review_show_total', $review, $post_id, $type, $total);
     
     if ($echo)
         echo $review;
@@ -405,7 +414,16 @@ function wp_review_total_shortcode($atts, $content) {
     if (empty($atts['class']))
         $atts['class'] = 'review-total-only review-total-shortcode';
     
-    return wp_review_show_total(false, $atts['class']);
+    if (empty($atts['id']))
+    	$atts['id'] = null;
+
+    return wp_review_show_total(false, $atts['class'], $atts['id']);
+}
+function wp_review_shortcode( $atts, $content = "") {
+    if (empty($atts['id']))
+    	$atts['id'] = null;
+
+    return wp_review_get_data($atts['id']);
 }
 
 function mts_get_post_reviews( $post_id ){
@@ -425,30 +443,33 @@ function mts_get_post_reviews( $post_id ){
  *
  * @since 1.0
  */
-function wp_review_color_output() {
+function wp_review_color_output($post_id) {
 	global $post;
+    if (empty($post_id))
+    	$post_id = $post->ID;
+
 	$style = '';
 	$options = get_option('wp_review_options');
 	if (empty($options['colors'])) $options['colors'] = array();
 	/* Retrieve the meta box data. */
 	if(is_singular()) {
         $colors = array();
-		$colors['custom_location'] = get_post_meta( $post->ID, 'wp_review_custom_location', true );
-		$colors['custom_colors'] = get_post_meta( $post->ID, 'wp_review_custom_colors', true );
-		$colors['custom_width'] = get_post_meta( $post->ID, 'wp_review_custom_width', true );
+		$colors['custom_location'] = get_post_meta( $post_id, 'wp_review_custom_location', true );
+		$colors['custom_colors'] = get_post_meta( $post_id, 'wp_review_custom_colors', true );
+		$colors['custom_width'] = get_post_meta( $post_id, 'wp_review_custom_width', true );
 
-		$colors['color'] = get_post_meta( $post->ID, 'wp_review_color', true );
-		$colors['type']  = get_post_meta( $post->ID, 'wp_review_type', true );
-		$colors['fontcolor'] = get_post_meta( $post->ID, 'wp_review_fontcolor', true );
-		$colors['bgcolor1']  = get_post_meta( $post->ID, 'wp_review_bgcolor1', true );
-		$colors['bgcolor2']  = get_post_meta( $post->ID, 'wp_review_bgcolor2', true );
-		$colors['bordercolor']  = get_post_meta( $post->ID, 'wp_review_bordercolor', true );
-		$colors['total'] = get_post_meta( $post->ID, 'wp_review_total', true );
+		$colors['color'] = get_post_meta( $post_id, 'wp_review_color', true );
+		$colors['type']  = get_post_meta( $post_id, 'wp_review_type', true );
+		$colors['fontcolor'] = get_post_meta( $post_id, 'wp_review_fontcolor', true );
+		$colors['bgcolor1']  = get_post_meta( $post_id, 'wp_review_bgcolor1', true );
+		$colors['bgcolor2']  = get_post_meta( $post_id, 'wp_review_bgcolor2', true );
+		$colors['bordercolor']  = get_post_meta( $post_id, 'wp_review_bordercolor', true );
+		$colors['total'] = get_post_meta( $post_id, 'wp_review_total', true );
         
         if (!$colors['custom_colors']) {
 			$colors = array_merge($colors, $options['colors']);
 		}
-        $colors = apply_filters('wp_review_colors', $colors, $post->ID);
+        $colors = apply_filters('wp_review_colors', $colors, $post_id);
 
         extract($colors, EXTR_SKIP);
 
@@ -458,36 +479,38 @@ function wp_review_color_output() {
 
 		if ( 'star' == $type ) {
 
-			$style .= '.wp-review-'.$post->ID.' .review-result-wrapper .review-result i { color: '.$color.'; opacity: 1; filter: alpha(opacity=100); }
-				.wp-review-'.$post->ID.' .review-result-wrapper i{ color: '.$color.'; opacity: 0.50; filter: alpha(opacity=50); }';
+			$style .= '.wp-review-'.$post_id.' .review-result-wrapper .review-result i { color: '.$color.'; opacity: 1; filter: alpha(opacity=100); }
+				.wp-review-'.$post_id.' .review-result-wrapper i{ color: '.$color.'; opacity: 0.50; filter: alpha(opacity=50); }';
 				
 		} elseif ( 'point' == $type ) {
 
-			$style .= '.wp-review-'.$post->ID.'.bar-point .review-result { background-color: '.$color.'; }';
+			$style .= '.wp-review-'.$post_id.'.bar-point .review-result { background-color: '.$color.'; }';
 
 		} elseif ( 'percentage' == $type ) { 
 
-			$style .= '.wp-review-'.$post->ID.'.percentage-point .review-result { background-color: '.$color.'; }';
+			$style .= '.wp-review-'.$post_id.'.percentage-point .review-result { background-color: '.$color.'; }';
 
 		}
 
-		$style .= '.wp-review-'.$post->ID.'.review-wrapper, .wp-review-'.$post->ID.' .review-title, .wp-review-'.$post->ID.' .review-desc p{ color: '.$fontcolor.';}
-		.wp-review-'.$post->ID.' .review-list li, .wp-review-'.$post->ID.'.review-wrapper{ background: '.$bgcolor2.';}
-		.wp-review-'.$post->ID.' .review-title, .wp-review-'.$post->ID.' .review-list li:nth-child(2n){background: '.$bgcolor1.';}
+		$style .= '.wp-review-'.$post_id.'.review-wrapper, .wp-review-'.$post_id.' .review-title, .wp-review-'.$post_id.' .review-desc p{ color: '.$fontcolor.';}
+		.wp-review-'.$post_id.' .review-list li, .wp-review-'.$post_id.'.review-wrapper{ background: '.$bgcolor2.';}
+		.wp-review-'.$post_id.' .review-title, .wp-review-'.$post_id.' .review-list li:nth-child(2n){background: '.$bgcolor1.';}
 
-		.wp-review-'.$post->ID.'.bar-point .allowed-to-rate .review-result, .wp-review-'.$post->ID.'.percentage-point .allowed-to-rate .review-result{background: none;}
-		.wp-review-'.$post->ID.' .review-total-star.allowed-to-rate a i, .wp-review-comment-field a i, .wp-review-comment-rating a i { color: '.$color.'; opacity: 0.50; filter: alpha(opacity=50); }
-		.wp-review-'.$post->ID.'.bar-point .allowed-to-rate .review-result, .wp-review-'.$post->ID.'.percentage-point .allowed-to-rate .review-result{text-indent:0;}
-		.wp-review-'.$post->ID.'.bar-point .allowed-to-rate .review-result i, .wp-review-'.$post->ID.'.percentage-point .allowed-to-rate .review-result i, .wp-review-'.$post->ID.' .mts-user-review-star-container .selected i, .wp-review-'.$post->ID.' .user-review-area .review-result i, .wp-review-comment-field .review-result i, .wp-review-comment-rating .review-result i { color: '.$color.'; opacity: 1; filter: alpha(opacity=100); }
-		.wp-review-'.$post->ID.'.review-wrapper, .wp-review-'.$post->ID.' .review-title, .wp-review-'.$post->ID.' .review-list li, .wp-review-'.$post->ID.' .review-list li:last-child, .wp-review-'.$post->ID.' .user-review-area{border-color: '.$bordercolor.';}';
+		.wp-review-'.$post_id.'.bar-point .allowed-to-rate .review-result, .wp-review-'.$post_id.'.percentage-point .allowed-to-rate .review-result{background: none;}
+		.wp-review-'.$post_id.' .review-total-star.allowed-to-rate a i, .wp-review-comment-field a i, .wp-review-comment-rating a i { color: '.$color.'; opacity: 0.50; filter: alpha(opacity=50); }
+		.wp-review-'.$post_id.'.bar-point .allowed-to-rate .review-result, .wp-review-'.$post_id.'.percentage-point .allowed-to-rate .review-result{text-indent:0;}
+		.wp-review-'.$post_id.'.bar-point .allowed-to-rate .review-result i, .wp-review-'.$post_id.'.percentage-point .allowed-to-rate .review-result i, .wp-review-'.$post_id.' .mts-user-review-star-container .selected i, .wp-review-'.$post_id.' .user-review-area .review-result i, .wp-review-comment-field .review-result i, .wp-review-comment-rating .review-result i { color: '.$color.'; opacity: 1; filter: alpha(opacity=100); }
+		.wp-review-'.$post_id.'.review-wrapper, .wp-review-'.$post_id.' .review-title, .wp-review-'.$post_id.' .review-list li, .wp-review-'.$post_id.' .review-list li:last-child, .wp-review-'.$post_id.' .user-review-area{border-color: '.$bordercolor.';}';
 		
 		if( $total == '' ){
 
-		$style .= '.wp-review-'.$post->ID.' .user-review-area{border: 1px solid '.$bordercolor.'; margin-top: 0px;}
-			.wp-review-'.$post->ID.' .review-desc{width: 100%;}
-			.wp-review-'.$post->ID.'.review-wrapper{border: none; overflow: visible;}';
+		$style .= '.wp-review-'.$post_id.' .user-review-area{border: 1px solid '.$bordercolor.'; margin-top: 0px;}
+			.wp-review-'.$post_id.' .review-desc{width: 100%;}
+			.wp-review-'.$post_id.'.review-wrapper{border: none; overflow: visible;}';
 		}
 		$style .= '</style>';
+
+    	$style = apply_filters('wp_review_color_output', $style, $post_id, $colors);
 
 		return $style;
 	}
