@@ -29,7 +29,7 @@ class CMA_BuddyPress {
 	 */
 	static function bp_setup_nav() {
 		bp_core_new_nav_item(array(
-			'name' => CMA_Labels::getLocalized('Questions'),
+			'name' => CMA_Labels::getLocalized('Article Ideas'),
 			'slug' => 'questions',
 			'position' => 21,
 			'show_for_displayed_user' => true,
