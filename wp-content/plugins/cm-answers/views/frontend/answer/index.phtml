@@ -7,7 +7,7 @@ get_header();
             <div id="content" role="main" class="entry-content">
                 <header class="entry-header">
                     <h1 class="entry-title">
-                        <?php _e('All Questions', 'cm-answers'); ?>
+                        <?php _e('All Article ideas', 'cm-answers'); ?>
                     </h1>
                 </header>
                 <div style="clear:both;height:15px;"></div>
@@ -76,20 +76,20 @@ get_header();
                         <div style="clear:both;height:40px;"></div>
                         <form method="post" class="cma-thread-add" id="cma-thread-add">
                             <input type="hidden" name="cma-action" value="add" />
-                            <h3><?php _e('Ask a Question', 'cm-answers'); ?></h3>
+                            <h3><?php _e('Post an Article Idea', 'cm-answers'); ?></h3>
                             <div style="clear:both;height:10px;"></div>
                             <ul class="cma-form-notes">
                                 <li><?php _e('Allow markup', 'cm-answers'); ?>: &lt;strong&gt;, &lt;em&gt;, &lt;a&gt;</li>
                                 <li><?php _e('Wrap your code using', 'cm-answers'); ?> &lt;pre&gt;&lt;/pre&gt;</li>
                             </ul>
-                            <input type="text" size="50" name="thread_title" placeholder="<?php _e('Question Title', 'cm-answers'); ?>" /><br />
-                            <textarea name="thread_comment" cols="50" rows="3" placeholder="<?php _e('What is your Question about?', 'cm-answers'); ?>"></textarea><br />
+                            <input type="text" size="50" name="thread_title" placeholder="<?php _e('Article Title', 'cm-answers'); ?>" /><br />
+                            <textarea name="thread_comment" cols="50" rows="3" placeholder="<?php _e('What is your Article about?', 'cm-answers'); ?>"></textarea><br />
                             <div style="clear:both;height:5px;"></div>
                             <label>
                                 <input name="thread_notify" type="checkbox" value="1"/>
                                 <?php _e('Notify me of follow', 'cm-answers'); ?></label><br />
                             <div style="clear:both;height:10px;"></div>
-                            <input type="submit" value="<?php _e('Add Question', 'cm-answers'); ?>" />
+                            <input type="submit" value="<?php _e('Add Article Idea', 'cm-answers'); ?>" />
                         </form>
                         <?php
                     else:
