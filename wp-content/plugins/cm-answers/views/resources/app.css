@@ -67,14 +67,14 @@ table.cma-thread-list td.cma-thread-summary {padding:10px 5px;vertical-align:top
 .cma-form input[type="submit"] {margin-top: 10px}
 .cma-form-container {margin: 10px 0;}
 .cma-form-container h5 {font-weight:bold;font-size:18px;}
-.cma-form-notes {display:block;float:right;font-size:11px;margin:0 !important;border:solid 1px #ccc; padding:5px 5px 5px 20px;list-style-type:square;line-height:1.5em;width:35%}
+.cma-form-notes {display:none;float:right;font-size:11px;margin:0 !important;border:solid 1px #ccc; padding:5px 5px 5px 20px;list-style-type:square;line-height:1.5em;width:35%}
 .cma-form-notes li {margin:0 !important}
 .cma-form-container input[type=text], .cma-form-container textarea {width:55%;margin-top:0;}
 .cma-form-container.no-markup-box input[type=text], .cma-form-container.no-markup-box textarea {width:85%;margin-top:0;}
 .cma-form-options label.cma-form-option-label{display: block;padding: 5px 0 0;}
 .cma-form-options label.cma-form-option-label input{width: auto;}
 table.cma-answers-list {width:100%; line-height:1.5em;}
-table.cma-answers-list td {border-bottom:solid 1px #ccc; padding:10px 0;}
+table.cma-answers-list td {border-bottom:solid 1px #ccc; padding:10px 10px;}
 td.cma-answer-content {vertical-align:top;}
 .cma-attachment {clear:both;margin:5px 0;font-size:10px; padding:5px;background-color:#f0f0f0; border-radius:5px;}
 .cma-answer-meta {text-align:right;font-size:11px;clear:both;float:right;padding: 5px;background-color: #f0f0f0;border-radius: 5px;max-width: 450px; color: #333}
