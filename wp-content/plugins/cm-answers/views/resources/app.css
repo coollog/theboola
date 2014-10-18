@@ -43,7 +43,7 @@ a.cma-backlink {float:right;font-size:11px;}
 table.cma-thread-list {width:100%;margin-top:20px;}
 table.cma-thread-list th {text-align:center}
 table.cma-thread-list td {border-bottom:solid 1px #ccc; padding:10px 0px;line-height:1.5em;}
-table.cma-thread-list td.cma-thread-meta {padding:10px 0px; width:5%;}
+table.cma-thread-list td.cma-thread-meta {padding:10px 10px; width:5%;}
 .cma-thread-numbers {border:solid 2px #ccc; padding:2px 5px;border-radius:4px; text-align:center; background-color:#fff; margin-right:5px;}
 .cma-thread-numbers-caption {font-size:11px;}
 .cma-thread-numbers-count {font-size:18px; font-weight:bold;}
