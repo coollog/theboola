@@ -101,14 +101,14 @@ $thread = CMA_AnswerThread::getInstance($post->ID);
                                 </ul>
                                 <input type="hidden" name="cma-thread" value="<?php echo $post->ID; ?>"/>
                                 <textarea name="content" placeholder="<?php _e('Write your Idea here', 'cm-answers'); ?>"></textarea><br />
-                                <label>
+                                <!--<label>
                                     <div style="clear:both;height:5px;"></div>
                                     <input name="thread_notify" type="checkbox" value="1"/>
                                     <?php _e('Notify me of follow', 'cm-answers'); ?></label><br />
                                 <?php if(get_current_user_id() == $thread->getAuthorId()): ?><label>
                                         <div style="clear:both;height:5px;"></div>
                                         <input name="thread_resolved" type="checkbox" value="1"/>
-                                        <?php _e('Mark as resolved', 'cm-answers'); ?></label><br /><?php endif; ?>
+                                        <?php _e('Mark as resolved', 'cm-answers'); ?></label><br /><?php endif; ?>-->
                                 <div style="clear:both;height:10px;"></div>
                                 <input type="submit" value="<?php _e('Post your Idea', 'cm-answers'); ?>" />
                             </form>
