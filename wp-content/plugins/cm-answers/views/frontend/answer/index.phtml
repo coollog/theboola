@@ -49,8 +49,8 @@ get_header();
                                             ?></div></div></td>
                                     <?php $numberOfAnswers = $thread->getNumberOfAnswers(); ?>
                                 <td class="cma-thread-meta"><div class="cma-thread-numbers cma-thread-answers<?php if( $numberOfAnswers == 0 ): ?> cma-thread-no-answers<?php endif; ?>"><div class="cma-thread-numbers-count cma-thread-answers-count"><?php echo $numberOfAnswers; ?></div><div class="cma-thread-numbers-caption cma-thread-answers-caption"><?php
-                                            if( $numberOfAnswers == 1 ) _e('answer', 'cm-answers');
-                                            else _e('answers', 'cm-answers');
+                                            if( $numberOfAnswers == 1 ) _e('idea', 'cm-answers');
+                                            else _e('ideas', 'cm-answers');
                                             ?></div></div>
                                 </td>
                                 <td class="cma-thread-summary">
