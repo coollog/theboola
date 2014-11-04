@@ -24,18 +24,14 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 		protected $post_info = array();
 
 		protected function add_actions() {
-
 			// everything bellow is for the admin interface
-
 			if ( is_admin() ) {
-				if ( $this->p->is_avail['opengraph'] )
-					add_action( 'admin_head', array( &$this, 'set_header_tags' ) );
-
+				add_action( 'admin_head', array( &$this, 'set_header_tags' ) );
 				add_action( 'add_meta_boxes', array( &$this, 'add_metaboxes' ) );
-				add_action( 'save_post', array( &$this, 'save_options' ), 10 );
-				add_action( 'save_post', array( &$this, 'flush_cache' ), 20 );	// 'save_post' runs after status change
-				add_action( 'edit_attachment', array( &$this, 'save_options' ), 10 );
-				add_action( 'edit_attachment', array( &$this, 'flush_cache' ), 20 );
+				add_action( 'save_post', array( &$this, 'save_options' ), NGFB_META_SAVE_PRIORITY );
+				add_action( 'save_post', array( &$this, 'flush_cache' ), 100 );	// save_post action runs after status change
+				add_action( 'edit_attachment', array( &$this, 'save_options' ), NGFB_META_SAVE_PRIORITY );
+				add_action( 'edit_attachment', array( &$this, 'flush_cache' ), 100 );
 			}
 		}
 
@@ -43,26 +39,29 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 			if ( ( $obj = $this->p->util->get_post_object() ) === false ||
 				empty( $obj->post_type ) )
 					return;
+			$post_id = empty( $obj->ID ) ? 0 : $obj->ID;
 			$post_type = get_post_type_object( $obj->post_type );
-			if ( ! empty( $this->p->options[ 'plugin_add_to_'.$post_type->name ] ) )
+			$add_metabox = empty( $this->p->options[ 'plugin_add_to_'.$post_type->name ] ) ? false : true;
+			if ( apply_filters( $this->p->cf['lca'].'_add_metabox_postmeta', $add_metabox, $post_id ) === true )
 				add_meta_box( NGFB_META_NAME, 'Social Settings', array( &$this, 'show_metabox_postmeta' ), $post_type->name, 'advanced', 'high' );
 		}
 
 		public function set_header_tags() {
-			if ( $this->p->is_avail['opengraph'] && empty( $this->header_tags ) ) {
-				if ( ( $obj = $this->p->util->get_post_object() ) === false )
+			if ( ! empty( $this->header_tags ) )
+				return;
+			if ( ( $obj = $this->p->util->get_post_object() ) === false ||
+				empty( $obj->post_type ) )
 					return;
-				$post_id = empty( $obj->ID ) || empty( $obj->post_type ) ? 0 : $obj->ID;
-				if ( ! empty( $post_id ) && $obj->post_status === 'publish' && $obj->filter === 'edit' ) {
+			$post_id = empty( $obj->ID ) ? 0 : $obj->ID;
+			if ( isset( $obj->post_status ) && $obj->post_status !== 'auto-draft' ) {
+				$post_type = get_post_type_object( $obj->post_type );
+				$add_metabox = empty( $this->p->options[ 'plugin_add_to_'.$post_type->name ] ) ? false : true;
+				if ( apply_filters( $this->p->cf['lca'].'_add_metabox_postmeta', $add_metabox, $post_id ) === true ) {
+					do_action( $this->p->cf['lca'].'_admin_postmeta_header', $post_type->name, $post_id );
 					$this->header_tags = $this->p->head->get_header_array( $post_id );
-					$this->p->debug->show_html( null, 'debug log' );
-					foreach ( $this->header_tags as $tag ) {
-						if ( isset ( $tag[3] ) && $tag[3] === 'og:type' ) {
-							$this->post_info['og_type'] = $tag[5];
-							break;
-						}
-					}
+					$this->post_info = $this->p->head->get_post_info( $this->header_tags );
 				}
+				$this->p->debug->show_html( null, 'debug log' );
 			}
 		}
 
@@ -81,6 +80,7 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 				array( 
 					'header' => 'Title and Descriptions', 
 					'media' => 'Image and Video', 
+					'preview' => 'Social Preview',
 					'tags' => 'Header Preview',
 					'tools' => 'Validation Tools'
 				)
@@ -99,28 +99,64 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 		protected function get_rows( $metabox, $key, &$post_info ) {
 			$rows = array();
 			switch ( $metabox.'-'.$key ) {
-				case 'meta-tools':
-					if ( get_post_status( $post_info['id'] ) == 'publish' ) {
-						$rows = $this->get_rows_validation_tools( $this->form, $post_info );
-					} else $rows[] = '<td><p class="centered">The Validation Tools will be available when the '
-						.$post_info['ptn'].' is published with public visibility.</p></td>';
-					break; 
+				case 'meta-preview':
+					if ( get_post_status( $post_info['id'] ) !== 'auto-draft' ) {
+						$rows = $this->get_rows_social_preview( $this->form, $post_info );
+					} else $rows[] = '<td><p class="centered">Save a draft version or publish the '.
+						$post_info['ptn'].' to display the Social Preview.</p></td>';
+					break;
 
 				case 'meta-tags':	
-					if ( get_post_status( $post_info['id'] ) == 'publish' ) {
+					if ( get_post_status( $post_info['id'] ) !== 'auto-draft' ) {
 						foreach ( $this->header_tags as $m ) {
-							$rows[] = '<th class="xshort">'.$m[1].'</th>'.
+							if ( ! empty( $m[0] ) )
+								$rows[] = '<th class="xshort">'.$m[1].'</th>'.
 								'<th class="xshort">'.$m[2].'</th>'.
-								'<td class="short">'.$m[3].'</td>'.
+								'<td class="short">'.( isset( $m[6] ) ? '<!-- '.$m[6].' -->' : '' ).$m[3].'</td>'.
 								'<th class="xshort">'.$m[4].'</th>'.
 								'<td class="wide">'.( strpos( $m[5], 'http' ) === 0 ? '<a href="'.$m[5].'">'.$m[5].'</a>' : $m[5] ).'</td>';
 						}
 						sort( $rows );
-					} else $rows[] = '<td><p class="centered">The Header Tags Preview will be available when the '.$post_info['ptn'].
-						' is published with public visibility.</p></td>';
+					} else $rows[] = '<td><p class="centered">Save a draft version or publish the '.
+						$post_info['ptn'].' to display the Header Preview.</p></td>';
+					break; 
+
+				case 'meta-tools':
+					if ( get_post_status( $post_info['id'] ) === 'publish' ) {
+						$rows = $this->get_rows_validation_tools( $this->form, $post_info );
+					} else $rows[] = '<td><p class="centered">The Validation Tools will be available when the '
+						.$post_info['ptn'].' is published with public visibility.</p></td>';
 					break; 
 			}
 			return $rows;
+		}
+
+		public function get_rows_social_preview( &$form, &$post_info ) {
+			$rows = array();
+			$size_name = $this->p->cf['lca'].'-preview';
+			$size_info = $this->p->media->get_size_info( $size_name );
+			$alt_html = '<p>No Open Graph Image Found</p>';
+			$alt_small = '<p>Image Dimensions Smaller<br/>
+				Than Suggested '.$size_info['width'].' x '.$size_info['height'].'</p>';
+			$title = empty( $post_info['og:title'] ) ? 'No Title' : $post_info['og:title'];
+			$desc = empty( $post_info['og:description'] ) ? 'No Description' : $post_info['og:description'];
+			$by = $_SERVER['SERVER_NAME'];
+			$by .= empty( $post_info['author'] ) ? '' : ' | By '.$post_info['author'];
+
+			$rows[] = $this->p->util->th( 'Open Graph Social Preview Example', 'medium', 'postmeta-social-preview' ).
+			'<td style="background-color:#e9eaed;">
+			<div class="preview_box" style="width:'.($size_info['width']+40).'px;">
+			<div class="preview_box" style="width:'.$size_info['width'].'px;">'.
+				$this->p->media->get_image_preview_html( $post_info['og_image'], 
+					$size_name, $size_info, $alt_html, $alt_small ).
+			'<div class="preview_txt">
+			<div class="preview_title">'.$title.'</div>
+			<div class="preview_desc">'.$desc.'</div>
+			<div class="preview_by">'.$by.'</div>
+			</div></div></div></td>';
+
+			return $rows;
+
 		}
 
 		public function get_rows_validation_tools( &$form, &$post_info ) {
@@ -161,47 +197,28 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 			return $rows;
 		}
 
-		// returns an array of $pid and $video_url
-		public function get_media( $post_id ) {
-			// use get_options() from the extended meta object
-			$pid = $this->get_options( $post_id, 'og_img_id' );
-			$pre = $this->get_options( $post_id, 'og_img_id_pre' );
-			$img_url = $this->get_options( $post_id, 'og_img_url' );
-			$video_url = $this->get_options( $post_id, 'og_vid_url' );
-
-			if ( empty( $pid ) ) {
-				if ( $this->p->is_avail['postthumb'] == true && has_post_thumbnail( $post_id ) )
-					$pid = get_post_thumbnail_id( $post_id );
-				else $pid = $this->p->media->get_first_attached_image_id( $post_id );
-			} elseif ( $pre === 'ngg' )
-				$pid = $pre.'-'.$pid;
-
-			if ( empty( $video_url ) ) {
-				$videos = array();
-				// get the first video, if any - don't check for duplicates
-				$videos = $this->p->media->get_content_videos( 1, $post_id, false );
-				if ( ! empty( $videos[0]['og:video'] ) ) 
-					$video_url = $videos[0]['og:video'];
-			}
-			return array( $pid, $video_url );
-		}
-
-                public function get_options( $post_id, $idx = '' ) {
-			if ( ! empty( $idx ) ) return false;
+                public function get_options( $post_id, $idx = false ) {
+			$this->p->debug->log( __METHOD__.' not implemented in GPL version' );
+			if ( $idx !== false )
+				return false;
 			else return array();
 		}
 
-		public function get_defaults( $idx = '' ) {
-			if ( ! empty( $idx ) ) return false;
+		public function get_defaults( $idx = false ) {
+			$this->p->debug->log( __METHOD__.' not implemented in GPL version' );
+			if ( $idx !== false )
+				return false;
 			else return array();
 		}
 
 		public function save_options( $post_id ) {
-			return;
+			$this->p->debug->log( __METHOD__.' not implemented in GPL version' );
+			return $post_id;
 		}
 
 		public function flush_cache( $post_id ) {
 			$this->p->util->flush_post_cache( $post_id );
+			return $post_id;
 		}
 
 		protected function get_nonce() {

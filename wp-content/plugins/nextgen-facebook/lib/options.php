@@ -22,7 +22,7 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 			do_action( $this->p->cf['lca'].'_init_options' );
 		}
 
-		public function get_site_defaults( $idx = '' ) {
+		public function get_site_defaults( $idx = false ) {
 			if ( ! isset( $this->p->cf['opt']['site_defaults']['options_filtered'] ) ||
 				$this->p->cf['opt']['site_defaults']['options_filtered'] !== true ) {
 
@@ -31,14 +31,14 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 				$this->p->cf['opt']['site_defaults']['options_version'] = $this->p->cf['opt']['version'];
 				$this->p->cf['opt']['site_defaults']['plugin_version'] = $this->p->cf['plugin'][$this->p->cf['lca']]['version'];
 			}
-			if ( ! empty( $idx ) ) {
+			if ( $idx !== false ) {
 				if ( array_key_exists( $idx, $defs ) )
 					return $this->p->cf['opt']['site_defaults'][$idx];
 				else return false;
 			} else return $this->p->cf['opt']['site_defaults'];
 		}
 
-		public function get_defaults( $idx = '' ) {
+		public function get_defaults( $idx = false ) {
 			if ( ! isset( $this->p->cf['opt']['defaults']['options_filtered'] ) ||
 				$this->p->cf['opt']['defaults']['options_filtered'] !== true ) {
 
@@ -69,7 +69,7 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 				$this->p->cf['opt']['defaults']['options_version'] = $this->p->cf['opt']['version'];
 				$this->p->cf['opt']['defaults']['plugin_version'] = $this->p->cf['plugin'][$this->p->cf['lca']]['version'];
 			}
-			if ( ! empty( $idx ) ) 
+			if ( $idx !== false ) 
 				if ( array_key_exists( $idx, $this->p->cf['opt']['defaults'] ) )
 					return $this->p->cf['opt']['defaults'][$idx];
 				else return false;
@@ -237,7 +237,7 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 			// update_option() returns false if options are the same or there was an error, 
 			// so check to make sure they need to be updated to avoid throwing a false error
 			if ( $options_name == NGFB_SITE_OPTIONS_NAME )
-				$opts_current = get_site_option( $options_name, $opts );
+				$opts_current = get_site_option( $options_name, $opts, false );	// use_cache = false
 			else $opts_current = get_option( $options_name, $opts );
 
 			if ( $opts_current !== $opts ) {
@@ -247,7 +247,7 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 
 				if ( $saved === true ) {
 					// if we're just saving a new plugin version string, don't bother showing the upgrade message
-					if ( $prev_opts_version !== $opts['options_version'] ) {
+					if ( $prev_opts_version != $opts['options_version'] ) {
 						$this->p->debug->log( 'upgraded '.$options_name.' settings have been saved' );
 						$this->p->notice->inf( 'Plugin settings ('.$options_name.') have been upgraded and saved.', true );
 					}
@@ -270,6 +270,9 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 				$key = preg_replace( '/#.*$/', '', $key );
 
 			switch ( $key ) {
+				case 'og_vid_embed':
+					return 'html';
+					break;
 				// js and css
 				case ( strpos( $key, '_js_' ) === false ? false : true ):
 				case ( strpos( $key, '_css_' ) === false ? false : true ):
@@ -277,16 +280,17 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 					break;
 				// twitter-style usernames (prepend with an at)
 				case 'tc_site':
-					return 'atname';
+					return 'at_name';
 					break;
 				// strip leading urls off facebook usernames
 				case 'fb_admins':
-					return 'urlbase';
+					return 'url_base';
 					break;
 				// must be a url
 				case 'link_publisher_url':
 				case 'og_publisher_url':
 				case 'og_def_img_url':
+				case 'og_img_url':
 					return 'url';
 					break;
 				// must be numeric (blank or zero is ok)
@@ -303,12 +307,12 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 				// integer options that must be 1 or more (not zero)
 				case 'plugin_object_cache_exp':
 				case ( preg_match( '/_len$/', $key ) ? true : false ):
-					return 'posnum';
+					return 'pos_num';
 					break;
 				// image dimensions, subject to minimum value (typically, at least 200px)
 				case ( preg_match( '/_img_(width|height)$/', $key ) ? true : false ):
 				case ( preg_match( '/^tc_[a-z]+_(width|height)$/', $key ) ? true : false ):
-					return 'imgdim';
+					return 'img_dim';
 					break;
 				// must be texturized 
 				case 'og_title_sep':
@@ -316,7 +320,7 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 					break;
 				// must be alpha-numeric uppercase (hyphens and periods allowed as well)
 				case ( preg_match( '/_tid$/', $key ) ? true : false ):
-					return 'anucase';
+					return 'anu_case';
 					break;
 				// text strings that can be blank
 				case 'og_art_section':
@@ -329,18 +333,19 @@ if ( ! class_exists( 'NgfbOptions' ) ) {
 				case 'fb_app_id':
 				case 'tc_desc':
 				case 'plugin_cf_vid_url':
-					return 'okblank';
+				case 'plugin_cf_vid_embed':
+					return 'ok_blank';
 					break;
 				// options that cannot be blank
 				case 'link_author_field':
-				case 'og_img_id_pre': 
 				case 'og_def_img_id_pre': 
+				case 'og_img_id_pre': 
 				case 'og_author_field':
 				case 'rp_author_name':
 				case 'fb_lang': 
 				case ( preg_match( '/_tid:use$/', $key ) ? true : false ):
 				case ( preg_match( '/^(plugin|wp)_cm_[a-z]+_(name|label)$/', $key ) ? true : false ):
-					return 'notblank';
+					return 'not_blank';
 					break;
 			}
 			return $type;

@@ -43,10 +43,10 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 			return self::$c[$lca]['umsg'];
 		}
 
-		public static function get_option( $lca, $idx = '' ) {
+		public static function get_option( $lca, $idx = false ) {
 			if ( ! empty( self::$c[$lca]['opt_name'] ) ) {
-				$option_data = get_site_option( self::$c[$lca]['opt_name'] );
-				if ( ! empty( $idx ) ) {
+				$option_data = get_site_option( self::$c[$lca]['opt_name'], false, true );	// use_cache = true
+				if ( $idx !== false ) {
 					if ( is_object( $option_data->update ) &&
 						isset( $option_data->update->$idx ) )
 							return $option_data->update->$idx;
@@ -147,10 +147,13 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 					continue;
 				
 				// remove existing plugin information to make sure it is correct
-				if ( isset( $updates->response[$info['base']] ) )
+				if ( isset( $updates->response[$info['base']] ) ) {
+					$this->p->debug->log( 'previous update information found (and removed)' );
+					$this->p->debug->log( $updates->response[$info['base']] );
 					unset( $updates->response[$info['base']] );	// nextgen-facebook/nextgen-facebook.php
+				}
 
-				$option_data = get_site_option( $info['opt_name'] );
+				$option_data = get_site_option( $info['opt_name'], false, true );	// use_cache = true
 				if ( empty( $option_data ) )
 					$this->p->debug->log( 'update option is empty' );
 				elseif ( empty( $option_data->update ) )
@@ -159,7 +162,8 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 					$this->p->debug->log( 'update property is not an object' );
 				elseif ( version_compare( $option_data->update->version, $this->get_installed_version( $lca ), '>' ) ) {
 					$updates->response[$info['base']] = $option_data->update->json_to_wp();
-					$this->p->debug->log( $updates->response[$info['base']], 2 );
+					$this->p->debug->log( 'update version ('.$option_data->update->version.') is newer than installed version ('.$this->get_installed_version( $lca ).')' );
+					$this->p->debug->log( $updates->response[$info['base']], 5 );
 				}
 			}
 			return $updates;
@@ -186,7 +190,7 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 				if ( empty( $info['slug'] ) )
 					continue;
 
-				$option_data = get_site_option( $info['opt_name'] );
+				$option_data = get_site_option( $info['opt_name'], false, true );	// use_cache = true
 				if ( empty( $option_data ) ) {
 					$option_data = new StdClass;
 					$option_data->lastCheck = 0;

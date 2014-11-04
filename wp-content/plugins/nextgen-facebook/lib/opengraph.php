@@ -32,12 +32,27 @@ if ( ! class_exists( 'NgfbOpengraph' ) && class_exists( 'SucomOpengraph' ) ) {
 		}
 
 		public function add_doctype( $doctype ) {
-			foreach ( array(
-				'xmlns:og="http://ogp.me/ns#"',
-				'xmlns:fb="http://ogp.me/ns/fb#"'
-			) as $xmlns )
-				if ( strpos( $doctype, ' '.$xmlns ) === false )
-					$doctype .= ' '.$xmlns;
+			/*
+			 * HTML5 Compliant
+			 */
+			$html_prefix = apply_filters( $this->p->cf['lca'].'_doctype_prefix_ns', array(
+				'og' => 'http://ogp.me/ns#',
+				'fb' => 'http://ogp.me/ns/fb#',
+			) );
+	
+			// find and extract an existing prefix attribute value
+			if ( strpos( $doctype, ' prefix=' ) &&
+				preg_match( '/^(.*) prefix=["\']([^"\']*)["\'](.*)$/', $doctype, $match ) ) {
+					$doctype = $match[1].$match[3];
+					$attr_value = ' '.$match[2];
+			} else $attr_value = '';
+
+			foreach ( $html_prefix as $ns => $url )
+				if ( strpos( $attr_value, ' '.$ns.': '.$url ) === false )
+					$attr_value .= ' '.$ns.': '.$url;
+
+			$doctype .= ' prefix="'.trim( $attr_value ).'"';
+
 			return $doctype;
 		}
 
@@ -86,18 +101,20 @@ if ( ! class_exists( 'NgfbOpengraph' ) && class_exists( 'SucomOpengraph' ) ) {
 
 			if ( ! isset( $og['og:type'] ) ) {
 
-				// singular posts / pages are articles by default
-				// check post_type for exceptions (like product pages)
+				/* singular posts / pages are articles by default
+				 * check the post_type for a match with a known open graph type 
+				 */
 				if ( is_singular() || $use_post !== false ) {
 					if ( ! empty( $obj->post_type ) )
 						$post_type = $obj->post_type;
 					switch ( $post_type ) {
 						case 'article':
 						case 'book':
-						case 'music.song':
 						case 'music.album':
 						case 'music.playlist':
 						case 'music.radio_station':
+						case 'music.song':
+						case 'place':			// supported by Facebook and Pinterest
 						case 'product':
 						case 'profile':
 						case 'video.episode':

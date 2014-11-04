@@ -26,7 +26,7 @@ if ( ! class_exists( 'NgfbSitesubmenuSiteadvanced' ) && class_exists( 'NgfbAdmin
 
 		protected function add_meta_boxes() {
 			// add_meta_box( $id, $title, $callback, $post_type, $context, $priority, $callback_args );
-			add_meta_box( $this->pagehook.'_plugin', 'Advanced Network Settings', array( &$this, 'show_metabox_plugin' ), $this->pagehook, 'normal' );
+			add_meta_box( $this->pagehook.'_plugin', 'Network Advanced Settings', array( &$this, 'show_metabox_plugin' ), $this->pagehook, 'normal' );
 
 			// add a class to set a minimum width for the network postboxes
 			add_filter( 'postbox_classes_'.$this->pagehook.'_'.$this->pagehook.'_plugin', array( &$this, 'add_class_postbox_network' ) );
@@ -40,6 +40,7 @@ if ( ! class_exists( 'NgfbSitesubmenuSiteadvanced' ) && class_exists( 'NgfbAdmin
 		public function show_metabox_plugin() {
 			$metabox = 'plugin';
 			$tabs = apply_filters( $this->p->cf['lca'].'_network_'.$metabox.'_tabs', array( 
+				'settings' => 'Plugin Settings',
 				'cache' => 'File and Object Cache' ) );
 			$rows = array();
 			foreach ( $tabs as $key => $title )
@@ -51,6 +52,19 @@ if ( ! class_exists( 'NgfbSitesubmenuSiteadvanced' ) && class_exists( 'NgfbAdmin
 		protected function get_rows( $metabox, $key ) {
 			$rows = array();
 			switch ( $metabox.'-'.$key ) {
+				case 'plugin-settings': 
+
+					$rows[] = $this->p->util->th( 'Preserve Settings on Uninstall', 'highlight', 'plugin_preserve' ).
+					'<td>'.$this->form->get_checkbox( 'plugin_preserve' ).'</td>'.
+					$this->p->util->th( 'Site Use', 'site_use' ).'<td>'.$this->form->get_select( 'plugin_preserve:use',
+						$this->p->cf['form']['site_option_use'], 'site_use' ).'</td>'; 
+					
+					$rows[] = $this->p->util->th( 'Add Hidden Debug Messages', null, 'plugin_debug' ).
+					'<td>'.$this->form->get_checkbox( 'plugin_debug' ).'</td>'.
+					$this->p->util->th( 'Site Use', 'site_use' ).'<td>'.$this->form->get_select( 'plugin_debug:use',
+						$this->p->cf['form']['site_option_use'], 'site_use' ).'</td>';
+						
+					break;
 			}
 			return $rows;
 		}

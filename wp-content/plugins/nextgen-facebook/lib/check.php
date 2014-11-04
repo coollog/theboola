@@ -27,10 +27,10 @@ if ( ! class_exists( 'NgfbCheck' ) ) {
 				method_exists( $this->p->debug, 'mark' ) )
 					$this->p->debug->mark();
 
-			$this->active_plugins = get_option( 'active_plugins', array() ); 
+			$this->active_plugins = get_option( 'active_plugins', array() );
 			if ( is_multisite() ) {
 				$this->network_plugins = array_keys( get_site_option( 'active_sitewide_plugins', array() ) );
-				if ( $this->network_plugins )
+				if ( ! empty( $this->network_plugins ) )
 					$this->active_plugins = array_merge( $this->active_plugins, $this->network_plugins );
 			}
 
@@ -109,17 +109,12 @@ if ( ! class_exists( 'NgfbCheck' ) ) {
 					constant( $constant_name ) ? false : true;
 			}
 
-			foreach ( SucomUtil::array_merge_recursive_distinct( 
-				$this->p->cf['*']['lib']['pro'], self::$mac ) as $sub => $lib ) {
-
+			foreach ( SucomUtil::array_merge_recursive_distinct( $this->p->cf['*']['lib']['pro'], self::$mac ) as $sub => $lib ) {
 				$ret[$sub] = array();
 				$ret[$sub]['*'] = false;
-
 				foreach ( $lib as $id => $name ) {
-
 					$chk = array();
 					$ret[$sub][$id] = false;	// default value
-
 					switch ( $sub.'-'.$id ) {
 						/*
 						 * 3rd Party Plugins
@@ -129,7 +124,7 @@ if ( ! class_exists( 'NgfbCheck' ) ) {
 							$chk['plugin'] = 'easy-digital-downloads/easy-digital-downloads.php';
 							break;
 						case 'ecom-marketpress':
-							$chk['class'] = 'MarketPress'; 
+							$chk['class'] = 'MarketPress';
 							$chk['plugin'] = 'wordpress-ecommerce/marketpress.php';
 							break;
 						case 'ecom-woocommerce':
@@ -141,11 +136,11 @@ if ( ! class_exists( 'NgfbCheck' ) ) {
 							$chk['plugin'] = 'wp-e-commerce/wp-shopping-cart.php';
 							break;
 						case 'forum-bbpress':
-							$chk['class'] = 'bbPress'; 
+							$chk['class'] = 'bbPress';
 							$chk['plugin'] = 'bbpress/bbpress.php';
 							break;
 						case 'lang-polylang':
-							$chk['class'] = 'Polylang'; 
+							$chk['class'] = 'Polylang';
 							$chk['plugin'] = 'polylang/polylang.php';
 							break;
 						case 'media-ngg':
@@ -171,11 +166,11 @@ if ( ! class_exists( 'NgfbCheck' ) ) {
 							$chk['plugin'] = 'seo-ultimate/seo-ultimate.php';
 							break;
 						case 'seo-wpseo':
-							$chk['function'] = 'wpseo_init'; 
+							$chk['function'] = 'wpseo_init';
 							$chk['plugin'] = 'wordpress-seo/wp-seo.php';
 							break;
 						case 'social-buddypress':
-							$chk['class'] = 'BuddyPress'; 
+							$chk['class'] = 'BuddyPress';
 							$chk['plugin'] = 'buddypress/bp-loader.php';
 							break;
 						/*
@@ -229,8 +224,7 @@ if ( ! class_exists( 'NgfbCheck' ) ) {
 								$ret[$sub]['*'] = $ret[$sub][$id] = true;
 				}
 			}
-
-			return $ret;
+			return apply_filters( $this->p->cf['lca'].'_get_avail', $ret );
 		}
 
 		// called from ngfbAdmin
@@ -398,7 +392,7 @@ if ( ! class_exists( 'NgfbCheck' ) ) {
 		public function aop( $lca = '', $active = true ) {
 			$lca = empty( $lca ) ? $this->p->cf['lca'] : $lca;
 			$uca = strtoupper( $lca );
-			$installed = ( defined( $uca.'_PLUGINDIR' ) &&
+			$installed = ( $this->p->is_avail['aop'] && defined( $uca.'_PLUGINDIR' ) &&
 				is_dir( constant( $uca.'_PLUGINDIR' ).'lib/pro/' ) ) ? true : false;
 			return $active === true ? ( ( ! empty( $this->p->options['plugin_'.$lca.'_tid'] ) && 
 				$installed && class_exists( 'SucomUpdate' ) &&

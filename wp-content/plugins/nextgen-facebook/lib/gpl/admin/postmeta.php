@@ -71,7 +71,7 @@ if ( ! class_exists( 'NgfbGplAdminPostmeta' ) ) {
 					'<td class="blank">'.$this->p->util->get_sharing_url( true ).'</td>';
 				else
 					$rows[] = $this->p->util->th( 'Sharing URL', 'medium', 'postmeta-sharing_url', $post_info ).
-					'<td class="blank"><em>The Sharing URL will be displayed when the '.$post_info['ptn'].' is published.</em></td>';
+					'<td class="blank"><em>The Sharing URL permalink will be available when the '.$post_info['ptn'].' is published.</em></td>';
 			}
 
 			return $rows;
@@ -87,13 +87,18 @@ if ( ! class_exists( 'NgfbGplAdminPostmeta' ) ) {
 			$rows[] = $this->p->util->th( 'Image URL', 'medium', 'postmeta-og_img_url', $post_info ).
 			'<td class="blank">&nbsp;</td>';
 
-			$rows[] = $this->p->util->th( 'Video URL', 'medium', 'postmeta-og_vid_url', $post_info ).
-			'<td class="blank">&nbsp;</td>';
-
 			if ( $this->p->options['plugin_display'] == 'all' ) {
 				$rows[] = $this->p->util->th( 'Maximum Images', 'medium', 'postmeta-og_img_max', $post_info ).
 				'<td class="blank">'.$this->p->options['og_img_max'].'</td>';
-	
+			}
+
+			$rows[] = $this->p->util->th( 'Video URL', 'medium', 'postmeta-og_vid_url', $post_info ).
+			'<td class="blank">&nbsp;</td>';
+
+			$rows[] = $this->p->util->th( 'Video Embed HTML', 'medium', 'postmeta-og_vid_embed', $post_info ).
+			'<td class="blank">&nbsp;</td>';
+
+			if ( $this->p->options['plugin_display'] == 'all' ) {
 				$rows[] = $this->p->util->th( 'Maximum Videos', 'medium', 'postmeta-og_vid_max', $post_info ).
 				'<td class="blank">'.$this->p->options['og_vid_max'].'</td>';
 			}

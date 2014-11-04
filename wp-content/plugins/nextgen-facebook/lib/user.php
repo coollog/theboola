@@ -21,57 +21,53 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 			add_filter( 'user_contactmethods', array( &$this, 'add_contact_methods' ), 20, 1 );
 
 			if ( is_admin() ) {
-				if ( $this->p->is_avail['opengraph'] )
-					add_action( 'admin_head', array( &$this, 'set_header_tags' ) );
-
+				add_action( 'admin_head', array( &$this, 'set_header_tags' ) );
 				add_action( 'admin_init', array( &$this, 'add_metaboxes' ) );
-				add_action( 'show_user_profile', array( &$this, 'show_metabox' ), 20 );
-				add_action( 'edit_user_profile', array( &$this, 'show_metabox' ), 20 );
+				add_action( 'show_user_profile', array( &$this, 'show_metaboxes' ), 20 );
+				add_action( 'edit_user_profile', array( &$this, 'show_metaboxes' ), 20 );
 				add_action( 'edit_user_profile_update', array( &$this, 'sanitize_contact_methods' ), 5 );
-				add_action( 'edit_user_profile_update', array( &$this, 'save_options' ), 10 );
+				add_action( 'edit_user_profile_update', array( &$this, 'save_options' ), NGFB_META_SAVE_PRIORITY );
 				add_action( 'personal_options_update', array( &$this, 'sanitize_contact_methods' ), 5 ); 
-				add_action( 'personal_options_update', array( &$this, 'save_options' ), 10 ); 
+				add_action( 'personal_options_update', array( &$this, 'save_options' ), NGFB_META_SAVE_PRIORITY ); 
 			}
 		}
 
 		public function add_metaboxes() {
-			if ( ! empty( $this->p->options['plugin_add_to_user'] ) )
-				add_meta_box( NGFB_META_NAME, 'Social Settings', array( &$this, 'show_usermeta' ), 'user', 'normal', 'high' );
+			$add_metabox = empty( $this->p->options[ 'plugin_add_to_user' ] ) ? false : true;
+			if ( apply_filters( $this->p->cf['lca'].'_add_metabox_usermeta', $add_metabox ) === true )
+				add_meta_box( NGFB_META_NAME, 'Social Settings', array( &$this, 'show_metabox_usermeta' ), 'user', 'normal', 'high' );
 		}
 
 		public function set_header_tags() {
+			if ( ! empty( $this->header_tags ) )
+				return;
 			$screen = get_current_screen();
 			$page = $screen->id;
-			if ( $this->p->is_avail['opengraph'] && empty( $this->header_tags ) ) {
-				switch ( $page ) {
-					case 'user-edit':
-					case 'profile':
+			switch ( $page ) {
+				case 'user-edit':
+				case 'profile':
+					$add_metabox = empty( $this->p->options[ 'plugin_add_to_user' ] ) ? false : true;
+					if ( apply_filters( $this->p->cf['lca'].'_add_metabox_usermeta', $add_metabox, $page ) === true ) {
+						do_action( $this->p->cf['lca'].'_admin_usermeta_header', $page );
 						$this->header_tags = $this->p->head->get_header_array( false );
-						$this->p->debug->show_html( null, 'debug log' );
-						foreach ( $this->header_tags as $tag ) {
-							if ( isset ( $tag[3] ) && $tag[3] === 'og:type' ) {
-								$this->post_info['og_type'] = $tag[5];
-								break;
-							}
-						}
-						break;
-				}
+						$this->post_info = $this->p->head->get_post_info( $this->header_tags );
+					}
+					$this->p->debug->show_html( null, 'debug log' );
+					break;
 			}
 		}
 
-		public function show_metabox( $user ) {
+		public function show_metaboxes( $user ) {
 			if ( ! current_user_can( 'edit_user', $user->ID ) )
 				return;
-
 			if ( isset( $_GET['updated'] ) )
-				$this->flush_cache( $user_id );
-
+				$this->flush_cache( $user->ID );
 			echo '<div id="poststuff">';
 			do_meta_boxes( 'user', 'normal', $user );
 			echo '</div>';
 		}
 
-		public function show_usermeta( $user ) {
+		public function show_metabox_usermeta( $user ) {
 			$opts = $this->get_options( $user->ID );
 			$def_opts = $this->get_defaults();
 			$screen = get_current_screen();
@@ -86,8 +82,9 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 				array( 
 					'header' => 'Title and Descriptions', 
 					'media' => 'Image and Video', 
-					'tools' => 'Validation Tools',
-					'tags' => 'Header Tags Preview'
+					'preview' => 'Social Preview',
+					'tags' => 'Header Preview',
+					'tools' => 'Validation Tools'
 				)
 			);
 
@@ -104,6 +101,10 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 		protected function get_rows( $metabox, $key, &$post_info ) {
 			$rows = array();
 			switch ( $metabox.'-'.$key ) {
+				case 'user-preview':
+					$rows = $this->p->addons['util']['postmeta']->get_rows_social_preview( $this->form, $post_info );
+					break;
+
 				case 'user-tools':
 					$rows = $this->p->addons['util']['postmeta']->get_rows_validation_tools( $this->form, $post_info );
 					break; 
@@ -336,7 +337,7 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 		}
 
 		static function delete_metabox_prefs( $user_id = false ) {
-			$cf = NgfbConfig::get_config( null, true );
+			$cf = NgfbConfig::get_config( false, true );
 
 			$parent_slug = 'options-general.php';
 			foreach ( array_keys( $cf['*']['lib']['setting'] ) as $id ) {
@@ -362,18 +363,20 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 			}
 		}
 
-		public function get_options( $user_id = false, $idx = '' ) {
-			if ( ! empty( $idx ) ) return false;
+		public function get_options( $user_id = false, $idx = false ) {
+			if ( $idx !== false ) 
+				return false;
 			else return array();
 		}
 
-		public function get_defaults( $idx = '' ) {
-			if ( ! empty( $idx ) ) return false;
+		public function get_defaults( $idx = false ) {
+			if ( $idx !== false ) 
+				return false;
 			else return array();
 		}
 
 		public function save_options( $user_id = false ) {
-			return;
+			return $user_id;
 		}
 
 		public function flush_cache( $user_id ) {
@@ -388,6 +391,7 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 			);
 			$transients = apply_filters( $this->p->cf['lca'].'_user_cache_transients', $transients, $post_id, $lang, $sharing_url );
 			$this->p->util->flush_cache_objects( $transients );
+			return $user_id;
 		}
 
 		protected function get_nonce() {

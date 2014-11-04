@@ -8,7 +8,7 @@ $thread = CMA_AnswerThread::getInstance($post->ID);
         <div class="cma-wrapper">
             <div id="content" role="main" class="entry-content">
                 <header class="entry-header">
-                    <h1 class="entry-title"><?php echo $thread->getTitle(); ?><a class="cma-backlink" href="<?php echo get_post_type_archive_link(CMA_AnswerThread::POST_TYPE); ?>">&laquo; <?php _e('Back to List', 'cm-answers'); ?></a></h1>
+                    <h1 class="entry-title"><?php echo $thread->getTitle(); ?><a class="cma-backlink" href="<?php echo esc_attr(get_post_type_archive_link(CMA_AnswerThread::POST_TYPE)); ?>">&laquo; <?php _e('Back to Questions List', 'cm-answers'); ?></a></h1>
 
                 </header>
                 <?php
@@ -40,7 +40,6 @@ $thread = CMA_AnswerThread::getInstance($post->ID);
                     <tr>
                         <td class="cma-question-content">
                             <div class="cma-question-body"><?php echo $thread->getContent(); ?></div>
-                            <br />
                             <div class="cma-question-meta">
                                 <div class="cma-question-author"><?php printf(__('Posted by %s', 'cm-answers'), $thread->getAuthor()->display_name); ?></div>
                                 <div class="cma-question-date"><?php printf(__('Asked on %s', 'cm-answers'), $thread->getCreationDate()); ?></div>
@@ -76,7 +75,6 @@ $thread = CMA_AnswerThread::getInstance($post->ID);
 
                                 <td class="cma-answer-content<?php if(CMA_AnswerThread::isRatingAllowed()): ?> cma-answer-norating-content<?php endif; ?>">
                                     <div class="cma-answer-body"><?php echo $answer['content']; ?></div>
-                                    <br />
                                     <div class="cma-answer-meta">
                                         <div class="cma-answer-author"><?php printf(__('Posted by %s', 'cm-answers'), $answer['author']); ?></div>
                                         <div class="cma-answer-date"><?php printf(__('Answered On %s', 'cm-answers'), $answer['date']); ?></div>
@@ -95,24 +93,24 @@ $thread = CMA_AnswerThread::getInstance($post->ID);
                             <div style="clear:both;height:25px;"></div>
                             <form method="post">
                                 <input type="hidden" name="cma-action" value="add" />
-                                <h3><?php _e('Post your Idea', 'cm-answers'); ?></h3>
+                                <h3><?php _e('Post your Answer', 'cm-answers'); ?></h3>
                                 <div style="clear:both;height:10px;"></div>
                                 <ul class="cma-form-notes">
                                     <li><?php _e('Allow markup', 'cm-answers'); ?>: &lt;strong&gt;, &lt;em&gt;, &lt;a&gt;</li>
                                     <li><?php _e('Wrap your code using', 'cm-answers'); ?> &lt;pre&gt;&lt;/pre&gt;</li>
                                 </ul>
                                 <input type="hidden" name="cma-thread" value="<?php echo $post->ID; ?>"/>
-                                <textarea name="content" placeholder="<?php _e('Write your Idea here', 'cm-answers'); ?>"></textarea><br />
-                                <!--<label>
+                                <textarea name="content" placeholder="<?php _e('Write your Answer here', 'cm-answers'); ?>"></textarea><br />
+                                <label>
                                     <div style="clear:both;height:5px;"></div>
                                     <input name="thread_notify" type="checkbox" value="1"/>
                                     <?php _e('Notify me of follow', 'cm-answers'); ?></label><br />
                                 <?php if(get_current_user_id() == $thread->getAuthorId()): ?><label>
                                         <div style="clear:both;height:5px;"></div>
                                         <input name="thread_resolved" type="checkbox" value="1"/>
-                                        <?php _e('Mark as resolved', 'cm-answers'); ?></label><br /><?php endif; ?>-->
+                                        <?php _e('Mark as resolved', 'cm-answers'); ?></label><br /><?php endif; ?>
                                 <div style="clear:both;height:10px;"></div>
-                                <input type="submit" value="<?php _e('Post your Idea', 'cm-answers'); ?>" />
+                                <input type="submit" value="<?php _e('Post your Answer', 'cm-answers'); ?>" />
                             </form>
                         <?php endif; ?>
 

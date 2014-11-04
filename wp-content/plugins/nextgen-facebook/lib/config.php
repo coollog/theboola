@@ -19,15 +19,15 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 			'update_check_hours' => 24,
 			'plugin' => array(
 				'ngfb' => array(
-					'version' => '7.6.10',		// plugin version
+					'version' => '7.6.13.1',	// plugin version
 					'short' => 'NGFB',		// short plugin name
 					'name' => 'NextGEN Facebook (NGFB)',
 					'desc' => 'Display your content in the best possible way on Facebook, Google+, Twitter, Pinterest, etc. - no matter how your webpage is shared!',
 					'slug' => 'nextgen-facebook',
 					'base' => 'nextgen-facebook/nextgen-facebook.php',
 					'img' => array(
-						'icon-small' => '//ps.w.org/nextgen-facebook/assets/icon-128x128.png?rev=',
-						'icon-medium' => '//ps.w.org/nextgen-facebook/assets/icon-256x256.png?rev=',
+						'icon-small' => 'https://ps.w.org/nextgen-facebook/assets/icon-128x128.png?rev=',
+						'icon-medium' => 'https://ps.w.org/nextgen-facebook/assets/icon-256x256.png?rev=',
 					),
 					'url' => array(
 						'download' => 'https://wordpress.org/plugins/nextgen-facebook/',
@@ -163,7 +163,7 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 				),
 			),
 			'opt' => array(				// options
-				'version' => 302,		// increment when changing default options
+				'version' => 307,		// increment when changing default options
 				'defaults' => array(
 					'options_filtered' => false,
 					'options_version' => '',
@@ -305,9 +305,11 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 					'plugin_ngfb_tid' => '',
 					'plugin_display' => 'basic',
 					'plugin_preserve' => 0,
+					'plugin_cache_info' => 1,
 					'plugin_debug' => 0,
-					'plugin_filter_content' => 1,
+					'plugin_filter_title' => 1,
 					'plugin_filter_excerpt' => 0,
+					'plugin_filter_content' => 1,
 					'plugin_filter_lang' => 1,
 					'plugin_shortcodes' => 1,
 					'plugin_widgets' => 1,
@@ -320,7 +322,9 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 					'plugin_vimeo_api' => 1,
 					'plugin_wistia_api' => 1,
 					'plugin_youtube_api' => 1,
-					'plugin_cf_vid_url' => '_format_video_embed',
+					'plugin_cf_img_url' => '_image_url',
+					'plugin_cf_vid_url' => '_video_url',
+					'plugin_cf_vid_embed' => '_video_embed',
 					'plugin_add_to_user' => 1,
 					'plugin_add_to_post' => 1,
 					'plugin_add_to_page' => 1,
@@ -414,7 +418,7 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 				'max_desc_hashtags' => 10,
 				'max_media_items' => 20,
 				'yes_no' => array( '1' => 'Yes', '0' => 'No' ),
-				'file_cache_hours' => array( 0, 1, 3, 6, 9, 12, 24, 36, 48, 72, 168 ),
+				'file_cache_hrs' => array( 0, 1, 3, 6, 9, 12, 24, 36, 48, 72, 168 ),
 				'js_locations' => array( 'none' => '[none]', 'header' => 'Header', 'footer' => 'Footer' ),
 				'caption_types' => array( 'none' => '[none]', 'title' => 'Title Only', 'excerpt' => 'Excerpt Only', 'both' => 'Title and Excerpt' ),
 				'user_name_fields' => array( 'none' => '[none]', 'fullname' => 'First and Last Names', 'display_name' => 'Display Name', 'nickname' => 'Nickname' ),
@@ -434,7 +438,7 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 		);
 
 		// get_config is called very early, so don't apply filters unless instructed
-		public static function get_config( $idx = '', $filter = false ) { 
+		public static function get_config( $idx = false, $filter = false ) { 
 
 			if ( ! isset( self::$cf['config_filtered'] ) || self::$cf['config_filtered'] !== true ) {
 
@@ -476,7 +480,7 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 				}
 			}
 
-			if ( ! empty( $idx ) ) {
+			if ( $idx !== false ) {
 				if ( array_key_exists( $idx, self::$cf ) )
 					return self::$cf[$idx];
 				else return false;
@@ -519,6 +523,9 @@ if ( ! class_exists( 'NgfbConfig' ) ) {
 
 			if ( ! defined( 'NGFB_META_NAME' ) )
 				define( 'NGFB_META_NAME', '_'.$cf['lca'].'_meta' );
+
+			if ( ! defined( 'NGFB_META_SAVE_PRIORITY' ) )
+				define( 'NGFB_META_SAVE_PRIORITY', 20 );
 
 			if ( ! defined( 'NGFB_MENU_PRIORITY' ) )
 				define( 'NGFB_MENU_PRIORITY', '99.11' );

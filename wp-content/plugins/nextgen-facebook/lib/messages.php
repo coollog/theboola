@@ -19,7 +19,7 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 			$this->p->debug->mark();
 		}
 
-		public function get( $idx = '', $atts = null, $class = '' ) {
+		public function get( $idx = false, $atts = null, $class = '' ) {
 			$text = is_array( $atts ) || is_object( $atts ) ? '' : $atts;
 			$idx = sanitize_title_with_dashes( $idx );
 			$lca = isset( $atts['lca'] ) ? $atts['lca'] : $this->p->cf['lca'];
@@ -173,6 +173,11 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 						/*
 						 * 'Header Meta Tags' settings
 						 */
+						 case 'tooltip-postmeta-social-preview':
+						 	$text = 'The Open Graph Social Preview shows an <em>example</em> of a typical share on a social website.
+							Images are displayed using Facebooks suggested minimum image dimensions of 600x315px.
+							Actual shares on social networks may look significantly different than this <em>example</em>.';
+						 	break;
 						 case 'tooltip-postmeta-og_art_section':
 							$text = 'A custom topic, different from the default Article Topic selected in the General settings.
 							The Facebook / Open Graph \'og:type\' meta tag must be an \'article\' to enable this option.
@@ -216,17 +221,22 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							an image size of 1200x630, 600x315 as a minimum, and will ignore any images less than 200x200 
 							(1200x1200 is recommended). This field is disabled if an Image ID has been specified.';
 						 	break;
-						 case 'tooltip-postmeta-og_vid_url':
-							$text = 'A custom Video URL to include first in the Facebook / Open Graph, Pinterest Rich Pin, 
-							and \'Player\' Twitter Card meta tags'.
-							( empty( $this->p->is_avail['ssb'] ) ? '' : ', along with the Tumblr social sharing button' ).'. '.
-							'If the URL is from Youtube, Vimeo or Wistia, an API connection will be made to retrieve the 
-							preferred sharing URL, video dimensions, and video preview image. The '.
-							$this->p->util->get_admin_url( 'advanced#sucom-tab_plugin_social', 'Video URL Custom Field' ).
-							' Advanced option also allows a 3rd-party themes to provide a Video URL value for this option.';
-						 	break;
 						 case 'tooltip-postmeta-og_img_max':
 							$text = 'The maximum number of images to include in the Facebook / Open Graph meta tags for this '.$ptn.'.';
+						 	break;
+						 case 'tooltip-postmeta-og_vid_url':
+							$text = 'A custom Video URL to include first in the Facebook / Open Graph, Pinterest Rich Pin, 
+							and \'Player\' Twitter Card meta tags. If the URL is from Youtube, Vimeo or Wistia, 
+							an API connection will be made to retrieve the preferred sharing URL, video dimensions, and video preview image.
+							The '.$this->p->util->get_admin_url( 'advanced#sucom-tab_plugin_social', 'Video URL Custom Field' ).
+							' Advanced option allows a 3rd-party theme or plugin to provide a custom Video URL value for this option.';
+						 	break;
+						 case 'tooltip-postmeta-og_vid_embed':
+							$text = 'Custom Video Embed HTML to use for the first in the Facebook / Open Graph, Pinterest Rich Pin, 
+							and \'Player\' Twitter Card meta tags. If the URL is from Youtube, Vimeo or Wistia, 
+							an API connection will be made to retrieve the preferred sharing URL, video dimensions, and video preview image. 
+							The '.$this->p->util->get_admin_url( 'advanced#sucom-tab_plugin_social', 'Video Embed HTML Custom Field' ).
+							' Advanced option also allows a 3rd-party theme or plugin to provide custom Video Embed HTML for this option.';
 						 	break;
 						 case 'tooltip-postmeta-og_vid_max':
 							$text = 'The maximum number of embedded videos to include in the Facebook / Open Graph meta tags for this '.$ptn.'.';
@@ -479,6 +489,9 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 						case 'tooltip-plugin_debug':
 							$text = 'Add hidden debug messages to the HTML of webpages (default is unchecked).';
 							break;
+						case 'tooltip-plugin_cache_info':
+							$text = 'Report the number of objects removed from the cache when updating Posts and Pages.';
+							break;
 						case 'tooltip-plugin_filter_lang':
 							$text = $short_pro.' can use the WordPress locale to select the correct language for the Facebook / Open Graph 
 							and Pinterest Rich Pin meta tags'.
@@ -500,14 +513,19 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 						/*
 						 * 'Content and Filters' settings
 						 */
-						case 'tooltip-plugin_filter_content':
-							$text = 'Apply the standard WordPress \'the_content\' filter to render the content text (default is checked).
-							This renders all shortcodes, and allows '.$short.' to detect images and 
-							embedded videos that may be provided by these.';
+						case 'tooltip-plugin_filter_title':
+							$text = 'By default, '.$short.' uses the title values provided by WordPress, which may include modifications
+							by themes and/or SEO plugins (appending the blog name to all titles, for example, is fairly common practice).
+							If you wish to use the original title value without these modifications, uncheck this option.';
 							break;
 						case 'tooltip-plugin_filter_excerpt':
 							$text = 'Apply the standard WordPress \'get_the_excerpt\' filter to render the excerpt text (default is unchecked).
 							Check this option if you use shortcodes in your excerpt, for example.';
+							break;
+						case 'tooltip-plugin_filter_content':
+							$text = 'Apply the standard WordPress \'the_content\' filter to render the content text (default is checked).
+							This renders all shortcodes, and allows '.$short.' to detect images and 
+							embedded videos that may be provided by these.';
 							break;
 						case 'tooltip-plugin_ignore_small_img':
 							$text = $short.' will retrieve image URLs from HTML tags in the <strong>content</strong>.
@@ -542,12 +560,23 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							If your theme (or another plugin) supports additional custom post types, and you would like to 
 							include the Social Settings metabox on their admin pages, check the appropriate option(s) here.';
 							break;
+						case 'tooltip-plugin_cf_img_url':
+							$text = 'If your theme or another plugin provides a custom field for image URLs,
+							you may enter its custom field name here.
+							If a custom field matching that name is found, its value will be used for the Image URL option
+							in the Social Settings metabox. The default value is "'.$this->p->opt->get_defaults( 'plugin_cf_img_url' ).'".';
+							break;
 						case 'tooltip-plugin_cf_vid_url':
-							$text = 'If your theme (or another plugin) provides a custom field for embedded video URLs, 
-							you may enter its custom field name (aka, the "post meta option name") here.
-							If a custom field matching that name is found, it\'s value will be used for the Video URL in the
-							Social Settings metabox for Posts and Pages. 
-							The default value is \''.$this->p->opt->get_defaults( 'plugin_cf_vid_url' ).'\'.';
+							$text = 'If your theme or another plugin provides a custom field for video URLs
+							(not embed HTML code), you may enter its custom field name here.
+							If a custom field matching that name is found, its value will be used for the Video URL option
+							in the Social Settings metabox. The default value is "'.$this->p->opt->get_defaults( 'plugin_cf_vid_url' ).'".';
+							break;
+						case 'tooltip-plugin_cf_vid_embed':
+							$text = 'If your theme or another plugin provides a custom field for video embed HTML code
+							(not simply a URL), you may enter its custom field name here.
+							If a custom field matching that name is found, its value will be used for the Video Embed HTML option
+							in the Social Settings metabox. The default value is "'.$this->p->opt->get_defaults( 'plugin_cf_vid_embed' ).'".';
 							break;
 						/*
 						 * 'File and Object Cache' settings
@@ -590,11 +619,11 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 						case 'tooltip-fb_admins':
 							$text = 'The Facebook Admin(s) user names are used by Facebook to allow access to 
 							<a href="https://developers.facebook.com/docs/insights/" target="_blank">Facebook Insight</a> data.
-							Note that these are <em>user</em> account names, not Facebook <em>page</em> names.
+							Note that these are <strong><em>user</em> account names, not Facebook <em>Page</em> names</strong>.
 							<p>Enter one or more Facebook user names, separated with commas. 
 							When viewing your own Facebook wall, your user name is located in the URL 
 							(example: https://www.facebook.com/<strong>user_name</strong>). 
-							Enter only the user user name(s), not the URL(s).</p>
+							Enter only the user name(s), not the URL(s).</p>
 							<a href="https://www.facebook.com/settings?tab=account&section=username&view" target="_blank">Update 
 							your user name in the Facebook General Account Settings</a>.';
 							break;
@@ -661,7 +690,7 @@ if ( ! class_exists( 'NgfbMessages' ) ) {
 							break;
 						case 'tooltip-google_publisher_url':
 							$text = 'If you have a <a href="http://www.google.com/+/business/" target="_blank">Google+ business page for your website</a>, 
-							you may use it\'s URL as the Publisher Link URL. For example, the Publisher Link URL for 
+							you may use its URL as the Publisher Link URL. For example, the Publisher Link URL for 
 							<a href="http://surniaulula.com/" target="_blank">Surnia Ulula</a> is 
 							<a href="https://plus.google.com/+SurniaUlula/" target="_blank">https://plus.google.com/+SurniaUlula/</a>.
 							Google Search may use this information to display publisher details in its search results.';

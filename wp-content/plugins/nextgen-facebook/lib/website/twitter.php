@@ -25,8 +25,7 @@ if ( ! class_exists( 'NgfbSubmenuSharingTwitter' ) && class_exists( 'NgfbSubmenu
 
 			$rows[] = $this->p->util->th( 'Preferred Order', 'short' ).'<td>'.
 			$this->form->get_select( 'twitter_order', 
-				range( 1, count( $this->p->admin->submenu['sharing']->website ) ), 
-					'short' ).'</td>';
+				range( 1, count( $this->p->admin->submenu['sharing']->website ) ), 'short' ).'</td>';
 
 			if ( $this->p->options['plugin_display'] == 'all' ) {
 				$rows[] = $this->p->util->th( 'JavaScript in', 'short' ).'<td>'.
@@ -145,13 +144,18 @@ if ( ! class_exists( 'NgfbSharingTwitter' ) ) {
 				$atts['caption'] = $atts['tweet'];
 
 			if ( ! array_key_exists( 'caption', $atts ) ) {
-				if ( ! empty( $post->ID ) && $use_post == true ) 
-					$atts['caption'] = $this->p->addons['util']['postmeta']->get_options( $post->ID, 'twitter_desc' );
-
 				if ( empty( $atts['caption'] ) ) {
-					// get_tweet_max_len() needs the long URL as input
-					$cap_len = $this->p->util->get_tweet_max_len( $long_url );
-					$atts['caption'] = $this->p->webpage->get_caption( $opts['twitter_caption'], $cap_len, $use_post );
+					$cap_len = $this->p->util->get_tweet_max_len( $long_url );	// get_tweet_max_len() needs the long URL as input
+					$atts['caption'] = $this->p->webpage->get_caption( 
+						$opts['twitter_caption'],	// title, excerpt, both
+						$cap_len,			// max caption length 
+						$use_post,			// 
+						true,				// use_cache
+						true, 				// add_hashtags
+						true, 				// encode
+						'twitter_desc',			// custom post meta
+						$source_id			// 
+					);
 				}
 			}
 

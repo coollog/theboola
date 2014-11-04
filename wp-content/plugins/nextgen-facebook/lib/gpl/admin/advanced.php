@@ -15,19 +15,25 @@ if ( ! class_exists( 'NgfbGplAdminAdvanced' ) ) {
 		public function __construct( &$plugin ) {
 			$this->p =& $plugin;
 			$this->p->util->add_plugin_filters( $this, array( 
-				'plugin_settings_rows' => 2,
+				'plugin_settings_rows' => 3,	// supports network options
 				'plugin_content_rows' => 2,
 				'plugin_social_rows' => 2,
-				'plugin_cache_rows' => 3,
-				'taglist_tags_rows' => 2,
+				'plugin_cache_rows' => 3,	// supports network options
+				'taglist_tags_rows' => 3,
 			), 20 );
 		}
 
-		public function filter_plugin_settings_rows( $rows, $form ) {
+		public function filter_plugin_settings_rows( $rows, $form, $network = false ) {
+
+			if ( $network === true )
+				return $rows;
 
 			if ( $this->p->options['plugin_display'] == 'all' ) {
 
 				$rows[] = '<td colspan="2" align="center">'.$this->p->msgs->get( 'pro-feature-msg' ).'</td>';
+
+				$rows[] = $this->p->util->th( 'Report Cache Purge Count', null, 'plugin_cache_info' ).
+				'<td class="blank">'.$form->get_no_checkbox( 'plugin_cache_info' ).'</td>';
 
 				$rows[] = $this->p->util->th( 'Use WP Locale for Language', null, 'plugin_filter_lang' ).
 				'<td class="blank">'.$form->get_no_checkbox( 'plugin_filter_lang' ).'</td>';
@@ -44,7 +50,7 @@ if ( ! class_exists( 'NgfbGplAdminAdvanced' ) ) {
 					$rows[] = $this->p->util->th( 'Enable Widget(s)', 'highlight', 'plugin_widgets' ).
 					'<td class="blank">'.$form->get_no_checkbox( 'plugin_widgets' ).'</td>';
 				}
-			}	
+			}
 			return $rows;
 		}
 
@@ -52,13 +58,18 @@ if ( ! class_exists( 'NgfbGplAdminAdvanced' ) ) {
 
 			$rows[] = '<td colspan="2" align="center">'.$this->p->msgs->get( 'pro-feature-msg' ).'</td>';
 
-			$rows[] = $this->p->util->th( 'Apply Content Filters', null, 'plugin_filter_content' ).
-			'<td class="blank">'.$form->get_no_checkbox( 'plugin_filter_content' ).'</td>';
+			$rows[] = $this->p->util->th( 'Use Filtered (SEO) Titles', 'highlight', 'plugin_filter_title' ).
+			'<td class="blank">'.$form->get_no_checkbox( 'plugin_filter_title' ).'</td>';
 
 			if ( $this->p->options['plugin_display'] == 'all' ) {
 				$rows[] = $this->p->util->th( 'Apply Excerpt Filters', null, 'plugin_filter_excerpt' ).
 				'<td class="blank">'.$form->get_no_checkbox( 'plugin_filter_excerpt' ).'</td>';
+			}
 
+			$rows[] = $this->p->util->th( 'Apply Content Filters', null, 'plugin_filter_content' ).
+			'<td class="blank">'.$form->get_no_checkbox( 'plugin_filter_content' ).'</td>';
+
+			if ( $this->p->options['plugin_display'] == 'all' ) {
 				$rows[] =  $this->p->util->th( 'Ignore Small Images in Content', null, 'plugin_ignore_small_img' ).
 				'<td class="blank">'.$form->get_no_checkbox( 'plugin_ignore_small_img' ).'</td>';
 			}
@@ -92,13 +103,21 @@ if ( ! class_exists( 'NgfbGplAdminAdvanced' ) ) {
 				$checkboxes .= '<p>'.$form->get_no_checkbox( 'plugin_add_to_'.$post_type->name ).' '.
 					$post_type->label.' '.( empty( $post_type->description ) ? '' : '('.$post_type->description.')' ).'</p>';
 
-			$rows[] = $this->p->util->th( 'Show Social Settings on', null, 'plugin_add_to' ).
+			$rows[] = $this->p->util->th( 'Show Custom Social Settings on', null, 'plugin_add_to' ).
 			'<td class="blank">'.$checkboxes.'</td>';
 			
 			if ( $this->p->options['plugin_display'] == 'all' ) {
+				$rows[] = $this->p->util->th( 'Image URL Custom Field', null, 'plugin_cf_img_url' ).
+				'<td class="blank">'.$form->get_hidden( 'plugin_cf_img_url' ).
+					$this->p->options['plugin_cf_img_url'].'</td>';
+
 				$rows[] = $this->p->util->th( 'Video URL Custom Field', null, 'plugin_cf_vid_url' ).
 				'<td class="blank">'.$form->get_hidden( 'plugin_cf_vid_url' ).
 					$this->p->options['plugin_cf_vid_url'].'</td>';
+
+				$rows[] = $this->p->util->th( 'Video Embed HTML Custom Field', null, 'plugin_cf_vid_embed' ).
+				'<td class="blank">'.$form->get_hidden( 'plugin_cf_vid_embed' ).
+					$this->p->options['plugin_cf_vid_embed'].'</td>';
 			}
 			
 			return $rows;
@@ -121,7 +140,6 @@ if ( ! class_exists( 'NgfbGplAdminAdvanced' ) ) {
 		public function filter_taglist_tags_rows( $rows, $form, $tag = '[^_]+' ) {
 
 			$og_cols = 2;
-
 			$cells = array();
 			foreach ( $this->p->opt->get_defaults() as $opt => $val ) {
 				if ( preg_match( '/^add_('.$tag.')_([^_]+)_(.+)$/', $opt, $match ) ) {

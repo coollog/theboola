@@ -33,7 +33,7 @@ if ( ! class_exists( 'NgfbSubmenuAdvanced' ) && class_exists( 'NgfbAdmin' ) ) {
 			$tabs = apply_filters( $this->p->cf['lca'].'_'.$metabox.'_tabs', array( 
 				'settings' => 'Plugin Settings',
 				'content' => 'Content and Filters',
-				'social' => 'Social Settings',
+				'social' => 'Custom Social Settings',
 				'cache' => 'File and Object Cache' ) );
 			$rows = array();
 			foreach ( $tabs as $key => $title )
@@ -72,9 +72,6 @@ if ( ! class_exists( 'NgfbSubmenuAdvanced' ) && class_exists( 'NgfbAdmin' ) ) {
 			$rows = array();
 			switch ( $metabox.'-'.$key ) {
 				case 'plugin-settings':
-					// retrieve information on license use, if any
-					$qty_used = class_exists( 'SucomUpdate' ) ?
-						SucomUpdate::get_option( $this->p->cf['lca'], 'qty_used' ) : false;
 
 					$rows[] = $this->p->util->th( 'Plugin Settings to Display', 'highlight', 'plugin_display' ).
 					'<td>'.$this->form->get_select( 'plugin_display', $this->p->cf['form']['display_options'] ).'</td>';

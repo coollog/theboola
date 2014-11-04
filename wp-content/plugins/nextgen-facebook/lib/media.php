@@ -106,8 +106,8 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 			if ( ! empty( $post_id ) && $this->p->is_avail['postthumb'] == true && has_post_thumbnail( $post_id ) ) {
 				$pid = get_post_thumbnail_id( $post_id );
 
-				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], 
-					$og_image['og:image:cropped'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
+				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'], 
+					$og_image['og:image:id'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
 
 				if ( ! empty( $og_image['og:image'] ) )
 					$this->p->util->push_max( $og_ret, $og_image, $num );
@@ -125,14 +125,38 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 			return;
 		}
 
+		public function get_image_preview_html( $og_image, $size_name, $size_info, 
+			$alt_html = '<p>No Image Found</p>',
+			$alt_small = '<p>Image Size Too Small</p>' ) {
+
+			$div_size = 'width:'.$size_info['width'].'px; height:'.$size_info['height'].'px;';
+			$is_sufficient = ( ! empty( $og_image['og:image:width'] ) && 
+				! empty( $og_image['og:image:height'] ) && 
+				$og_image['og:image:width'] >= $size_info['width'] &&
+				$og_image['og:image:height'] >= $size_info['height'] ) ? true : false;
+
+			if ( ! empty( $og_image['og:image:id'] ) && $is_sufficient === true ) {
+				list( $url, $width, $height, $cropped, $pid ) = $this->p->media->get_attachment_image_src( $og_image['og:image:id'], $size_name, false );
+				if ( ! empty( $url ) )
+					return '<div class="preview_img" style="'.$div_size.'"><img src="'.$url.'" width="'.$width.'" height="'.$height.'" /></div>';
+			}
+			if ( empty( $html ) )
+				foreach ( array( 'og:image:secure_url', 'og:image' ) as $key )
+					if ( ! empty( $og_image[$key] ) )
+						return '<div class="preview_img" style="'.$div_size.' 
+							background-size:'.( $is_sufficient === true ? 'cover' : $og_image['og:image:width'].' '.$og_image['og:image:height'] ).'; 
+							background-image:url('.$og_image[$key].');" />'.( $is_sufficient === true ? '' : $alt_small ).'</div>';
+			return '<div class="preview_img" style="'.$div_size.'">'.$alt_html.'</div>';
+		}
+
 		public function get_attachment_image( $num = 0, $size_name = 'thumbnail', $attach_id, $check_dupes = true ) {
 			$this->p->debug->args( array( 'num' => $num, 'size_name' => $size_name, 'attach_id' => $attach_id, 'check_dupes' => $check_dupes ) );
 			$og_ret = array();
 			if ( ! empty( $attach_id ) ) {
 				if ( wp_attachment_is_image( $attach_id ) ) {	// since wp 2.1.0 
 					$og_image = array();
-					list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'],
-						$og_image['og:image:cropped'] ) = $this->get_attachment_image_src( $attach_id, $size_name, $check_dupes );
+					list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'], 
+						$og_image['og:image:id'] ) = $this->get_attachment_image_src( $attach_id, $size_name, $check_dupes );
 					if ( ! empty( $og_image['og:image'] ) &&
 						$this->p->util->push_max( $og_ret, $og_image, $num ) )
 							return $og_ret;
@@ -157,8 +181,8 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 					$attach_ids = apply_filters( $this->p->cf['lca'].'_attached_image_ids', $attach_ids, $post_id );
 					foreach ( $attach_ids as $pid ) {
 						$og_image = array();
-						list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'],
-							$og_image['og:image:cropped'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
+						list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'],
+							$og_image['og:image:id'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
 						if ( ! empty( $og_image['og:image'] ) &&
 							$this->p->util->push_max( $og_ret, $og_image, $num ) )
 								break;	// end foreach and apply filters
@@ -174,7 +198,7 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 			$img_width = -1;
 			$img_height = -1;
 			$img_cropped = empty( $size_info['crop'] ) ? 0 : 1;
-			$ret_empty = array( null, null, null, null );
+			$ret_empty = array( null, null, null, null, null );
 
 			if ( $this->p->is_avail['media']['ngg'] === true && strpos( $pid, 'ngg-' ) === 0 ) {
 				if ( ! empty( $this->p->addons['media']['ngg'] ) )
@@ -293,7 +317,7 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 
 			if ( $check_dupes == false || $this->p->util->is_uniq_url( $img_url ) )
 				return array( apply_filters( $this->p->cf['lca'].'_rewrite_url', $img_url ), 
-					$img_width, $img_height, $img_cropped );
+					$img_width, $img_height, $img_cropped, $pid );
 
 			return $ret_empty;
 		}
@@ -313,15 +337,15 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 			if ( $pid > 0 ) {
 				$pid = $pre === 'ngg' ? 'ngg-'.$pid : $pid;
 				$this->p->debug->log( 'found custom user image id = '.$pid );
-				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], 
-					$og_image['og:image:cropped'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
+				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'], 
+					$og_image['og:image:id'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
 
 			}
 
 			if ( empty( $og_image['og:image'] ) && ! empty( $img_url ) ) {
 				$this->p->debug->log( 'found custom user image url = "'.$img_url.'"' );
-				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], 
-					$og_image['og:image:cropped'] ) = array( $img_url, -1, -1, -1 );
+				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'], 
+					$og_image['og:image:id'] ) = array( $img_url, -1, -1, -1, -1 );
 			}
 
 			if ( ! empty( $og_image['og:image'] ) &&
@@ -345,15 +369,15 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 			if ( $pid > 0 ) {
 				$pid = $pre === 'ngg' ? 'ngg-'.$pid : $pid;
 				$this->p->debug->log( 'found custom meta image id = '.$pid );
-				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], 
-					$og_image['og:image:cropped'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
+				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'],
+					$og_image['og:image:id'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
 
 			}
 			
 			if ( empty( $og_image['og:image'] ) && ! empty( $img_url ) ) {
 				$this->p->debug->log( 'found custom meta image url = "'.$img_url.'"' );
-				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], 
-					$og_image['og:image:cropped'] ) = array( $img_url, -1, -1, -1 );
+				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'],
+					$og_image['og:image:id'] ) = array( $img_url, -1, -1, -1, -1 );
 			}
 
 			if ( ! empty( $og_image['og:image'] ) &&
@@ -379,8 +403,8 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 			if ( $pid > 0 ) {
 				$pid = $pre === 'ngg' ? 'ngg-'.$pid : $pid;
 				$this->p->debug->log( 'using default img pid = '.$pid );
-				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'],
-					$og_image['og:image:cropped'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
+				list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'],
+					$og_image['og:image:id'] ) = $this->get_attachment_image_src( $pid, $size_name, $check_dupes );
 			}
 
 			if ( empty( $og_image['og:image'] ) && ! empty( $url ) ) {
@@ -395,12 +419,12 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 			return $og_ret;
 		}
 
-		public function get_content_images( $num = 0, $size_name = 'thumbnail', $use_post = true, $check_dupes = true, $content = null ) {
+		public function get_content_images( $num = 0, $size_name = 'thumbnail', $use_post = true, $check_dupes = true, $content = '' ) {
 			$this->p->debug->args( array( 'num' => $num, 'size_name' => $size_name, 'use_post' => $use_post, 'check_dupes' => $check_dupes, 'content' => strlen( $content ).' chars' ) );
 			$og_ret = array();
 			$size_info = $this->get_size_info( $size_name );
 
-			// allow custom content to be passed
+			// allow custom content to be passed as argument
 			if ( empty( $content ) )
 				$content = $this->p->webpage->get_content( $use_post );
 
@@ -429,15 +453,14 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 					$og_image = array();
 					switch ( $attr_name ) {
 						case 'data-wp-pid' :
-							list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], 
-								$og_image['og:image:cropped'] ) = $this->get_attachment_image_src( $attr_value, $size_name, false );
+							list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'],
+								$og_image['og:image:id'] ) = $this->get_attachment_image_src( $attr_value, $size_name, false );
 							break;
 						// filter hook for 3rd party addons to return image information
 						case ( preg_match( '/^data-[a-z]+-pid$/', $attr_name ) ? true : false ):
 							$filter_name = $this->p->cf['lca'].'_get_content_'.$tag_name.'_'.( preg_replace( '/-/', '_', $attr_name ) );
-							list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], 
-								$og_image['og:image:cropped'] ) = apply_filters( $filter_name, array( null, null, null, null ), 
-									$attr_value, $size_name, false );
+							list( $og_image['og:image'], $og_image['og:image:width'], $og_image['og:image:height'], $og_image['og:image:cropped'],
+								$og_image['og:image:id'] ) = apply_filters( $filter_name, array( null, null, null, null ), $attr_value, $size_name, false );
 							break;
 						default :
 							// prevent duplicates by silently ignoring ngg images (already processed by the ngg addon)
@@ -521,9 +544,9 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 						case 'gallery' :
 							$content = do_shortcode( $match[0] );
 							$content = preg_replace( '/\['.$shortcode_type.'[^\]]*\]/', '', $content );	// prevent loops, just in case
-							// provide the expanded content and extract images
-							$og_ret = array_merge( $og_ret, 
-								$this->p->media->get_content_images( $num, $size_name, null, $check_dupes, $content ) );
+							// provide content to the method and extract its images
+							// $use_post argument is null since we're passing the content
+							$og_ret = array_merge( $og_ret, $this->p->media->get_content_images( $num, $size_name, null, $check_dupes, $content ) );
 							if ( ! empty( $og_ret ) ) 
 								return $og_ret;		// return immediately and ignore any other type of image
 							break;
@@ -548,10 +571,15 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 					return $og_ret;
 
 			$url = $this->p->addons['util']['postmeta']->get_options( $post_id, 'og_vid_url' );
-			if ( ! empty( $url ) && 
-				( $check_dupes == false || $this->p->util->is_uniq_url( $url ) ) ) {
+			$embed = $this->p->addons['util']['postmeta']->get_options( $post_id, 'og_vid_embed' );
 
-				$this->p->debug->log( 'found custom meta video url = '.$url );
+			if ( empty( $url ) && ! empty( $embed ) ) {
+				$videos = $this->p->media->get_content_videos( 1, $post_id, false, $embed );
+				if ( ! empty( $videos[0]['og:video'] ) ) 
+					$url = $videos[0]['og:video'];
+			}
+
+			if ( ! empty( $url ) && ( $check_dupes == false || $this->p->util->is_uniq_url( $url ) ) ) {
 				$og_video = $this->get_video_info( $url );
 				if ( empty( $og_video ) )	// fallback to the original custom video URL
 					$og_video['og:video'] = $url;
@@ -579,17 +607,22 @@ if ( ! class_exists( 'NgfbMedia' ) ) {
 		}
 
 		/* Purpose: Check the content for generic <iframe|embed/> html tags. Apply ngfb_content_videos filter for more specialized checks. */
-		public function get_content_videos( $num = 0, $use_post = true, $check_dupes = true ) {
-			$this->p->debug->args( array( 'num' => $num, 'check_dupes' => $check_dupes ) );
+		public function get_content_videos( $num = 0, $use_post = true, $check_dupes = true, $content = '' ) {
+			$this->p->debug->args( array( 'num' => $num, 'check_dupes' => $check_dupes, 'content' => strlen( $content ).' chars' ) );
 			$og_ret = array();
-			$content = $this->p->webpage->get_content( $use_post );
+
+			// allow custom content to be passed as argument
+			if ( empty( $content ) )
+				$content = $this->p->webpage->get_content( $use_post );
+
 			if ( empty( $content ) ) { 
 				$this->p->debug->log( 'exiting early: empty post content' ); 
 				return $og_ret; 
 			}
+
 			// detect standard iframe/embed tags - use the ngfb_content_videos filter for additional html5/javascript methods
 			// the src url must contain /embed|embed_code|swf|video/ in its path to be recognized as an embedded video url
-			if ( preg_match_all( '/<(iframe|embed)[^>]*? src=[\'"]([^\'"]+\/(embed|embed_code|swf|video|v)\/[^\'"]+)[\'"][^>]*>/i', $content, $match_all, PREG_SET_ORDER ) ) {
+			if ( preg_match_all( '/<(iframe|embed)[^<>]*? src=[\'"]([^\'"<>]+\/(embed|embed_code|swf|video|v)\/[^\'"<>]+)[\'"][^<>]*>/i', $content, $match_all, PREG_SET_ORDER ) ) {
 				$this->p->debug->log( count( $match_all ).' x video <iframe|embed/> html tag(s) found' );
 				foreach ( $match_all as $media ) {
 					$this->p->debug->log( '<'.$media[1].'/> html tag found = '.$media[2] );

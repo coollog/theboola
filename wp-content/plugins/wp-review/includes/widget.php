@@ -42,7 +42,8 @@ class wp_review_tab_widget extends WP_Widget {
             'comment_num' => '5',
             'thumb_size' => 'small', 
             'show_date' => 1,
-            'custom_reviews' => ''
+            'custom_reviews' => '',
+            'title_length' => apply_filters( 'wpt_title_length_default', '15' ) 
         ));
 		extract($instance);
 		?>
@@ -94,7 +95,16 @@ class wp_review_tab_widget extends WP_Widget {
 				<input id="<?php echo $this->get_field_id('post_num'); ?>" name="<?php echo $this->get_field_name('post_num'); ?>" type="number" min="1" step="1" value="<?php echo $post_num; ?>" />
 			</label>
 		</p>
-				
+		
+		<p>
+			<label for="<?php echo $this->get_field_id('title_length'); ?>"><?php _e('Title length (words):', 'mts_wpt'); ?>
+				<br />
+				<!-- dummy input so that WP doesn't pick up title_length as title -->
+				<input id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="" style="display: none;" />
+				<input id="<?php echo $this->get_field_id('title_length'); ?>" name="<?php echo $this->get_field_name('title_length'); ?>" type="number" min="1" step="1" value="<?php echo $title_length; ?>" />
+			</label>
+		</p>
+
 		<p class="wp_review_tab_thumbnail_size">
 			<label for="<?php echo $this->get_field_id('thumb_size'); ?>"><?php _e('Thumbnail size:', 'wp-review'); ?></label> 
 			<select id="<?php echo $this->get_field_id('thumb_size'); ?>" name="<?php echo $this->get_field_name('thumb_size'); ?>" style="margin-left: 12px;">
@@ -178,6 +188,7 @@ class wp_review_tab_widget extends WP_Widget {
         $instance['review_type'] = $new_instance['review_type'];        
 		$instance['allow_pagination'] = $new_instance['allow_pagination'];	
 		$instance['post_num'] = $new_instance['post_num'];
+		$instance['title_length'] = $new_instance['title_length'];	
 		$instance['thumb_size'] = $new_instance['thumb_size'];
 		$instance['show_date'] = $new_instance['show_date'];
         $instance['custom_reviews'] = $new_instance['custom_reviews']; 
@@ -315,6 +326,8 @@ class wp_review_tab_widget extends WP_Widget {
             $review_type = $args['review_type'];
         }
         
+		$title_length = ! empty($args['title_length']) ? $args['title_length'] : apply_filters( 'wpt_title_length_default', '15' );
+
 		switch ($tab) {
 			case "toprated":      
 				$custom_query = array(
@@ -430,7 +443,7 @@ class wp_review_tab_widget extends WP_Widget {
 						</div>
 					</a>
 					<div class="title-right">
-						<div class="entry-title"><a title="<?php the_title(); ?>" href="<?php the_permalink() ?>"><?php echo get_the_title(); ?></div></a>
+						<div class="entry-title"><a title="<?php the_title(); ?>" href="<?php the_permalink() ?>"><?php echo $this->post_title( $title_length ); ?></div></a>
 						<?php wp_review_show_total(true, 'review-total-only '.$thumb_size.'-thumb'); ?>
 	                    <?php if ( $show_date ) : ?>	
 							<div class="wp-review-tab-postmeta">								
@@ -463,6 +476,17 @@ class wp_review_tab_widget extends WP_Widget {
 		<input type="hidden" class="page_num" name="page_num" value="<?php echo $page; ?>" />    
 		<?php   
 	}
+    function post_title($limit = 15) {
+    	  $limit++;
+          $title = explode(' ', get_the_title(), $limit);
+          if (count($title)>=$limit) {
+            array_pop($title);
+            $title = implode(" ",$title).'...';
+          } else {
+            $title = implode(" ",$title);
+          }
+          return $title;
+    }
     function truncate($str, $length = 24) {
         if (mb_strlen($str) > $length) {
             return mb_substr($str, 0, $length).'...';

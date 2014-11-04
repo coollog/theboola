@@ -249,7 +249,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 
 		// "use_post = false" when used for open graph meta tags and buttons in widget,
 		// true when buttons are added to individual posts on an index webpage
-		public function get_sharing_url( $use_post = false, $add_page = true, $source_id = '' ) {
+		public function get_sharing_url( $use_post = false, $add_page = true, $source_id = false ) {
 			$url = false;
 			if ( is_singular() || $use_post !== false ) {
 				if ( ( $obj = $this->get_post_object( $use_post ) ) === false )
@@ -259,7 +259,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 					if ( isset( $this->p->addons['util']['postmeta'] ) )
 						$url = $this->p->addons['util']['postmeta']->get_options( $post_id, 'sharing_url' );
 					if ( ! empty( $url ) ) 
-						$this->p->debug->log( 'custom postmeta sharing_url = "'.$url.'"' );
+						$this->p->debug->log( 'custom postmeta sharing_url = '.$url );
 					else $url = get_permalink( $post_id );
 
 					if ( $add_page && get_query_var( 'page' ) > 1 ) {
@@ -293,7 +293,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 						if ( isset( $this->p->addons['util']['user'] ) )
 							$url = $this->p->addons['util']['user']->get_options( $author->ID, 'sharing_url' );
 						if ( ! empty( $url ) ) 
-							$this->p->debug->log( 'custom user sharing_url = "'.$url.'"' );
+							$this->p->debug->log( 'custom user sharing_url = '.$url );
 						else $url = get_author_posts_url( $author->ID );
 					}
 				} elseif ( is_archive() ) {
@@ -385,8 +385,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			if ( ! function_exists( 'mb_decode_numericentity' ) )
 				return $encoded;
 
-			$decoded = preg_replace( '/&#\d{2,5};/ue', 
-				'self::decode_utf8_entity( \'$0\' )', $encoded );
+			$decoded = preg_replace( '/&#\d{2,5};/ue', 'self::decode_utf8_entity( \'$0\' )', $encoded );
 
 			return $decoded;
 		}

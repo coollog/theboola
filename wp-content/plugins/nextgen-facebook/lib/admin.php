@@ -38,6 +38,8 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 				add_action( 'network_admin_edit_'.NGFB_SITE_OPTIONS_NAME, array( &$this, 'save_site_options' ) );
 				add_filter( 'network_admin_plugin_action_links', array( &$this, 'add_plugin_action_links' ), 10, 2 );
 			}
+
+			add_image_size( $this->p->cf['lca'].'-preview', 600, 315, true );
 		}
 
 		// load all submenu classes into the $this->submenu array
@@ -200,7 +202,7 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 			$def_opts = $this->p->opt->get_defaults();
 			$opts = SucomUtil::restore_checkboxes( $opts );
 			$opts = array_merge( $this->p->options, $opts );
-			$opts = $this->p->opt->sanitize( $opts, $def_opts );	// cleanup excess options and sanitize
+			$opts = $this->p->opt->sanitize( $opts, $def_opts );
 			$opts = apply_filters( $this->p->cf['lca'].'_save_options', $opts, NGFB_OPTIONS_NAME );
 			$this->p->notice->inf( __( 'Plugin settings have been updated.', NGFB_TEXTDOM ).' '.
 				sprintf( __( 'Wait %d seconds for cache objects to expire (default) or use the \'Clear All Cache\' button.', NGFB_TEXTDOM ), 
@@ -238,7 +240,7 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 			// store message in user options table
 			$this->p->notice->inf( __( 'Plugin settings have been updated.', NGFB_TEXTDOM ), true );
 			wp_redirect( $this->p->util->get_admin_url( $page ).'&settings-updated=true' );
-			exit;
+			exit;	// stop here
 		}
 
 		public function load_single_page() {
@@ -314,8 +316,11 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 			add_meta_box( $this->pagehook.'_info', __( 'Version Information', NGFB_TEXTDOM ), 
 				array( &$this, 'show_metabox_info' ), $this->pagehook, 'side' );
 
-			add_meta_box( $this->pagehook.'_status', __( 'Plugin Features', NGFB_TEXTDOM ), 
-				array( &$this, 'show_metabox_status' ), $this->pagehook, 'side' );
+			add_meta_box( $this->pagehook.'_status_gpl', __( 'Standard Features', NGFB_TEXTDOM ), 
+				array( &$this, 'show_metabox_status_gpl' ), $this->pagehook, 'side' );
+
+			add_meta_box( $this->pagehook.'_status_pro', __( 'Pro Features', NGFB_TEXTDOM ), 
+				array( &$this, 'show_metabox_status_pro' ), $this->pagehook, 'side' );
 		}
 
 		public function show_single_page() {
@@ -508,7 +513,7 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 			echo '</table>';
 		}
 
-		public function show_metabox_status() {
+		public function show_metabox_status_gpl() {
 			$metabox = 'status';
 			echo '<table class="sucom-setting" style="margin-bottom:10px;">';
 			/*
@@ -528,11 +533,16 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 				else $features = array();
 				$features = apply_filters( $lca.'_'.$metabox.'_gpl_features', $features, $lca, $info );
 				if ( ! empty( $features ) ) {
-					echo '<tr><td><h4>'.$this->p->cf['plugin'][$lca]['short'].' Core Features</h4></td></tr>';
+					echo '<tr><td><h4>'.$this->p->cf['plugin'][$lca]['short'].'</h4></td></tr>';
 					$this->show_plugin_status( $features );
 				}
 			}
+			echo '</table>';
+		}
 
+		public function show_metabox_status_pro() {
+			$metabox = 'status';
+			echo '<table class="sucom-setting" style="margin-bottom:10px;">';
 			/*
 			 * Pro version features
 			 */
@@ -556,7 +566,7 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 				}
 				$features = apply_filters( $lca.'_'.$metabox.'_pro_features', $features, $lca, $info );
 				if ( ! empty( $features ) ) {
-					echo '<tr><td><h4>'.$this->p->cf['plugin'][$lca]['short'].' Pro Addons</h4></td></tr>';
+					echo '<tr><td><h4>'.$this->p->cf['plugin'][$lca]['short'].' Pro</h4></td></tr>';
 					$this->show_plugin_status( $features );
 				}
 			}

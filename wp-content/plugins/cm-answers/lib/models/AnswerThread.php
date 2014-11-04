@@ -110,7 +110,7 @@ Click to see: [comment_link]';
 
     public static function getQuestionsTitle()
     {
-        return get_option(self::OPTION_QUESTIONS_TITLE, 'Article Ideas');
+        return get_option(self::OPTION_QUESTIONS_TITLE, 'Questions');
     }
 
     public static function registerAdminMenu()
@@ -120,7 +120,7 @@ Click to see: [comment_link]';
         if( user_can($current_user, 'manage_options') )
         {
 
-            $page = add_menu_page(__('Article Ideas', 'cm-answers'), 'CM Answers', 'edit_posts', self::ADMIN_MENU, create_function('$q', 'return;'));
+            $page = add_menu_page(__('Questions', 'cm-answers'), 'CM Answers', 'edit_posts', self::ADMIN_MENU, create_function('$q', 'return;'));
             add_submenu_page(self::ADMIN_MENU, __('Answers', 'cm-answers'), __('Answers', 'cm-answers'), 'edit_posts', 'edit-comments.php?post_type=' . self::POST_TYPE);
             add_submenu_page(self::ADMIN_MENU, __('Add New', 'cm-answers'), __('Add New', 'cm-answers'), 'edit_posts', 'post-new.php?post_type=' . self::POST_TYPE);
         }
