@@ -1234,7 +1234,7 @@ function ap_ask_form_hidden_input(){
 	wp_nonce_field('post_nonce', 'ask_form');
 	echo '<input type="hidden" name="is_question" value="true" />';
 	echo '<input type="hidden" name="submitted" value="true" />';
-	echo '<button class="btn ap-btn ap-success btn-submit-ask" type="submit">'. __('Ask Question', 'ap'). '</button>';
+	echo '<button class="btn ap-btn ap-success btn-submit-ask" type="submit">'. __('Post Topic', 'ap'). '</button>';
 }
 
 function ap_answer_form_hidden_input($question_id){	
@@ -1242,7 +1242,7 @@ function ap_answer_form_hidden_input($question_id){
 	echo '<input type="hidden" name="is_answer" value="true" />';
 	echo '<input type="hidden" name="submitted" value="true" />';
 	echo '<input type="hidden" name="form_question_id" value="'.$question_id.'" />';
-	echo '<button type="submit" class="btn-submit-ans btn ap-btn ap-success">'. __('Submit Answer', 'ap'). '</button>';
+	echo '<button type="submit" class="btn-submit-ans btn ap-btn ap-success">'. __('Submit Suggestion', 'ap'). '</button>';
 }
 
 
@@ -1252,7 +1252,7 @@ function ap_edit_question_form_hidden_input($post_id){
 	echo '<input type="hidden" name="question_id" value="'.$post_id.'" />';
 	echo '<input type="hidden" name="edited" value="true" />';
 	echo '<input type="hidden" name="submitted" value="true" />';
-	echo '<button type="submit" class="btn-submit-ans btn ap-btn ap-success">'. __('Update question', 'ap'). '</button>';
+	echo '<button type="submit" class="btn-submit-ans btn ap-btn ap-success">'. __('Update Topic', 'ap'). '</button>';
 }
 
 

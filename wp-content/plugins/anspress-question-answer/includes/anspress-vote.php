@@ -485,13 +485,13 @@ function ap_favorite_html($post = false){
 			<span> 
 				<?php  
 					if( $post->favorite =='1' && $post->favorited)
-						_e('You favorited this question', 'ap'); 
+						_e('You favorited this topic', 'ap'); 
 					elseif($post->favorited)
-						printf( __( 'You and %s others favorited this question', 'ap' ), ($post->favorite -1));
+						printf( __( 'You and %s others favorited this topic', 'ap' ), ($post->favorite -1));
 					elseif($post->favorited == 0)
-						 _e( 'Be the first to add this question to favorite', 'ap' );
+						 _e( 'Be the first to add this topic to favorite', 'ap' );
 					else
-						printf( _n( '%s person favorited this question', '%s persons favorited this question', $post->favorite, 'ap' ), $post->favorite); 
+						printf( _n( '%s person favorited this topic', '%s persons favorited this topic', $post->favorite, 'ap' ), $post->favorite); 
 				?>
 			</span>
 		</div>
