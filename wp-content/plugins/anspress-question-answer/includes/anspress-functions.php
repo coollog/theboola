@@ -485,9 +485,9 @@ function ap_questions_tab(){
 			<li class="<?php echo $order == 'active' ? ' active' : ''; ?>"><a href="<?php echo $link.'active'; ?>"><?php _e('Active', 'ap'); ?></a></li>
 			<li class="<?php echo $order == 'newest' ? ' active' : ''; ?>"><a href="<?php echo $link.'newest'; ?>"><?php _e('Newest', 'ap'); ?></a></li>			
 			<li class="<?php echo $order == 'voted' ? ' active' : ''; ?>"><a href="<?php echo $link.'voted'; ?>"><?php _e('Voted', 'ap'); ?></a></li>
-			<li class="<?php echo $order == 'answers' ? ' active' : ''; ?>"><a href="<?php echo $link.'answers'; ?>"><?php _e('Most answered', 'ap'); ?></a></li>
-			<li class="<?php echo $order == 'unanswered' ? ' active' : ''; ?>"><a href="<?php echo $link.'unanswered'; ?>"><?php _e('Unanswered', 'ap'); ?></a></li>
-			<li class="<?php echo $order == 'unsolved' ? ' active' : ''; ?>"><a href="<?php echo $link.'unsolved'; ?>"><?php _e('Unsolved', 'ap'); ?></a></li>
+			<li class="<?php echo $order == 'answers' ? ' active' : ''; ?>"><a href="<?php echo $link.'answers'; ?>"><?php _e('Most replies', 'ap'); ?></a></li>
+			<li class="<?php echo $order == 'unanswered' ? ' active' : ''; ?>"><a href="<?php echo $link.'unanswered'; ?>"><?php _e('Unreplied', 'ap'); ?></a></li>
+			<li class="<?php echo $order == 'unsolved' ? ' active' : ''; ?>"><a href="<?php echo $link.'unsolved'; ?>"><?php _e('Unfinished', 'ap'); ?></a></li>
 			<li class="<?php echo $order == 'oldest' ? ' active' : ''; ?>"><a href="<?php echo $link.'oldest'; ?>"><?php _e('Oldest', 'ap'); ?></a></li>			
 		</ul>
 		<div class="pull-right">
@@ -863,5 +863,5 @@ function ap_ask_btn($parent_id = false){
 	if(get_query_var('parent') != '')
 		$args['parent'] = get_query_var('parent');
 	
-	echo '<a class="ap-btn ap-ask-btn-head pull-right" href="'.ap_get_link_to($args).'">'.__('Ask Question').'</a>';
+	echo '<a class="ap-btn ap-ask-btn-head pull-right" href="'.ap_get_link_to($args).'">'.__('Post Topic').'</a>';
 }

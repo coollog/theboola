@@ -14,7 +14,7 @@ if(ap_user_can_view_question()){
 <div id="ap-single" class="clearfix" itemtype="http://schema.org/Question" itemscope="">
 	<header class="ap-qhead clearfix">		
 		<div class="ap-qtitle-meta">
-			<a class="ap-btn ap-ask-btn-head pull-right" href="<?php echo ap_get_link_to('ask') ?>"><?php _e('Ask Question'); ?></a>
+			<a class="ap-btn ap-ask-btn-head pull-right" href="<?php echo ap_get_link_to('ask') ?>"><?php _e('Post Topic'); ?></a>
 			<h1 class="entry-title" itemprop="name">
 				<?php the_title(); ?>
 			</h1>

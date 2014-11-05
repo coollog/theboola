@@ -6,6 +6,6 @@
 	<?php if (ap_user_can_ask()): ?>
 		<?php ap_ask_form(); ?>
 	<?php else: ?>
-		<h2>Please login or register to ask question</h2>
+		<h2>Please login or register to post topic/h2>
 	<?php endif; ?>	
 </div>
