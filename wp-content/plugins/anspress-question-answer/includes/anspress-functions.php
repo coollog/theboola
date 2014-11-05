@@ -67,8 +67,8 @@ function ap_default_options(){
 		
 		'answers_sort' 			=> 'voted',
 		
-		'base_page_title' 		=> 'AnsPress - Question and answer plugin',
-		'ask_page_title' 		=> 'Ask a question',
+		'base_page_title' 		=> 'Idea Board',
+		'ask_page_title' 		=> 'Post an Topic',
 		'categories_page_title' => 'AnsPress Categories',
 		'tags_page_title' 		=> 'AnsPress Tags',
 		'users_page_title' 		=> 'AnsPress users',
