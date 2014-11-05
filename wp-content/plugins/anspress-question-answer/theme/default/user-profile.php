@@ -15,7 +15,7 @@
 		<?php echo ap_get_user_answers_list($userid); ?>
 	</div>
 <?php else: ?>
-	<div class="ap-bo-about-me ap-icon-chat ap-soft-warning"><?php _e('No answers posted by the user.'); ?></div>
+	<div class="ap-bo-about-me ap-icon-chat ap-soft-warning"><?php _e('No suggestions posted by the user.'); ?></div>
 <?php endif; ?>
 
 <?php if(ap_user_question_count($userid) > 0) : ?>
@@ -24,5 +24,5 @@
 		<?php echo ap_get_user_question_list($userid); ?>
 	</div>
 <?php else: ?>
-	<div class="ap-bo-about-me ap-icon-comment ap-soft-warning"><?php _e('No question posted by the user.'); ?></div>
+	<div class="ap-bo-about-me ap-icon-comment ap-soft-warning"><?php _e('No topics posted by the user.'); ?></div>
 <?php endif; ?>
