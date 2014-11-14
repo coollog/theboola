@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 wp-content/uploads/
 wp-config.php
 wp-content/cache/
 wp-content/w3tc-config/
+=======
+wp-content/uploads/
+wp-config.php
+wp-content/cache/
+wp-content/w3tc-config/
+>>>>>>> dd8263d1b202b37083cc47f68312020ab05e3ab2
 wp-content/advanced-cache.php
