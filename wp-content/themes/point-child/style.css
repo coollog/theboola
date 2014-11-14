@@ -30,4 +30,5 @@ body {
 }
 .secondary-navigation a {
     padding: 9px 30px;
+    min-height: 30px;
   }
