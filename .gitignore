@@ -2,3 +2,4 @@ wp-content/uploads/
 wp-config.php
 wp-content/cache/
 wp-content/w3tc-config/
+wp-content/advanced-cache.php
