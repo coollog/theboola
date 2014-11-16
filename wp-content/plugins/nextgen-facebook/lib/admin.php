@@ -39,7 +39,7 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 				add_filter( 'network_admin_plugin_action_links', array( &$this, 'add_plugin_action_links' ), 10, 2 );
 			}
 
-			add_image_size( $this->p->cf['lca'].'-preview', 600, 315, true );
+			add_image_size( $this->p->cf['lca'].'-preview', 600, 315, true );	// social preview tab background image
 		}
 
 		// load all submenu classes into the $this->submenu array
@@ -229,7 +229,7 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 			}
 
 			$def_opts = $this->p->opt->get_site_defaults();
-			$opts = empty( $_POST[NGFB_SITE_OPTIONS_NAME] ) ?  $def_opts : 
+			$opts = empty( $_POST[NGFB_SITE_OPTIONS_NAME] ) ? $def_opts : 
 				SucomUtil::restore_checkboxes( $_POST[NGFB_SITE_OPTIONS_NAME] );
 			$opts = array_merge( $this->p->site_options, $opts );
 			$opts = $this->p->opt->sanitize( $opts, $def_opts );	// cleanup excess options and sanitize
@@ -264,8 +264,7 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 						case 'check_for_updates': 
 							if ( ! empty( $this->p->options['plugin_'.$this->p->cf['lca'].'_tid'] ) ) {
 								$this->readme_info = array();
-								$this->p->update->check_for_updates();
-								$this->p->notice->inf( __( 'Plugin update information has been checked and updated.', NGFB_TEXTDOM ) );
+								$this->p->update->check_for_updates( null, true );
 							}
 							break;
 
@@ -452,10 +451,8 @@ if ( ! class_exists( 'NgfbAdmin' ) ) {
 			switch ( $this->menu_id ) {
 				case 'readme':
 				case 'setup':
-				case 'whatsnew':
 				case 'sitereadme':
 				case 'sitesetup':
-				case 'sitewhatsnew':
 					break;
 				default:
 					echo $this->get_submit_buttons();

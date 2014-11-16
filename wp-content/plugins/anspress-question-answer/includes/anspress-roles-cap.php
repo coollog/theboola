@@ -71,12 +71,12 @@ class AP_Roles_Permission
 }
 
 function ap_show_form_to_guest(){
-	return ap_opt('allow_non_loggedin');
+	return ap_opt('show_login_signup');
 }
 
 /* Check if a user can ask a question */
 function ap_user_can_ask(){
-	if(current_user_can('ap_new_question') || is_super_admin() || ap_show_form_to_guest())
+	if(current_user_can('ap_new_question') || is_super_admin() || ap_show_form_to_guest() || ap_allow_anonymous())
 		return true;
 	
 	return false;
@@ -167,9 +167,9 @@ function ap_user_can_edit_comment($comment_id){
 		return true;
 	
 	global $current_user;	
-	if( current_user_can('ap_edit_comment') && ($current_user->ID == $comment_id))
+	if( current_user_can('ap_edit_comment') && ($current_user->ID == get_comment($comment_id)->user_id))
 		return true;
-
+	
 	return false;
 }
 
@@ -178,7 +178,7 @@ function ap_user_can_delete_comment($comment_id){
 		return true;
 	
 	global $current_user;	
-	if( current_user_can('ap_delete_comment') && ($current_user->ID == $comment_id))
+	if( current_user_can('ap_delete_comment') && ($current_user->ID == get_comment($comment_id)->user_id))
 		return true;
 
 	return false;
@@ -219,7 +219,7 @@ function ap_user_can_message(){
 }
 
 function ap_user_can_create_tag(){
-	if(is_super_admin() || (current_user_can('ap_new_tag') && ap_get_points() > ap_opt('min_point_new_tag') ))
+	if(is_super_admin() || (current_user_can('ap_new_tag') && ap_get_points() >= ap_opt('min_point_new_tag') ))
 		return true;
 	
 	return false;
@@ -251,4 +251,8 @@ function ap_user_can_view_question($question_id = false){
 	
 	return false;
 	
+}
+
+function ap_allow_anonymous(){
+	return ap_opt('allow_anonymous');
 }

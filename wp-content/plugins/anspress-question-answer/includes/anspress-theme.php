@@ -39,6 +39,8 @@ class anspress_theme {
 		add_filter('wp_title', array($this, 'ap_title'), 100, 2);
 		add_filter( 'the_title', array($this, 'the_title'), 100, 2 );
 		//add_filter( 'nav_menu_link_attributes', array($this, 'menu'), 10, 3 );
+		add_filter( 'wp_head', array($this, 'feed_link'), 9);
+
 	}
 	
 	// include required theme files
@@ -90,6 +92,9 @@ class anspress_theme {
 		 if($post->post_type == 'question' || $post->post_type == 'answer' ){ 
 			return ap_get_theme_location('comments.php');
 		 }
+		 else {
+			return $comment_template;
+		 }
 	}
 	
 	public function disable_comment_form( $open, $post_id ) {
@@ -121,8 +126,13 @@ class anspress_theme {
 	}
 	
 	public function menu( $atts, $item, $args ) {
-		var_dump($atts);
 		return $atts;
+	}
+	
+	public function feed_link( ) {
+		if(is_anspress()){
+			echo '<link href="'. esc_url( home_url( '/feed/question-feed' ) ) .'" title="'.__('Question >> Feed', 'ap').'" type="application/rss+xml" rel="alternate">';
+		}
 	}
 	
 

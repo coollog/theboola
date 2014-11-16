@@ -14,19 +14,24 @@ if(ap_user_can_view_question()){
 <div id="ap-single" class="clearfix" itemtype="http://schema.org/Question" itemscope="">
 	<header class="ap-qhead clearfix">		
 		<div class="ap-qtitle-meta">
-			<a class="ap-btn ap-ask-btn-head pull-right" href="<?php echo ap_get_link_to('ask') ?>"><?php _e('Post Topic'); ?></a>
-			<h1 class="entry-title" itemprop="name">
-				<?php the_title(); ?>
-			</h1>
+			<a class="ap-btn ap-ask-btn-head pull-right" href="<?php echo ap_get_link_to('ask') ?>"><?php _e('Ask Question'); ?></a>
+			<?php if (!ap_opt("double_titles")):?>
+				<h1 class="entry-title" itemprop="name">
+					<?php the_title(); ?>
+				</h1>
+			<?php else:?>
+				<h1 style="display:none" class="entry-title" itemprop="name">
+					<?php the_title(); ?>
+				</h1>
+			<?php endif;?>
 			<div class="ap-qtopmeta">
 				<?php ap_favorite_html(); ?>		
 			</div>
 		</div>
 	</header>
 	<div class="ap-question-lr">		
-		<div class="ap-question-left ap-tab-content">
-			<div id="discussion" class="active">
-				<span class="ap-qtline"></span>
+		<div class="ap-question-left">
+			<div id="discussion">
 				<div id="question" role="main" class="ap-content question" data-id="<?php echo get_the_ID(); ?>">					
 					<div class="ap-question-cells clearfix">
 						<div class="ap-avatar">
@@ -40,7 +45,7 @@ if(ap_user_can_view_question()){
 									<div class="ap-single-vote"><?php ap_vote_html(); ?></div>
 									<div class="ap-meta">
 										<?php 
-											printf( __( '<a href="'.ap_user_link(get_the_author_meta('ID')).'?rel=author" class="author"><span itemprop="author">%s</span></a> <span class="when">posted about %s ago</span>', 'ap' ), ap_user_display_name(false, true) , ap_human_time( get_the_time('U')));
+											printf( __( '<a href="'.ap_user_link(get_the_author_meta('ID')).'?rel=author" class="author"><span itemprop="author">%s</span></a> <span class="when">asked about %s ago</span>', 'ap' ), ap_user_display_name(false, true) , ap_human_time( get_the_time('U')));
 										?>
 									</div>									
 								</div>			
@@ -65,13 +70,13 @@ if(ap_user_can_view_question()){
 									<ul class="ap-question-meta">
 										<li>
 											<?php 
-												printf( __( '<span>Posted</span><strong><time itemprop="datePublished" datetime="%s">%s Ago</time></strong>', 'ap' ), get_the_time('c', get_question_id()), ap_human_time( get_the_time('U')));
+												printf( __( '<span>Asked</span><strong><time itemprop="datePublished" datetime="%s">%s Ago</time></strong>', 'ap' ), get_the_time('c', get_question_id()), ap_human_time( get_the_time('U')));
 											?>
 										</li>
 										<li>
 											<?php 
 												$count = ap_count_ans(get_the_ID());
-												printf( _n('<span>Reply</span><strong data-view="ap-answer-count-label">1 Reply</strong>', '<span>Replies</span><strong data-view="ap-answer-count-label">%d Replies</strong>', $count, 'ap'), $count) ; 
+												printf( _n('<span>Answer</span><strong data-view="ap-answer-count-label">1 Answer</strong>', '<span>Answers</span><strong data-view="ap-answer-count-label">%d Answers</strong>', $count, 'ap'), $count) ; 
 											?>
 										</li>
 										<li>
@@ -109,11 +114,6 @@ if(ap_user_can_view_question()){
 		<div class="ap-question-right">
 			<div class="ap-question-right-inner">
 				<?php ap_question_side_tab(get_question_id()); ?>
-				<!-- Start Views and Answers -->
-				<div class="ap-question-side">			
-					
-				</div>
-				<!-- End Views and Answers -->
 				
 				<!-- Start labels -->
 				<div class="ap-question-side">
@@ -152,7 +152,6 @@ if(ap_user_can_view_question()){
 				</div>
 				<!-- End participants -->
 			</div>
-			<?php dynamic_sidebar( 'ap-qsidebar' ); ?>
 		</div>
 	</div>
 </div>

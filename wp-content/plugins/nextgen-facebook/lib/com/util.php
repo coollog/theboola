@@ -335,14 +335,18 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			return ( is_home() && 'page' == get_option( 'show_on_front' ) );
 		}
 
-		public function get_cache_url( $url ) {
+		public function get_cache_url( $url, $url_ext = '' ) {
+
 			// make sure the cache expiration is greater than 0 hours
 			if ( empty( $this->p->cache->file_expire ) ) 
 				return $url;
+
 			// facebook javascript does not work when hosted locally
 			if ( preg_match( '/:\/\/connect.facebook.net/', $url ) ) 
 				return $url;
-			return ( apply_filters( $this->p->cf['lca'].'_rewrite_url', $this->p->cache->get( $url ) ) );
+
+			return ( apply_filters( $this->p->cf['lca'].'_rewrite_url',
+				$this->p->cache->get( $url, 'url', 'file', false, false, $url_ext ) ) );
 		}
 
 		public function fix_relative_url( $url = '' ) {
@@ -479,7 +483,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			$this->p->debug->args( array( 'lca' => $lca, 'expire_secs' => $expire_secs ) );
 			$plugin_info = array();
 			if ( ! defined( strtoupper( $lca ).'_PLUGINDIR' ) ) {
-				$this->p->debug->log( defined( strtoupper( $lca ).'_PLUGINDIR' ).' is undefined and required for readme.txt path' );
+				$this->p->debug->log( strtoupper( $lca ).'_PLUGINDIR is undefined and required for readme.txt path' );
 				return $plugin_info;
 			}
 			$readme_txt = constant( strtoupper( $lca ).'_PLUGINDIR' ).'readme.txt';

@@ -106,8 +106,15 @@ if ( ! class_exists( 'NgfbSharingPinterest' ) ) {
 
 		public function __construct( &$plugin ) {
 			$this->p =& $plugin;
-			$this->p->util->add_plugin_filters( $this, array( 'get_defaults' => 1 ) );
-			$this->p->util->add_img_sizes_from_opts( array( 'pin_img' => 'pinterest' ) );
+			$this->p->util->add_plugin_filters( $this, array( 
+				'plugin_image_sizes' => 1,
+				'get_defaults' => 1,
+			) );
+		}
+
+		public function filter_plugin_image_sizes( $sizes ) {
+			$sizes['pin_img'] = array( 'name' => 'pinterest', 'label' => 'Pinterest Button Image Dimensions' );
+			return $sizes;
 		}
 
 		public function filter_get_defaults( $opts_def ) {
@@ -115,6 +122,7 @@ if ( ! class_exists( 'NgfbSharingPinterest' ) ) {
 		}
 
 		public function get_html( $atts = array(), &$opts = array() ) {
+			$this->p->debug->mark();
 			if ( empty( $opts ) ) 
 				$opts =& $this->p->options;
 			$prot = empty( $_SERVER['HTTPS'] ) ? 'http:' : 'https:';

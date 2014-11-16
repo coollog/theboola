@@ -72,7 +72,7 @@ if ( ! class_exists( 'NgfbSubmenuSharingTwitter' ) && class_exists( 'NgfbSubmenu
 				$rows[] = $this->p->util->th( 'Shorten URLs with', 'short', null, 
 				'If you select a URL shortening service here, <strong>you must also enter its API credentials</strong>
 				on the '.$this->p->util->get_admin_url( 'advanced#sucom-tab_plugin_apikeys', 'Advanced settings page' ).'.' ).
-				( $this->p->check->aop( 'ngfb' ) ?  '<td>'.$this->form->get_select( 'twitter_shortener', $this->p->cf['form']['shorteners'], 'medium' ).'&nbsp;' :
+				( $this->p->check->aop( 'ngfb' ) ? '<td>'.$this->form->get_select( 'twitter_shortener', $this->p->cf['form']['shorteners'], 'medium' ).'&nbsp;' :
 				'<td class="blank">'.$this->form->get_hidden( 'twitter_shortener' ).$this->p->cf['form']['shorteners'][$this->p->options['twitter_shortener']].' &mdash; ' ).
 				' using these '.$this->p->util->get_admin_url( 'advanced#sucom-tab_plugin_apikeys', 'API Keys' ).'</td>';
 			}
@@ -120,6 +120,7 @@ if ( ! class_exists( 'NgfbSharingTwitter' ) ) {
 		}
 
 		public function get_html( $atts = array(), &$opts = array() ) {
+			$this->p->debug->mark();
 			if ( empty( $opts ) ) 
 				$opts =& $this->p->options;
 			global $post; 
@@ -130,11 +131,9 @@ if ( ! class_exists( 'NgfbSharingTwitter' ) ) {
 
 			$long_url = empty( $atts['url'] ) ? 
 				$this->p->util->get_sharing_url( $use_post, $atts['add_page'], $source_id ) : 
-				apply_filters( $this->p->cf['lca'].'_sharing_url', $atts['url'], 
-					$use_post, $atts['add_page'], $source_id );
+				apply_filters( $this->p->cf['lca'].'_sharing_url', $atts['url'], $use_post, $atts['add_page'], $source_id );
 
-			$short_url = apply_filters( $this->p->cf['lca'].'_shorten_url', 
-				$long_url, $opts['twitter_shortener'] );
+			$short_url = apply_filters( $this->p->cf['lca'].'_shorten_url', $long_url, $opts['twitter_shortener'] );
 
 			if ( ! array_key_exists( 'lang', $atts ) )
 				$atts['lang'] = empty( $opts['twitter_lang'] ) ? 'en' : $opts['twitter_lang'];

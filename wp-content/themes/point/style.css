@@ -4,7 +4,7 @@ Theme URI: http://mythemeshop.com/themes/point
 Author: MyThemeShop
 Author URI: http://mythemeshop.com/
 Description: Point is a fluid responsive and multipurpose WP Theme. Through the advanced options panel, you can choose from multiple site layouts, backgrounds and color schemes, as well as control specific features of the theme. ==>>>> Demo: ==>>>> http://bit.ly/1nPzfbC It includes 9 custom widgets, 2 site layouts, an author box and related posts widget, ad management, cross-browser compatibility, RTL Language support and it's translation-ready, all search engine optimized. Support for free themes is provided through the MyThemeShop forums. **Notable features => Fluid responsive layout. | Advanced options panel with ability to upload logo, favicon, customize settings and more. | 7 custom widgets included. | SEO Optimized | 2 site layouts to choose from. | Full width page template included. | Translation-ready. | Cross-browser compatible. | Ad management to control ad display. | Related posts widget. | Author box widget. | Unlimited color schemes. | Unlimited background colors, or upload your own image. | Option to disable or enable responsiveness | Numbered pagination | Trending stories option. | 2 featured post sections. | RTL Language Support | And much more! ==>>>> Support ==>>>> http://community.mythemeshop.com/
-Version: 1.1
+Version: 1.2.2
 Tags: light, custom-menu, custom-header, custom-background, custom-colors, two-columns, right-sidebar, theme-options, threaded-comments, full-width-template, sticky-post, translation-ready, gray, blue, featured-images, theme-options, rtl-language-support
 License: GPL
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -838,7 +838,7 @@ hr {
     -moz-transition: all 0.25s linear;
     transition: all 0.25s linear;
     z-index: 1;
-    background: url(/wp-content/themes/point/images/sprite.png) no-repeat center center;
+    background: url(images/sprite.png) no-repeat center center;
     background-position: 2px -71px;
     text-indent: -999em;
     right: 3px;
@@ -1065,7 +1065,7 @@ footer .carousel img { margin-top: 0 }
     left: 50%;
     text-align: center;
     color: #fff;
-    background: url('/wp-content/themes/point/images/sprite.png') center no-repeat;
+    background: url('images/sprite.png') center no-repeat;
 }
 .foot-logo {
     float: left;
@@ -1130,7 +1130,7 @@ a.toplink {
     top: 9px;
     width: 27px;
     height: 27px;
-    background: url(/wp-content/themes/point/images/sprite.png) no-repeat center center;
+    background: url(images/sprite.png) no-repeat center center;
     background-position: 0 0;
     border-radius: 20px;
     -webkit-border-radius: 20px;

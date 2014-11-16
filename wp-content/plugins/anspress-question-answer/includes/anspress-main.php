@@ -31,7 +31,8 @@ class anspress {
 	 * and styles.
 	 */
 	private function __construct() {
-
+	
+		remove_action('pre_comment_on_post', 'dsq_pre_comment_on_post');
 		// Load plugin text domain
 		add_action( 'wp_loaded', array( $this, 'flush_rules' ) );
 		
@@ -93,6 +94,7 @@ class anspress {
 		if(is_question()){
 			global $wp;
 			echo '<link href="'.home_url(add_query_arg(array(),$wp->request)).'" title="'.wp_title( '|', false, 'right' ).'" type="application/rss+xml" rel="alternate">';
+			echo '<link rel="canonical" href="'.get_permalink(get_question_id()).'"> ';
 		}
 	}
 
@@ -267,6 +269,8 @@ class anspress {
 			$slug. "ask/([^/]+)/?" => "index.php?page_id=".$base_page_id."&ap_page=ask&parent=".$wp_rewrite->preg_index(1),
 			
 			$slug. "([^/]+)/?" => "index.php?page_id=".$base_page_id."&ap_page=".$wp_rewrite->preg_index(1),
+			
+			//"feed/([^/]+)/?" => "index.php?feed=feed&parent=".$wp_rewrite->preg_index(1),
 		);  
 		$ap_rules = $new_rules;
 		return $wp_rewrite->rules = $new_rules + $wp_rewrite->rules;  
@@ -274,7 +278,9 @@ class anspress {
 	
 	public function body_class($classes){
 		// add anspress class to body
-		$classes[] = 'anspress';
+		if(is_anspress())
+			$classes[] = 'anspress';
+			
 		// return the $classes array
 		return $classes;
 	}

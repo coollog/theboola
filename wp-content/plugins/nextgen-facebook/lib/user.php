@@ -48,6 +48,7 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 				case 'profile':
 					$add_metabox = empty( $this->p->options[ 'plugin_add_to_user' ] ) ? false : true;
 					if ( apply_filters( $this->p->cf['lca'].'_add_metabox_usermeta', $add_metabox, $page ) === true ) {
+						$this->p->util->add_plugin_image_sizes( $post_id );
 						do_action( $this->p->cf['lca'].'_admin_usermeta_header', $page );
 						$this->header_tags = $this->p->head->get_header_array( false );
 						$this->post_info = $this->p->head->get_post_info( $this->header_tags );
@@ -81,7 +82,7 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 			$tabs = apply_filters( $this->p->cf['lca'].'_'.$metabox.'_tabs', 
 				array( 
 					'header' => 'Title and Descriptions', 
-					'media' => 'Image and Video', 
+					'media' => 'Priority Media', 
 					'preview' => 'Social Preview',
 					'tags' => 'Header Preview',
 					'tools' => 'Validation Tools'
@@ -390,7 +391,7 @@ if ( ! class_exists( 'NgfbUser' ) ) {
 				),
 			);
 			$transients = apply_filters( $this->p->cf['lca'].'_user_cache_transients', $transients, $post_id, $lang, $sharing_url );
-			$this->p->util->flush_cache_objects( $transients );
+			$deleted = $this->p->util->flush_cache_objects( $transients );
 			return $user_id;
 		}
 

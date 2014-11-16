@@ -1,3 +1,0 @@
-<div id="chorus_authoring" class="">
-  Initializing ...
-</div>

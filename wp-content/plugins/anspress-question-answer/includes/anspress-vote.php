@@ -485,13 +485,13 @@ function ap_favorite_html($post = false){
 			<span> 
 				<?php  
 					if( $post->favorite =='1' && $post->favorited)
-						_e('You favorited this topic', 'ap'); 
+						_e('You favorited this question', 'ap'); 
 					elseif($post->favorited)
-						printf( __( 'You and %s others favorited this topic', 'ap' ), ($post->favorite -1));
-					elseif($post->favorited == 0)
-						 _e( 'Be the first to add this topic to favorite', 'ap' );
+						printf( __( 'You and %s others favorited this question', 'ap' ), ($post->favorite -1));
+					elseif($post->favorite == 0)
+						 _e( 'Be the first to add this question to favorite', 'ap' );
 					else
-						printf( _n( '%s person favorited this topic', '%s persons favorited this topic', $post->favorite, 'ap' ), $post->favorite); 
+						printf( _n( '%s person favorited this question', '%s persons favorited this question', $post->favorite, 'ap' ), $post->favorite); 
 				?>
 			</span>
 		</div>
@@ -588,7 +588,7 @@ function ap_flag_note_modal(){
 			<div class="ap-modal-bg"></div>
 			<div class="ap-modal-content">
 				<div class="ap-modal-header">					
-					<h4 class="ap-modal-title"><?php _e('I am flagging this post because', 'ap'); ?></h4>
+					<h4 class="ap-modal-title"><?php _e('I am flagging this post because', 'ap'); ?><span class="ap-modal-close">&times;</span></h4>
 				</div>
 				<div class="ap-modal-body">
 				<?php 
@@ -634,5 +634,5 @@ function ap_follow_btn_html($userid, $small = false){
 		
 	$followed = ap_is_user_voted($userid, 'follow', get_current_user_id());
 	$text = $followed ? __('Unfollow', 'ap') : __('Follow', 'ap');
-	echo '<a class="btn ap-btn ap-follow-btn '.($followed ? 'ap-unfollow ap-icon-minus' : 'ap-icon-plus').($small ? ' ap-tip' : '').'" href="#" data-action="ap-follow" data-args=\''.json_encode(array('user' => $userid, 'nonce' => wp_create_nonce( 'follow_'.$userid))).'\' title="'.$text.'">'.($small ? '' : $text).'</a>';
+	echo '<a class="btn ap-btn ap-follow-btn '.($followed ? 'ap-unfollow '.ap_icon('unfollow') : ap_icon('follow')).($small ? ' ap-tip' : '').'" href="#" data-action="ap-follow" data-args=\''.json_encode(array('user' => $userid, 'nonce' => wp_create_nonce( 'follow_'.$userid))).'\' title="'.$text.'">'.($small ? '' : $text).'</a>';
 }

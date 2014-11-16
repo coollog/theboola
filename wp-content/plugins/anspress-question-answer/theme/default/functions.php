@@ -23,16 +23,19 @@ function init_scripts_front(){
 			
 		wp_enqueue_script( 'ap-site-js', ANSPRESS_URL.'assets/ap-site.js', 'jquery', AP_VERSION);		
 		wp_enqueue_script( 'tooltipster', ap_get_theme_url('js/jquery.tooltipster.min.js'), 'jquery', AP_VERSION);
+		wp_enqueue_script( 'jstorage', ap_get_theme_url('js/jstorage.js'), 'jquery', AP_VERSION);
 		//wp_enqueue_script( 'perfect-scrollbar', ap_get_theme_url('js/perfect-scrollbar.min.js'), 'jquery', AP_VERSION);
 		wp_enqueue_script( 'ap-js', ap_get_theme_url('js/ap.js'), 'jquery', AP_VERSION);
 		wp_enqueue_style( 'tagsinput', ap_get_theme_url('css/bootstrap-tagsinput.css'), array(), AP_VERSION);
 		wp_enqueue_style( 'tooltipster', ap_get_theme_url('css/tooltipster.css'), array(), AP_VERSION);
 		//wp_enqueue_style( 'perfect-scrollbar', ap_get_theme_url('css/perfect-scrollbar.min.css'), array(), AP_VERSION);
-		wp_enqueue_style( 'ap-style', ap_get_theme_url('css/ap.css'), array(), AP_VERSION);
+		wp_enqueue_style( 'ap-style', ap_get_theme_url('css/ap.css'), array(), AP_VERSION);		
 		
 		wp_enqueue_style( 'ap-fonts', ap_get_theme_url('fonts/style.css'), array(), AP_VERSION);
 		
 		do_action('ap_enqueue');
+		
+		wp_enqueue_style( 'ap-overrides', ap_get_theme_url('css/overrides.css'), array(), AP_VERSION);
 		
 		?>
 			<script type="text/javascript">
@@ -84,6 +87,7 @@ if ( ! function_exists( 'ap_comment' ) ) :
 		$GLOBALS['comment'] = $comment;
 		?>
 		<li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
+			<!-- comment #<?php comment_ID(); ?> -->
 			<article id="comment-<?php comment_ID(); ?>" class="comment">
 				<div class="ap-avatar">
 					<a href="<?php echo ap_user_link($comment->user_id); ?>">
@@ -162,3 +166,14 @@ function ap_widgets_positions(){
 		'after_title'  	=> '</h3>',
 	) );
 }
+
+/* for overriding icon in social login plugin */
+function ap_social_login_icons( $provider_id, $provider_name, $authenticate_url )
+{
+	?>
+	<a rel = "nofollow" href = "<?php echo $authenticate_url; ?>" data-provider = "<?php echo  $provider_id ?>" class = "wp-social-login-provider wp-social-login-provider-<?php echo strtolower( $provider_id ); ?> btn btn-<?php echo strtolower( $provider_id ); ?>">
+		<i class="ap-icon-<?php echo strtolower( $provider_id ); ?>"></i> <span><?php echo $provider_name; ?></span>
+	</a>
+	<?php
+}
+add_filter( 'wsl_render_login_form_alter_provider_icon_markup', 'ap_social_login_icons', 10, 3 );

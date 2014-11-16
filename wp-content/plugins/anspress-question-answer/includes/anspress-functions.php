@@ -44,18 +44,22 @@ function ap_default_options(){
 	return array(
 		'base_page' 			=> get_option('ap_base_page_created'),
 		'base_page_slug' 		=> $page->post_name,
-		'allow_non_loggedin' 	=> true,
+		'custom_signup_url'		=> '',
+		'custom_login_url'		=> '',
+		'show_login_signup' 	=> true,
 		'show_login' 			=> true,
 		'show_signup' 			=> true,
-		'login_after_signup' 	=> true,
+		'double_titles'			=> false,
+		'show_social_login'		=> false,
 		'theme' 				=> 'default',
 		'author_credits' 		=> false,
-		'clear_databse' 		=> false,
+		'clear_database' 		=> false,
 		'minimum_qtitle_length'	=> 3,
 		'minimum_question_length'=> 5,
 		'multiple_answers' 		=> false,
 		'minimum_ans_length' 	=> 5,
 		'avatar_size_qquestion' => 30,
+		'can_private_question'	=> false,
 		'avatar_size_qanswer' 	=> 30,
 		'avatar_size_qcomment' 	=> 25,
 		'down_vote_points' 		=> -1,
@@ -67,8 +71,8 @@ function ap_default_options(){
 		
 		'answers_sort' 			=> 'voted',
 		
-		'base_page_title' 		=> 'Idea Board',
-		'ask_page_title' 		=> 'Post an Topic',
+		'base_page_title' 		=> 'AnsPress - Question and answer plugin',
+		'ask_page_title' 		=> 'Ask a question',
 		'categories_page_title' => 'AnsPress Categories',
 		'tags_page_title' 		=> 'AnsPress Tags',
 		'users_page_title' 		=> 'AnsPress users',
@@ -85,6 +89,8 @@ function ap_default_options(){
 		'users_per_page'		=> 15,
 		'cover_width_small'		=> 275,
 		'cover_height_small'	=> 80,
+		'followers_limit'		=> 10,
+		'following_limit'		=> 10,
 		'captcha_ask'			=> true,
 		'captcha_answer'		=> true,
 		'moderate_new_question'	=> 'no_mod',
@@ -93,6 +99,9 @@ function ap_default_options(){
 		'question_prefix'		=> 'question',
 		'min_point_new_tag'		=> 100,
 		'min_tags'				=> 2,
+		'allow_anonymous'		=> false,
+		'enable_captcha_skip'	=> false,
+		'captcha_skip_rpoints'	=> 40
 	);
 }
 
@@ -434,8 +443,7 @@ function ap_ans_tab(){
 		$link = '?sort=';
 		$ans_count = ap_count_ans(get_the_ID());
 	?>
-		<div class="ap-anstabhead ap-tlitem clearfix">
-			<span class="ap-icon-answer ap-tlicon"></span>
+		<div class="ap-anstabhead clearfix">
 			<h2 class="ap-answer-count pull-left" data-view="ap-answer-count-label"><?php printf(_n('<span>1 Answer</span>', '<span>%d Answers</span>', $ans_count, 'ap'), $ans_count); ?><span itemprop="answerCount" style="display:none;"><?php echo $ans_count; ?></span></h2>
 			<ul class="ap-ans-tab ap-tabs clearfix" role="tablist">
 				<li class="<?php echo $order == 'newest' ? ' active' : ''; ?>"><a href="<?php echo $link.'newest'; ?>"><?php _e('Newest', 'ap'); ?></a></li>
@@ -485,13 +493,13 @@ function ap_questions_tab(){
 			<li class="<?php echo $order == 'active' ? ' active' : ''; ?>"><a href="<?php echo $link.'active'; ?>"><?php _e('Active', 'ap'); ?></a></li>
 			<li class="<?php echo $order == 'newest' ? ' active' : ''; ?>"><a href="<?php echo $link.'newest'; ?>"><?php _e('Newest', 'ap'); ?></a></li>			
 			<li class="<?php echo $order == 'voted' ? ' active' : ''; ?>"><a href="<?php echo $link.'voted'; ?>"><?php _e('Voted', 'ap'); ?></a></li>
-			<li class="<?php echo $order == 'answers' ? ' active' : ''; ?>"><a href="<?php echo $link.'answers'; ?>"><?php _e('Most replies', 'ap'); ?></a></li>
-			<li class="<?php echo $order == 'unanswered' ? ' active' : ''; ?>"><a href="<?php echo $link.'unanswered'; ?>"><?php _e('Unreplied', 'ap'); ?></a></li>
-			<li class="<?php echo $order == 'unsolved' ? ' active' : ''; ?>"><a href="<?php echo $link.'unsolved'; ?>"><?php _e('Unfinished', 'ap'); ?></a></li>
+			<li class="<?php echo $order == 'answers' ? ' active' : ''; ?>"><a href="<?php echo $link.'answers'; ?>"><?php _e('Most answered', 'ap'); ?></a></li>
+			<li class="<?php echo $order == 'unanswered' ? ' active' : ''; ?>"><a href="<?php echo $link.'unanswered'; ?>"><?php _e('Unanswered', 'ap'); ?></a></li>
+			<li class="<?php echo $order == 'unsolved' ? ' active' : ''; ?>"><a href="<?php echo $link.'unsolved'; ?>"><?php _e('Unsolved', 'ap'); ?></a></li>
 			<li class="<?php echo $order == 'oldest' ? ' active' : ''; ?>"><a href="<?php echo $link.'oldest'; ?>"><?php _e('Oldest', 'ap'); ?></a></li>			
 		</ul>
 		<div class="pull-right">
-			<ul class="ap_status ap-dropdown">
+			<div class="ap_status ap-dropdown">
 				<a href="#" class="btn ap-btn ap-dropdown-toggle"><?php _e('Label', 'ap'); ?> &#9662;</a>
 				<ul class="ap-dropdown-menu">
 					<?php
@@ -502,7 +510,7 @@ function ap_questions_tab(){
 						}
 					?>
 				</ul>
-			</ul>
+			</div>
 		</div>
 	</div>
 	<?php
@@ -863,5 +871,22 @@ function ap_ask_btn($parent_id = false){
 	if(get_query_var('parent') != '')
 		$args['parent'] = get_query_var('parent');
 	
-	echo '<a class="ap-btn ap-ask-btn-head pull-right" href="'.ap_get_link_to($args).'">'.__('Post Topic').'</a>';
+	echo '<a class="ap-btn ap-ask-btn-head pull-right" href="'.ap_get_link_to($args).'">'.__('Ask Question').'</a>';
+}
+
+function ap_icon($name){
+	$icons = array(
+		'follow' 		=> 'ap-icon-plus',
+		'unfollow' 		=> 'ap-icon-minus',
+		'upload' 		=> 'ap-icon-upload',
+		'unchecked' 	=> 'ap-icon-checkbox-unchecked',
+		'checked' 		=> 'ap-icon-checkbox-checked',
+	);
+	
+	$icons = apply_filters('ap_icon', $icons);
+	
+	if(isset($icons[$name]))
+		return $icons[$name];
+		
+	return '';
 }

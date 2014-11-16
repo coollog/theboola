@@ -24,7 +24,7 @@ class AP_QuickAsk_Widget extends WP_Widget {
 			$title = $instance[ 'title' ];
 		}
 		else {
-			$title = __( 'Post topic', 'ap' );
+			$title = __( 'Ask questions', 'ap' );
 		}
 		?>
 		<p>

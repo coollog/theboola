@@ -56,17 +56,33 @@ if ( ! isset( $_REQUEST['settings-updated'] ) )
 					<th scope="row">Allow non loggedin to see question & answer form</th>
 					<td>
 						<fieldset>
-							<input type="checkbox" id="allow_non_loggedin" name="anspress_opt[allow_non_loggedin]" value="1" <?php checked( true, $settings['allow_non_loggedin'] ); ?> />
-							<label for="allow_non_loggedin">Allow non logged in (but still they need to signup or login)</label>
+							<input type="checkbox" id="allow_anonymous" name="anspress_opt[allow_anonymous]" value="1" <?php checked( true, $settings['allow_anonymous'] ); ?> />
+							<label for="allow_anonymous"><?php _e('Allow anonymous', 'ap') ?></label>
+						</fieldset>
+						<fieldset>
+							<input type="checkbox" id="show_login_signup" name="anspress_opt[show_login_signup]" value="1" <?php checked( true, $settings['show_login_signup'] ); ?> />
+							<label for="show_login_signup">Show login and signup</label>
 						</fieldset>
 						<fieldset>
 							<input type="checkbox" id="show_signup" name="anspress_opt[show_signup]" value="1" <?php checked( true, $settings['show_signup'] ); ?> />
 							<label for="show_signup">Show signup form</label>
 						</fieldset>
 						<fieldset>
-							<input type="checkbox" id="login_after_signup" name="anspress_opt[login_after_signup]" value="1" <?php checked( true, $settings['login_after_signup'] ); ?> />
-							<label for="login_after_signup">Automatically login after signup</label>
-						</fieldset>						
+							<input type="checkbox" id="show_login" name="anspress_opt[show_login]" value="1" <?php checked( true, $settings['show_login'] ); ?> />
+							<label for="show_login">Show login form</label>
+						</fieldset>
+						<fieldset>
+							<input type="checkbox" id="show_social_login" name="anspress_opt[show_social_login]" value="1" <?php checked( true, $settings['show_social_login'] ); ?> />
+							<label for="show_social_login">Show social login form</label>
+						</fieldset>
+						<fieldset>
+							<p>Type down your own custom signup url or leave it blank for the default AnsPress modal signup</p>
+							<input type="url" name="anspress_opt[custom_signup_url]" placeholder="http://yorsite.com/signup" id="custom_signup_url" value="<?php echo $settings['custom_signup_url'] ; ?>" />
+						</fieldset>
+						<fieldset>
+							<p>Type down your own custom login url or leave it blank for the default AnsPress modal login</p>
+							<input type="url" name="anspress_opt[custom_login_url]" placeholder="http://yorsite.com/login" id="custom_login_url" value="<?php echo $settings['custom_login_url'] ; ?>" />
+						</fieldset>
 					</td>
 				</tr>
 				<tr valign="top">
@@ -76,7 +92,20 @@ if ( ! isset( $_REQUEST['settings-updated'] ) )
 						<label for="author_credits">Hide Author Credits</label>
 					</td>
 				</tr>
-
+				<tr valign="top">
+					<th scope="row">Double titles</th>
+					<td>
+						<input type="checkbox" id="double_titles" name="anspress_opt[double_titles]" value="1" <?php checked( true, $settings['double_titles'] ); ?> />
+						<label for="double_titles">If you see double titles on your pages enable this checkbox </label>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">Disable private question</th>
+					<td>
+						<input type="checkbox" id="can_private_question" name="anspress_opt[can_private_question]" value="1" <?php checked( true, $settings['can_private_question'] ); ?> />
+						<label for="can_private_question">Disable the ability to ask a question as private</label>
+					</td>
+				</tr>
 			</table>
 			</div>
 			<div class="tab-pane" id="ap-question">		
@@ -168,7 +197,7 @@ if ( ! isset( $_REQUEST['settings-updated'] ) )
 						<th scope="row"><label for="max_tags"><?php _e('Maximum tags', 'ap'); ?></label></th>
 						<td>
 							<input type="number" min="1" id="max_tags" name="anspress_opt[max_tags]" value="<?php echo $settings['max_tags']; ?>" />
-							<p class="description"><?php _e('Maximum numbers of user can add when asking.', 'ap'); ?></p>
+							<p class="description"><?php _e('Maximum numbers of tags that user can add when asking.', 'ap'); ?></p>
 						</td>
 					</tr>
 					<tr valign="top">
@@ -182,7 +211,7 @@ if ( ! isset( $_REQUEST['settings-updated'] ) )
 						<th scope="row"><label for="min_point_new_tag"><?php _e('Minimum points to create new tag', 'ap'); ?></label></th>
 						<td>
 							<input type="number" min="1" id="min_point_new_tag" name="anspress_opt[min_point_new_tag]" value="<?php echo $settings['min_point_new_tag']; ?>" />
-							<p class="description"><?php _e('User must have more then this point for creating new tag', 'ap'); ?></p>
+							<p class="description"><?php _e('User must have more or equal to those points to create a new tag.', 'ap'); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -203,6 +232,16 @@ if ( ! isset( $_REQUEST['settings-updated'] ) )
 			
 			<div class="tab-pane" id="ap-user">
 				<table class="form-table">
+					<!--<tr valign="top">
+						<th scope="row"><label for="default_avatar"><?php _e('Default avatar', 'ap'); ?></label></th>
+						<td>
+							<div class="uploader">
+								<input id="default_avatar" name="anspress_opt[default_avatar]" type="text" value="<?php echo $settings['default_avatar'] ; ?>" />
+								<button id="default_avatar_upload" class="button" name="default_avatar_upload">Upload</button>
+							</div>					
+							<p class="description"><?php _e('Default avatar.', 'ap'); ?></p>
+						</td>
+					</tr>-->
 					<tr valign="top">
 						<th scope="row"><label for="cover_width"><?php _e('Cover width', 'ap'); ?></label></th>
 						<td>
@@ -284,6 +323,20 @@ if ( ! isset( $_REQUEST['settings-updated'] ) )
 						<td>
 							<input type="number" min="1" name="anspress_opt[users_per_page]" id="users_per_page" value="<?php echo $settings['users_per_page'] ; ?>" />								
 							<p class="description"><?php _e('Users to show per page on users page', 'ap'); ?></p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row"><label for="followers_limit"><?php _e('Followers per page', 'ap'); ?></label></th>
+						<td>
+							<input type="number" min="1" name="anspress_opt[followers_limit]" id="followers_limit" value="<?php echo $settings['followers_limit'] ; ?>" placeholder="10" />								
+							<p class="description"><?php _e('How many followers to display on user profile?', 'ap'); ?></p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row"><label for="following_limit"><?php _e('Following users per page', 'ap'); ?></label></th>
+						<td>
+							<input type="number" min="1" name="anspress_opt[following_limit]" id="following_limit" value="<?php echo $settings['following_limit'] ; ?>" placeholder="10" />								
+							<p class="description"><?php _e('How many following users to display on user profile?', 'ap'); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -466,13 +519,25 @@ if ( ! isset( $_REQUEST['settings-updated'] ) )
 					<tr valign="top">
 						<th scope="row"><label for="captcha_ask"><?php _e('Enable in ask form', 'ap'); ?></label></th>
 						<td>
-							<input type="checkbox" name="anspress_opt[captcha_ask]" id="captcha_ask" value="<?php echo $settings['captcha_ask'] ; ?>" <?php checked(true, $settings['captcha_ask']); ?> />
+							<input type="checkbox" name="anspress_opt[captcha_ask]" id="captcha_ask" value="1" <?php checked(true, $settings['captcha_ask']); ?> />
 						</td>
 					</tr>
 					<tr valign="top">
 						<th scope="row"><label for="captcha_answer"><?php _e('Enable in answer form', 'ap'); ?></label></th>
 						<td>
-							<input type="checkbox" name="anspress_opt[captcha_answer]" id="captcha_answer" value="<?php echo $settings['captcha_answer'] ; ?>" <?php checked(true, $settings['captcha_answer']); ?> />
+							<input type="checkbox" name="anspress_opt[captcha_answer]" id="captcha_answer" value="1" <?php checked(true, $settings['captcha_answer']); ?> />
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row"><label for="enable_captcha_skip"><?php _e('Enable reCaptcha skip based on user points', 'ap'); ?></label></th>
+						<td>
+							<input type="checkbox" name="anspress_opt[enable_captcha_skip]" id="enable_captcha_skip" value="1" <?php checked(true, $settings['enable_captcha_skip']); ?> />
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row"><label for="captcha_skip_rpoints"><?php _e('Minimum points to skip reCaptcha', 'ap'); ?></label></th>
+						<td>
+							<input type="number" min="1" name="anspress_opt[captcha_skip_rpoints]" id="captcha_skip_rpoints" value="<?php echo $settings['captcha_skip_rpoints'] ; ?>" />
 						</td>
 					</tr>
 				</table>

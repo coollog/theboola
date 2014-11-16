@@ -113,8 +113,15 @@ if ( ! class_exists( 'NgfbSharingTumblr' ) ) {
 
 		public function __construct( &$plugin ) {
 			$this->p =& $plugin;
-			$this->p->util->add_plugin_filters( $this, array( 'get_defaults' => 1 ) );
-			$this->p->util->add_img_sizes_from_opts( array( 'tumblr_img' => 'tumblr' ) );
+			$this->p->util->add_plugin_filters( $this, array( 
+				'plugin_image_sizes' => 1,
+				'get_defaults' => 1,
+			) );
+		}
+
+		public function filter_plugin_image_sizes( $sizes ) {
+			$sizes['tumblr_img'] = array( 'name' => 'tumblr', 'label' => 'Tumblr Button Image Dimensions' );
+			return $sizes;
 		}
 
 		public function filter_get_defaults( $opts_def ) {
@@ -122,6 +129,7 @@ if ( ! class_exists( 'NgfbSharingTumblr' ) ) {
 		}
 
 		public function get_html( $atts = array(), &$opts = array() ) {
+			$this->p->debug->mark();
 			if ( empty( $opts ) ) 
 				$opts =& $this->p->options;
 			$prot = empty( $_SERVER['HTTPS'] ) ? 'http:' : 'https:';
@@ -190,7 +198,7 @@ if ( ! class_exists( 'NgfbSharingTumblr' ) ) {
 						$use_post,			//
 						true,				// use_cache
 						true,				// add_hashtags
-						false,				// encode (false for later url encoding)
+						false,				// encode is false for later url encoding)
 						( ! empty( $atts['photo'] ) ? 'tumblr_img_desc' : 'tumblr_vid_desc' ),	// custom post meta
 						$source_id
 					);

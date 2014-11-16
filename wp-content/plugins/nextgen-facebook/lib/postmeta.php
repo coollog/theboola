@@ -57,6 +57,7 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 				$post_type = get_post_type_object( $obj->post_type );
 				$add_metabox = empty( $this->p->options[ 'plugin_add_to_'.$post_type->name ] ) ? false : true;
 				if ( apply_filters( $this->p->cf['lca'].'_add_metabox_postmeta', $add_metabox, $post_id ) === true ) {
+					$this->p->util->add_plugin_image_sizes( $post_id );
 					do_action( $this->p->cf['lca'].'_admin_postmeta_header', $post_type->name, $post_id );
 					$this->header_tags = $this->p->head->get_header_array( $post_id );
 					$this->post_info = $this->p->head->get_post_info( $this->header_tags );
@@ -79,7 +80,7 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 			$tabs = apply_filters( $this->p->cf['lca'].'_'.$metabox.'_tabs', 
 				array( 
 					'header' => 'Title and Descriptions', 
-					'media' => 'Image and Video', 
+					'media' => 'Priority Media', 
 					'preview' => 'Social Preview',
 					'tags' => 'Header Preview',
 					'tools' => 'Validation Tools'
@@ -135,9 +136,6 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 			$rows = array();
 			$size_name = $this->p->cf['lca'].'-preview';
 			$size_info = $this->p->media->get_size_info( $size_name );
-			$alt_html = '<p>No Open Graph Image Found</p>';
-			$alt_small = '<p>Image Dimensions Smaller<br/>
-				Than Suggested '.$size_info['width'].' x '.$size_info['height'].'</p>';
 			$title = empty( $post_info['og:title'] ) ? 'No Title' : $post_info['og:title'];
 			$desc = empty( $post_info['og:description'] ) ? 'No Description' : $post_info['og:description'];
 			$by = $_SERVER['SERVER_NAME'];
@@ -147,8 +145,11 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 			'<td style="background-color:#e9eaed;">
 			<div class="preview_box" style="width:'.($size_info['width']+40).'px;">
 			<div class="preview_box" style="width:'.$size_info['width'].'px;">'.
-				$this->p->media->get_image_preview_html( $post_info['og_image'], 
-					$size_name, $size_info, $alt_html, $alt_small ).
+			$this->p->media->get_image_preview_html( $post_info['og_image'], $size_name, $size_info, array(
+				'not_found' => '<p>No Open Graph Image Found</p>',
+				'too_small' => '<p>Image Dimensions Smaller<br/>than Suggested Minimum<br/>of '.$size_info['width'].' x '.$size_info['height'].'px</p>',
+				'no_size' => '<p>Image Dimensions Unknown<br/>or Not Available</p>',
+			) ).
 			'<div class="preview_txt">
 			<div class="preview_title">'.$title.'</div>
 			<div class="preview_desc">'.$desc.'</div>
@@ -197,7 +198,17 @@ if ( ! class_exists( 'NgfbPostmeta' ) ) {
 			return $rows;
 		}
 
-                public function get_options( $post_id, $idx = false ) {
+		public function get_og_video( $num = 0, $post_id, $check_dupes = true, $meta_pre = 'og' ) {
+			$this->p->debug->log( __METHOD__.' not implemented in GPL version' );
+			return array();
+		}
+
+		public function get_og_image( $num = 0, $size_name = 'thumbnail', $post_id, $check_dupes = true, $meta_pre = 'og' ) {
+			$this->p->debug->log( __METHOD__.' not implemented in GPL version' );
+			return array();
+		}
+
+                public function get_options( $post_id, $idx = false, $attr = array() ) {
 			$this->p->debug->log( __METHOD__.' not implemented in GPL version' );
 			if ( $idx !== false )
 				return false;

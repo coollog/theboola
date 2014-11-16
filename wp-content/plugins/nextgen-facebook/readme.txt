@@ -1,12 +1,12 @@
-=== NextGEN Facebook - Complete Social SEO for Facebook, Google+, Twitter, Pinterest, etc. ===
+=== NextGEN Facebook - Advanced Social SEO for Facebook, Google+, Pinterest, Twitter & More ===
 Contributors: jsmoriss
-Donate Link: http://surniaulula.com/extend/plugins/nextgen-facebook/
+Donate Link: https://surniaulula.com/extend/plugins/nextgen-facebook/
 Tags: nextgen gallery, featured, attached, open graph, meta tags, buttons, like, share, facebook, google, google+, g+, twitter, linkedin, social, seo, pinterest, rich pins, tumblr, stumbleupon, widget, multilingual, shortcode, object cache, transient cache, wp_cache, nggalbum, nggallery, singlepic, imagebrowser, gallery, twitter cards, photo card, gallery card, player card, summary card, easy digital downloads, woocommerce, marketpress, e-commerce, multisite, hashtags, bbpress, buddypress, jetpack, photon, slideshare, vimeo, wistia, youtube, polylang
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
 Requires At Least: 3.0
 Tested Up To: 4.0
-Stable Tag: 7.6.13.1
+Stable Tag: 7.7
 
 Display your content in the best possible way on Facebook, Google+, Twitter, Pinterest, etc. - no matter how your webpage is shared!
 
@@ -206,6 +206,7 @@ NGFB (Pro version) provides the [Summary](https://dev.twitter.com/docs/cards/typ
 	* product:availability
 * **Schema Meta Tags**
 	* description
+	* image
 * **Twitter Card Meta Tags** (Pro version)
 	* twitter:card (Summary, Large Image Summary, Photo, Gallery, Player and Product)
 	* twitter:creator
@@ -282,6 +283,7 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 = Install and Uninstall =
 
 <ul>
+	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/installation/developer-special-buy-one-get-one-free/">Developer Special – Buy one, Get one Free</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/installation/install-the-plugin/">Install the Plugin</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/installation/integration/">Integration Notes</a>
 	<ul>
@@ -323,6 +325,7 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/faq/w3c-says-there-is-no-attribute-property/">W3C says “there is no attribute ‘property’”</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/faq/what-about-google-search-and-google-plus/">What about Google Search and Google Plus?</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/faq/what-features-of-nextgen-gallery-are-supported/">What features of NextGEN Gallery are supported?</a></li>
+	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/faq/what-is-the-difference-between-ngfb-and-wpsso/">What is the difference between NGFB and WPSSO?</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/faq/what-is-the-difference-between-the-free-and-pro-versions/">What is the difference between the Free and Pro versions?</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/faq/why-arent-pins-from-my-website-posting-rich/">Why aren’t Pins from my website posting Rich?</a></li>
 	<li><a href="http://surniaulula.com/codex/plugins/nextgen-facebook/faq/why-do-my-facebook-shares-have-small-images/">Why do my Facebook shares have small images?</a></li>
@@ -403,12 +406,39 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 
 == Changelog ==
 
+= Version 7.7 =
+
+* **Bugfixes**
+	* *None*
+* **Improvements**
+	* Removed the 'What's New' settings page (see the 'Read Me' changelog instead).
+	* Added a new 'ngfb_plugin_image_sizes' action hook to load all plugin image sizes.
+	* Renamed the 'Image and Video' tab in the custom Social Settings metabox to 'Priority Media'.
+* **New Features**
+	* Added new 'Image Dimensions' options for Open Graph and Pinterest in the custom Social Settings metabox (Pro version).
+	* Added new 'Image ID' and 'Image URL' options for Pinterest in the custom Social Settings metabox (Pro version).
+	* Added an 'image' schema meta tag with the first Open Graph image meta tag.
+	* Added an aspect ratio check for image dimensions that exceed 3:1.
+
+= Version 7.6.13.3 =
+
+* **Bugfixes**
+	* Added a check to disable social sharing buttons in RSS feeds.
+* **Improvements**
+	* *None*
+* **New Features**
+	* *None*
+
 = Version 7.6.13.2 =
 
 * **Bugfixes**
-	* Fixed WooCommerce v2.2.7 shortcodes in the admin interface by loading the WooCommerce template functions ourselves (Pro version).
+	* Fixed WooCommerce v2.2.7 shortcodes in the admin interface by loading the missing WooCommerce template functions (Pro version).
+	* Fixed the `og:description` value for BuddyPress activities by improving the `NgfbProSocialBuddypress::filter_content_seed()` method (Pro version).
+	* Fixed the sharing URL for buttons in a BuddyPress activity loop by including the `$source_id` value in the transient cache object id (Pro version).
 * **Improvements**
-	* Added more detail to the error message when WordPress fails to save the upgraded plugin settings.
+	* Added more detail to the error message when WordPress fails to save upgraded plugin settings.
+	* Extended the `SucomWebpage::get_content()` method arguments to include the `$post_id`, `$use_post`, `$use_cache`, `$custom`, and `$source_id` variables.
+	* Extended the 'ngfb_content_seed' filter arguments to include the `$post_id`, `$use_post`, `$custom`, and `$source_id` variables.
 * **New Features**
 	* *None*
 
@@ -434,11 +464,23 @@ NGFB support and development is on-going. You can review the [FAQ](http://faq.ng
 
 == Upgrade Notice ==
 
+= 7.7 =
+
+New 'Image Dimensions' options for Open Graph and Pinterest in the custom Social Settings metabox (Pro version), plus other new features and improvements.
+
+= 7.6.13.3 =
+
+Added a check to disable social sharing buttons in RSS feeds.
+
+= 7.6.13.2 =
+
+Fixes for the WooCommerce and BuddyPress support addons (Pro version).
+
 = 7.6.13.1 =
 
 A new 'Report Cache Purge Count' option, and 'Social Preview' and 'Header Preview' tabs enabled for Drafts as well.
 
 = 7.6.13 =
 
-Adds a new 'Social Preview' tab to the Social Settings metabox, improved title and description handling in some cases, fix to better control URL rewriting service failures.
+Adds a new 'Social Preview' tab to the Social Settings metabox, improved title and description handling in some special cases, fix to better control URL rewriting service failures.
 

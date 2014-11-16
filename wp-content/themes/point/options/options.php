@@ -607,7 +607,7 @@ echo '<span class="headtext">Welcome to your theme\'s mission control center.</s
 				echo '<div id="nhp-opts-sidebar">';
 					echo '<ul id="nhp-opts-group-menu">';
 						foreach($this->sections as $k => $section){
-							$icon = (!isset($section['icon']))?'<img src="'.$this->url.'img/glyphicons/glyphicons_019_cogwheel.png" /> ':'<img src="'.$section['icon'].'" /> <br/>';
+							$icon = (!isset($section['icon']))?'<img src="'.$this->url.'img/glyphicons/glyphicons_019_cogwheel.png" /> ':'<img src="'.$section['icon'].'" />';
 							echo '<li id="'.$k.'_section_group_li" class="nhp-opts-group-tab-link-li">';
 								echo '<a href="javascript:void(0);" id="'.$k.'_section_group_li_a" class="nhp-opts-group-tab-link-a" data-rel="'.$k.'">'.$icon.$section['title'].'</a>';
 							echo '</li>';
@@ -621,7 +621,7 @@ echo '<span class="headtext">Welcome to your theme\'s mission control center.</s
 						
 						if(true === $this->args['show_import_export']){
 							echo '<li id="import_export_default_section_group_li" class="nhp-opts-group-tab-link-li">';
-									echo '<a href="javascript:void(0);" id="import_export_default_section_group_li_a" class="nhp-opts-group-tab-link-a" data-rel="import_export_default"><img src="'.$this->url.'img/glyphicons/download.png" /><br/> '.__('Import / Export', 'mythemeshop').'</a>';
+									echo '<a href="javascript:void(0);" id="import_export_default_section_group_li_a" class="nhp-opts-group-tab-link-a" data-rel="import_export_default"><img src="'.$this->url.'img/glyphicons/download.png" />'.__('Import / Export', 'mythemeshop').'</a>';
 							echo '</li>';
 							
 						}//if

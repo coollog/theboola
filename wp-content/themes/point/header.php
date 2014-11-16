@@ -60,7 +60,6 @@
 						<?php } else { ?>
 							<ul class="menu">
 								<?php wp_list_categories('title_li='); ?>
-								<li></li>
 							</ul>
 						<?php } ?>
 						<a href="#" id="pull"><?php _e('Menu','mythemeshop'); ?></a>

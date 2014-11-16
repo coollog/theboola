@@ -150,12 +150,10 @@ jQuery("#ngfb-sidebar").click( function(){
 			$this->add_buttons_filter( 'the_content' );
 
 			$this->p->util->add_plugin_filters( $this, array( 
-				'get_defaults' => 1,	// add sharing options and css file contents to defaults
-			) );
-			$this->p->util->add_plugin_filters( $this, array( 
+				'get_defaults' => 1,		// add sharing options and css file contents to defaults
 				'pre_filter_remove' => 2,	// remove the buttons filter from content, excerpt, etc.
 				'post_filter_add' => 2,		// re-add the buttons filter to content, excerpt, etc.
-			), 10, 'ngfb' );
+			) );
 
 			if ( is_admin() ) {
 				add_action( 'add_meta_boxes', array( &$this, 'add_post_metaboxes' ) );
@@ -521,12 +519,12 @@ jQuery("#ngfb-sidebar").click( function(){
 			}
 		}
 
-		public function filter_pre_filter_remove( $ret, $filter ) {
-			return ( $this->remove_buttons_filter( $filter ) ? true : $ret );
-		}
-
 		public function filter_post_filter_add( $ret, $filter ) {
 			return ( $this->add_buttons_filter( $filter ) ? true : $ret );
+		}
+
+		public function filter_pre_filter_remove( $ret, $filter ) {
+			return ( $this->remove_buttons_filter( $filter ) ? true : $ret );
 		}
 
 		public function add_buttons_filter( $type = 'the_content' ) {
@@ -615,6 +613,9 @@ jQuery("#ngfb-sidebar").click( function(){
 					$this->p->debug->log( $type.' filter skipped: '.$type.' ignored with is_admin()'  );
 					return $text;
 				}
+			} elseif ( is_feed() ) {
+				$this->p->debug->log( $type.' filter skipped: no buttons allowed in RSS feeds'  );
+				return $text;
 			} else {
 				if ( ! is_singular() && empty( $this->p->options['buttons_on_index'] ) ) {
 					$this->p->debug->log( $type.' filter skipped: index page without buttons_on_index enabled' );
@@ -638,13 +639,13 @@ jQuery("#ngfb-sidebar").click( function(){
 			$obj = $this->p->util->get_post_object( $use_post );
 			$post_id = empty( $obj->ID ) || empty( $obj->post_type ) || 
 				( ! is_singular() && $use_post === false ) ? 0 : $obj->ID;
-			$sharing_url = $this->p->util->get_sharing_url( $use_post );
+			$source_id = $this->p->util->get_source_id( $type );
 			$html = false;
 
 			if ( $this->p->is_avail['cache']['transient'] ) {
 				$cache_salt = __METHOD__.'('.apply_filters( $lca.'_buttons_cache_salt', 
 					'lang:'.SucomUtil::get_locale().'_type:'.$type.'_post:'.$post_id.
-					( empty( $post_id ) ? '_url:'.$sharing_url : '' ), $type, $use_post ).')';
+						( empty( $post_id ) ? '_url:'.$this->p->util->get_sharing_url( $use_post, true, $source_id ) : '' ), $type, $use_post ).')';
 				$cache_id = $lca.'_'.md5( $cache_salt );
 				$cache_type = 'object cache';
 				$this->p->debug->log( $cache_type.': transient salt '.$cache_salt );
@@ -854,6 +855,7 @@ jQuery("#ngfb-sidebar").click( function(){
 		public function is_post_buttons_disabled() {
 			global $post;
 			$ret = false;
+
 			if ( ! empty( $post ) ) {
 				$post_type = $post->post_type;
 				if ( $this->p->addons['util']['postmeta']->get_options( $post->ID, 'buttons_disabled' ) ) {

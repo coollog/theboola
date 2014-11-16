@@ -36,6 +36,8 @@ class anspress_form
     public function __construct()
     {
 		add_action( 'init', array($this, 'process_forms') );
+		add_action( 'ap_new_question', array($this, 'on_new_question'), 10, 2 );
+		add_action( 'ap_new_answer', array($this, 'on_new_answer'), 10, 2 );
 		//add_action('comment_form', array($this, 'comment_button') );
 		add_action( 'wp_ajax_ap_load_comment_form', array($this, 'load_ajax_commentform') ); 
 		add_action( 'wp_ajax_nopriv_ap_load_comment_form', array($this, 'load_ajax_commentform') );
@@ -116,6 +118,54 @@ class anspress_form
 
 	}
 	
+	public function on_new_question($post_id, $post){
+		if($post_id){
+			$user_id = get_current_user_id();
+			update_post_meta($post_id, ANSPRESS_VOTE_META, '0');
+			update_post_meta($post_id, ANSPRESS_FAV_META, '0');
+			update_post_meta($post_id, ANSPRESS_CLOSE_META, '0');
+			update_post_meta($post_id, ANSPRESS_FLAG_META, '0');
+			update_post_meta($post_id, ANSPRESS_VIEW_META, '0');
+			update_post_meta($post_id, ANSPRESS_UPDATED_META, current_time( 'mysql' ));
+			update_post_meta($post_id, ANSPRESS_SELECTED_META, false);
+			
+			//ap_add_history($user_id, $post_id, 'asked');
+			ap_add_parti($post_id, $user_id, 'question');
+			
+			//update answer count
+			update_post_meta($post_id, ANSPRESS_ANS_META, '0');
+
+			do_action('ap_after_inserting_question', $post_id);
+			ap_do_event('new_question', $post_id, $user_id);
+		}
+	}	
+	
+	public function on_new_answer($post_id, $post){
+		if($post_id){
+
+			$user_id = get_current_user_id();	
+			$question = get_post($post->post_parent);
+			// set default value for meta
+			update_post_meta($post_id, ANSPRESS_VOTE_META, '0');
+			
+			// set updated meta for sorting purpose
+			update_post_meta($question->ID, ANSPRESS_UPDATED_META, current_time( 'mysql' ));
+			update_post_meta($post_id, ANSPRESS_UPDATED_META, current_time( 'mysql' ));
+			
+			ap_add_parti($question->ID, $user_id, 'answer');			
+			
+			// get existing answer count
+			$current_ans = ap_count_ans($question->ID);
+			
+			//update answer count
+			update_post_meta($question->ID, ANSPRESS_ANS_META, $current_ans);
+			
+			update_post_meta($post_id, ANSPRESS_BEST_META, 0);
+			
+			do_action('ap_after_inserting_answer', $post_id);			
+		}
+	}
+	
 	public function get_question_fields_to_process(){
 		$fields = array(
 			'post_title' 	=> sanitize_text_field($_POST['post_title']),
@@ -139,6 +189,9 @@ class anspress_form
 		
 		if(isset($_POST['parent_id']))
 			$fields['parent_id']	= sanitize_text_field($_POST['parent_id']);
+		
+		if(isset($_POST['name']))
+			$fields['name']	= sanitize_text_field($_POST['name']);
 		
 		return apply_filters('ap_save_question_filds', $fields);
 		
@@ -191,14 +244,14 @@ class anspress_form
 	}
 	
 	public function process_ask_form(){
-		if(!is_user_logged_in())
+		if(!is_user_logged_in() && !ap_allow_anonymous())
 			return false;
 		
 		if(isset($_POST['is_question']) && isset($_POST['submitted']) && isset($_POST['ask_form']) && wp_verify_nonce($_POST['ask_form'], 'post_nonce')) {
 		
 			$fields = $this->get_question_fields_to_process();
 			
-			if(!ap_user_can_ask())
+			if(!ap_user_can_ask() && ap_opt('allow_anonymous'))
 				return;
 			
 			$validate = $this->validate_question_form();
@@ -215,7 +268,8 @@ class anspress_form
 				return;
 			}
 
-			do_action('process_ask_form');			
+			do_action('process_ask_form');
+			
 			$user_id = get_current_user_id();			
 			$status = 'publish';
 			
@@ -243,25 +297,12 @@ class anspress_form
 				// Update Custom Meta
 				if(isset($fields['category']))
 					wp_set_post_terms( $post_id, $fields['category'], 'question_category' );
+					
 				if(isset($fields['tags']))
 					wp_set_post_terms( $post_id, $fields['tags'], 'question_tags' );
 					
-				update_post_meta($post_id, ANSPRESS_VOTE_META, '0');
-				update_post_meta($post_id, ANSPRESS_FAV_META, '0');
-				update_post_meta($post_id, ANSPRESS_CLOSE_META, '0');
-				update_post_meta($post_id, ANSPRESS_FLAG_META, '0');
-				update_post_meta($post_id, ANSPRESS_VIEW_META, '0');
-				update_post_meta($post_id, ANSPRESS_UPDATED_META, current_time( 'mysql' ));
-				update_post_meta($post_id, ANSPRESS_SELECTED_META, false);
-				
-				//ap_add_history($user_id, $post_id, 'asked');
-				ap_add_parti($post_id, $user_id, 'question');
-				
-				//update answer count
-				update_post_meta($post_id, ANSPRESS_ANS_META, '0');
-
-				do_action('ap_after_inserting_question', $post_id);
-				ap_do_event('new_question', $post_id, $user_id);
+				if (ap_opt('allow_anonymous') && isset($fields['name']))
+					update_post_meta($post_id, 'anonymous_name', $fields['name']);
 				
 				if($_POST['action'] == 'ap_submit_question'){
 					$result = apply_filters('ap_ajax_question_submit_result', 
@@ -271,7 +312,6 @@ class anspress_form
 							'redirect_to'	=> get_permalink($post_id)
 						)
 					);
-
 					
 					return json_encode($result) ;
 				}else{
@@ -297,6 +337,9 @@ class anspress_form
 		if(isset($_POST['form_question_id']))
 			$fields['question_id'] 	= sanitize_text_field($_POST['form_question_id']);
 		
+		if(isset($_POST['name']))
+			$fields['name'] 	= sanitize_text_field($_POST['name']);
+		
 		return apply_filters('ap_save_answer_filds', $fields);
 		
 	}
@@ -318,7 +361,7 @@ class anspress_form
 	}
 	
 	public function process_answer_form( ){	
-		if(!is_user_logged_in())
+		if(!is_user_logged_in() && !ap_opt('allow_anonymous'))
 			return false;
 			
 		if(isset($_POST['is_answer']) && isset($_POST['submitted']) && isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'post_nonce_'.$_POST['form_question_id'])) {
@@ -344,7 +387,7 @@ class anspress_form
 			
 			$question = get_post( $fields['question_id'] );
 			
-			if(!ap_user_can_answer($question->ID) )
+			if(!ap_user_can_answer($question->ID) && !ap_opt('allow_anonymous'))
 				return;
 			
 			do_action('process_answer_form');
@@ -363,28 +406,16 @@ class anspress_form
 			$post_id = wp_insert_post($ans_array);
 			
 			if($post_id){				
-				
-				// set default value for meta
-				update_post_meta($post_id, ANSPRESS_VOTE_META, '0');
-				
-				// set updated meta for sorting purpose
-				update_post_meta($question->ID, ANSPRESS_UPDATED_META, current_time( 'mysql' ));
-				
-				ap_add_parti($question->ID, $user_id, 'answer');			
-				
 				// get existing answer count
 				$current_ans = ap_count_ans($question->ID);
-				
-				//update answer count
-				update_post_meta($question->ID, ANSPRESS_ANS_META, $current_ans);
-				
-				update_post_meta($post_id, ANSPRESS_BEST_META, 0);
 				
 				// redirect if just logged in
 				if($logged_in && $_POST['action'] != 'ap_submit_answer'){
 					wp_redirect( get_permalink($question->ID) ); exit;
 				}
-				
+				if (ap_opt('allow_anonymous') && isset($fields['name']))
+					update_post_meta($post_id, 'anonymous_name', $fields['name']);
+					
 				$result = array();
 				
 				if($_POST['action'] == 'ap_submit_answer'){
@@ -424,9 +455,9 @@ class anspress_form
 					
 					if($logged_in)
 						$result['redirect_to'] = get_permalink($post->ID);
-				}
-				do_action('ap_after_inserting_answer', $post_id);
-				ap_do_event('new_answer', $post_id, $user_id, $question->ID, $result);
+					
+					ap_do_event('new_answer', $post_id, $user_id, $question->ID, $result);
+				}				
 				
 				if($_POST['action'] == 'ap_submit_answer')
 					return json_encode($result) ;
@@ -534,7 +565,7 @@ class anspress_form
 				if($_POST['action'] == 'ap_submit_answer'){
 					$result = array(
 								'action' 		=> 'false',								
-								'message' 		=> __('You do not have permission to edit this answer.','ap')
+								'message' 		=> __('You don\'t have permission to edit this answer.','ap')
 							);
 					return json_encode($result) ;
 				}
@@ -836,13 +867,15 @@ class anspress_form
 	
 	public function ask_from_private_field($validate){
 		?>
+		<?php if (!ap_opt('can_private_question')): ?>
 			<div class="checkbox<?php echo isset($validate['private_question']) ? ' has-error' : ''; ?>">
 				<label>
 					<input type="checkbox" value="1" name="private_question" id="private_question"/>
-					<?php _e('This question is ment to be private', 'ap') ?>
+					<?php _e('This question is meant to be private', 'ap') ?>
 				</label>
 					<?php echo isset($validate['private_question']) ? '<span class="help-block">'. $validate['private_question'] .'</span>' : ''; ?>
 			</div>
+			<?php endif;?>
 		<?php
 	}	
 	
@@ -1012,6 +1045,7 @@ class anspress_form
 	public function login_signup_modal(){
 		if(!is_user_logged_in()){
 		?>
+		<?php if (ap_opt('custom_login_url') == ''): ?>
 		<div class="ap-modal flag-note" id="ap_login_modal" tabindex="-1" role="dialog">
 			<div class="ap-modal-bg"></div>
 			<div class="ap-modal-content">
@@ -1019,10 +1053,13 @@ class anspress_form
 					<h4 class="ap-modal-title"><?php _e('Login', 'ap'); ?><span class="ap-modal-close">&times;</span></h4>					
 				</div>
 				<div class="ap-modal-body">				
-					<?php ap_login_form(); ?>
+					<?php wp_login_form(); ?>
 				</div>
 			</div>		  
 		</div>
+		<?php endif;?>
+		<?php if (ap_opt('show_signup')): ?>
+		<?php if (ap_opt('custom_signup_url') == ''): ?>
 		<div class="ap-modal flag-note" id="ap_signup_modal" tabindex="-1" role="dialog">
 			<div class="ap-modal-bg"></div>
 			<div class="ap-modal-content">
@@ -1034,6 +1071,8 @@ class anspress_form
 				</div>
 			</div>		  
 		</div>
+		<?php endif;?>
+		<?php endif;?>
 		<?php
 		}
 	}
@@ -1041,17 +1080,60 @@ class anspress_form
 	public function login_bottom(){
 		if(!is_user_logged_in()){
 		?>
-			<div class="ap-nli-backdrop"></div>
 			<div class="ap-account-button clearfix">
-				<h3><?php _e('Quickly login or sign up to continue', 'ap'); ?></h3>
-				<div class="ap-site-ac">
-					<h3><?php _e('Sign up or login', 'ap'); ?></h3>
-					<a href="#ap_login_modal" class="ap-open-modal ap-btn" title="<?php _e('Click here to login if you already have an account on this site.', 'ap'); ?>"><?php _e('Login', 'ap'); ?></a>
-					<a href="#ap_signup_modal" class="ap-open-modal ap-btn" title="<?php _e('Click here to signup if you do not have an account on this site.', 'ap'); ?>"><?php _e('Sign Up', 'ap'); ?></a>
+			<?php if (ap_opt('allow_anonymous')): ?>
+				<div class="ap-ac-accordion">
+					<strong>
+						<i class="<?php echo ap_icon('unchecked') ?>"></i>
+						<i class="<?php echo ap_icon('checked') ?>"></i>
+						<?php _e('Continue as anonymous', 'ap'); ?>
+					</strong>
+					<div class="anonymous-info accordion-content">					
+						<div class="form-group">
+							<label for="name"><?php _e('Your name', 'ap') ?></label>
+							<input id="name" type="text" class="form-control" name="name" placeholder="<?php _e('Your name or leave it blank', 'ap') ?>" />
+						</div>
+					</div>
 				</div>
+				<?php endif; ?>
+				<?php if(ap_opt('show_signup') || ap_opt('show_login')):?>
+				<div class="ap-ac-accordion">
+					<strong>
+						<i class="<?php echo ap_icon('unchecked') ?>"></i>
+						<i class="<?php echo ap_icon('checked') ?>"></i>
+						<?php if(ap_opt('show_signup') && ap_opt('show_login')):?>
+						<?php _e('Login or Sign Up', 'ap'); ?>
+						<?php elseif (ap_opt('show_signup')): ?>
+						<?php _e('Sign up', 'ap'); ?>
+						<?php elseif(ap_opt('show_login')): ?>
+						<?php _e('Login', 'ap'); ?>
+						<?php endif; ?>
+					</strong>
+					<div class="ap-site-ac accordion-content">
+						<?php if (ap_opt('show_login')): ?>
+						<?php if (ap_opt('custom_login_url') != ''): ?>
+						<?php $customloginurl=ap_opt('custom_login_url');?>
+						<a href="<?php echo $customloginurl?>" class="ap-btn" title="<?php _e('Click here to login if you already have an account on this site.', 'ap'); ?>"><?php _e('Login', 'ap'); ?></a>
+						<?php else: ?>
+						<a href="#ap_login_modal" class="ap-open-modal ap-btn" title="<?php _e('Click here to login if you already have an account on this site.', 'ap'); ?>"><?php _e('Login', 'ap'); ?></a>
+						<?php endif; ?>
+						<?php endif;?>
+						<?php if (ap_opt('show_signup')): ?>
+						<?php if (ap_opt('custom_signup_url') != ''): ?>
+						<?php $customsignupurl=ap_opt('custom_signup_url');?>
+						<a href="<?php echo $customsignupurl?>" class="ap-btn" title="<?php _e('Click here to signup if you do not have an account on this site.', 'ap'); ?>"><?php _e('Sign Up', 'ap'); ?></a>
+						<?php else: ?>
+						<a href="#ap_signup_modal" class="ap-open-modal ap-btn" title="<?php _e('Click here to signup if you do not have an account on this site.', 'ap'); ?>"><?php _e('Sign Up', 'ap'); ?></a>
+						<?php endif;?>
+						<?php endif; ?>
+					</div>
+				</div>
+				<?php endif;?>
+				<?php if (ap_opt('show_social_login')): ?>
 				<div class="ap-social-ac">
 					<?php do_action( 'wordpress_social_login' ); ?>
 				</div>
+				<?php endif;?>
 			</div>		
 		<?php
 		}
@@ -1183,7 +1265,7 @@ function ap_answer_form($question_id){
 	}
 	
 	if(ap_user_can_answer($question_id) ){
-		echo '<form action="" id="answer_form" class="ap-content-inner no-overflow" method="POST" data-action="ap-submit-answer">';
+		echo '<form action="" id="answer_form" class="ap-content-inner" method="POST" data-action="ap-submit-answer">';
 		
 		echo '<div class="form-groups">';
 		do_action('ap_answer_fields', $question_id, $validate);
@@ -1234,7 +1316,7 @@ function ap_ask_form_hidden_input(){
 	wp_nonce_field('post_nonce', 'ask_form');
 	echo '<input type="hidden" name="is_question" value="true" />';
 	echo '<input type="hidden" name="submitted" value="true" />';
-	echo '<button class="btn ap-btn ap-success btn-submit-ask" type="submit">'. __('Post Topic', 'ap'). '</button>';
+	echo '<button class="btn ap-btn ap-success btn-submit-ask" type="submit">'. __('Ask Question', 'ap'). '</button>';
 }
 
 function ap_answer_form_hidden_input($question_id){	
@@ -1242,7 +1324,7 @@ function ap_answer_form_hidden_input($question_id){
 	echo '<input type="hidden" name="is_answer" value="true" />';
 	echo '<input type="hidden" name="submitted" value="true" />';
 	echo '<input type="hidden" name="form_question_id" value="'.$question_id.'" />';
-	echo '<button type="submit" class="btn-submit-ans btn ap-btn ap-success">'. __('Submit Suggestion', 'ap'). '</button>';
+	echo '<button type="submit" class="btn-submit-ans btn ap-btn ap-success">'. __('Submit Answer', 'ap'). '</button>';
 }
 
 
@@ -1252,7 +1334,7 @@ function ap_edit_question_form_hidden_input($post_id){
 	echo '<input type="hidden" name="question_id" value="'.$post_id.'" />';
 	echo '<input type="hidden" name="edited" value="true" />';
 	echo '<input type="hidden" name="submitted" value="true" />';
-	echo '<button type="submit" class="btn-submit-ans btn ap-btn ap-success">'. __('Update Topic', 'ap'). '</button>';
+	echo '<button type="submit" class="btn-submit-ans btn ap-btn ap-success">'. __('Update question', 'ap'). '</button>';
 }
 
 
@@ -1273,7 +1355,7 @@ function ap_edit_answer_form($post_id){
 	}
 	
 	if(ap_user_can_edit_ans($post->ID) ){
-		echo '<form action="" id="answer_form" class="ap-content-inner" method="POST" data-action="ap-submit-answer">';
+		echo '<form action="" id="edit_form" class="ap-content-inner" method="POST" data-action="ap-submit-answer">';
 		
 		echo '<div class="form-groups">';
 		echo '<div class="ap-fom-group-label">'.__('Edit answer', 'ap').'</div>';
@@ -1310,7 +1392,7 @@ function ap_signup_form(){
 				</div>
 			</div>
 
-			<button type="submit" class="ap-btn" ><?php _e('Login', 'ap') ?></button>
+			<button type="submit" class="ap-btn" ><?php _e('Sign Up', 'ap') ?></button>
 			<input type="hidden" name="action" value="ap_ajax_signup" />
 		</form>
 	<?php
@@ -1366,7 +1448,7 @@ function ap_edit_question_form($question_id = false){
 	
 
 	?>
-	<form action="" id="ask_question_form" method="POST" data-action="ap-submit-question">			
+	<form action="" id="edit_question_form" method="POST" data-action="ap-submit-question">			
 		<div class="form-groups">
 			<div class="ap-fom-group-label"><?php _e('Edit question', 'ap'); ?></div>
 			<?php do_action('ap_edit_question_form_fields', $question, $validate); ?>

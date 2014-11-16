@@ -179,7 +179,7 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 			return $schedule;
 		}
 	
-		public function check_for_updates( $lca = '' ) {
+		public function check_for_updates( $lca = null, $notice = false, $use_cache = true ) {
 			if ( empty( $lca ) )
 				$plugins = self::$c;				// check all plugins defined
 			elseif ( isset( self::$c[$lca] ) )
@@ -199,19 +199,31 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 				}
 				$option_data->lastCheck = time();
 				$option_data->checkedVersion = $this->get_installed_version( $lca );
-				$option_data->update = $this->get_update_data( $lca );
-				update_site_option( $info['opt_name'], $option_data );
+				$option_data->update = $this->get_update_data( $lca, $use_cache );
+				$saved = update_site_option( $info['opt_name'], $option_data );
+				if ( $notice === true || $this->p->debug->is_on() ) {
+					if ( $saved === true ) {
+						$this->p->debug->log( 'update information saved to the '.$info['opt_name'].' option' );
+						$this->p->notice->inf( 'Plugin update information ('.
+							$info['opt_name'].') has been retrieved and saved.', true );
+					} else {
+						$this->p->debug->log( 'failed saving the update information to the '.$info['opt_name'].' option' );
+						$this->p->notice->err( 'WordPress returned an error saving the plugin update information ('.
+							$info['opt_name'].') to the options table.', true );
+					}
+					$this->p->debug->log( $option_data );
+				}
 			}
 		}
 	
-		public function get_update_data( $lca ) {
-			$plugin_data = $this->get_json( $lca );
+		public function get_update_data( $lca, $use_cache = true ) {
+			$plugin_data = $this->get_json( $lca, $use_cache );
 			if ( empty( $plugin_data ) ) 
 				return null;
 			return SucomPluginUpdate::from_plugin_data( $plugin_data );
 		}
 	
-		public function get_json( $lca, $query = array(), $read_cache = true ) {
+		public function get_json( $lca, $use_cache = true ) {
 			if ( empty( self::$c[$lca]['slug'] ) )
 				return null;
 
@@ -234,7 +246,7 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 				$cache_type = 'object cache';
 				$this->p->debug->log( $cache_type.': transient salt '.$cache_salt );
 				$last_update = get_option( $lca.'_utime' );
-				if ( $read_cache && $last_update !== false ) {
+				if ( $use_cache && $last_update !== false ) {
 					$plugin_data = get_transient( $cache_id );
 					if ( $plugin_data !== false ) {
 						$this->p->debug->log( $cache_type.': plugin data retrieved from transient '.$cache_id );

@@ -26,9 +26,25 @@ body {
 /* NAVIGATION */
 
 .secondary-navigation {
-    float: none;
+  float: none;
 }
 .secondary-navigation a {
-    padding: 9px 30px;
-    min-height: 30px;
-  }
+  padding: 9px 30px;
+  min-height: 30px;
+  color: #fafafa;
+}
+
+#navigation {
+  text-align: center;
+  background: #666;
+}
+#navigation .menu {
+  float: none;
+  display: inline-block;
+}
+.secondary-navigation a {
+  border-right: 0;
+}
+#navigation > ul li:last-child a {
+  border-right: 1px solid #E2E2E2;
+}

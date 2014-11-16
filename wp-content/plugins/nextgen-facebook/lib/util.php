@@ -12,6 +12,7 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 
 	class NgfbUtil extends SucomUtil {
 
+		private $size_labels = array();	// reference array for image size labels
 		private $urls_found = array();	// array to detect duplicate images, etc.
 
 		protected $p;
@@ -23,18 +24,68 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 		}
 
 		protected function add_actions() {
+			add_action( 'wp', array( &$this, 'add_plugin_image_sizes' ), 10, 0 );
 			add_action( 'wp_scheduled_delete', array( &$this, 'delete_expired_transients' ) );
 			add_action( 'wp_scheduled_delete', array( &$this, 'delete_expired_file_cache' ) );
 		}
 
-		// add filters to this plugin
-		public function add_plugin_filters( &$class, $filters, $prio = 10, $prefix = '' ) {
-			$prefix = $prefix === '' ? $this->p->cf['lca'] : $prefix;
+		// called from several class __construct() methods to hook their filters
+		public function add_plugin_filters( &$class, $filters, $prio = 10, $lca = '' ) {
+			$lca = $lca === '' ? $this->p->cf['lca'] : $lca;
 			foreach ( $filters as $name => $num ) {
-				$filter = $prefix.'_'.$name;
+				$filter = $lca.'_'.$name;
 				$method = 'filter_'.$name;
 				add_filter( $filter, array( &$class, $method ), $prio, $num );
 				$this->p->debug->log( 'filter for '.$filter.' added', 2 );
+			}
+		}
+
+		public function get_image_size_label( $size_name ) {
+			if ( ! empty( $this->size_labels[$size_name] ) )
+				return $this->size_labels[$size_name];
+			else return $size_name;
+		}
+
+		public function add_plugin_image_sizes( $post_id = false ) {
+			$sizes = apply_filters( $this->p->cf['lca'].'_plugin_image_sizes', array() );
+			$meta_opts = array();
+
+			// allow custom post meta to override the image size options
+			if ( isset( $this->p->addons['util']['postmeta'] ) ) {
+				if ( ! is_numeric( $post_id ) && is_singular() ) {
+					$obj = $this->get_post_object();
+					$post_id = empty( $obj->ID ) || 
+						empty( $obj->post_type ) ? 0 : $obj->ID;
+				}
+				if ( ! empty( $post_id ) )
+					$meta_opts = $this->p->addons['util']['postmeta']->get_options( $post_id );
+			}
+
+			foreach( $sizes as $opt_prefix => $attr ) {
+
+				// check for custom meta sizes first
+				if ( ! empty( $meta_opts[$opt_prefix.'_width'] ) && $meta_opts[$opt_prefix.'_width'] > 0 && 
+					! empty( $meta_opts[$opt_prefix.'_height'] ) && $meta_opts[$opt_prefix.'_height'] > 0 ) {
+					$width = $meta_opts[$opt_prefix.'_width'];
+					$height = $meta_opts[$opt_prefix.'_height'];
+					$crop = empty( $meta_opts[$opt_prefix.'_crop'] ) ? false : true;
+					$this->p->debug->log( 'found custom meta '.$opt_prefix.' size ('.$width.'x'.$height.( $crop === true ? ' cropped' : '' ).')' );
+				} else {
+					$width = empty( $this->p->options[$opt_prefix.'_width'] ) ? 0 : $this->p->options[$opt_prefix.'_width'];
+					$height = empty( $this->p->options[$opt_prefix.'_height'] ) ? 0 : $this->p->options[$opt_prefix.'_height'];
+					$crop = empty( $this->p->options[$opt_prefix.'_crop'] ) ? false : true;
+				}
+
+				if ( $width > 0 && $height > 0 ) {
+					if ( is_array( $attr ) ) {
+						$name = empty( $attr['name'] ) ? $opt_prefix : $attr['name'];
+						$label = empty( $attr['label'] ) ? $opt_prefix : $attr['label'];
+					} else $name = $label = $attr;
+					$this->size_labels[$this->p->cf['lca'].'-'.$name] = $label;	// setup reference array for image size labels
+					$this->p->debug->log( 'image size '.$this->p->cf['lca'].'-'.$name.
+						' ('.$width.'x'.$height.( $crop === true ? ' cropped' : '' ).') added' );
+					add_image_size( $this->p->cf['lca'].'-'.$name, $width, $height, $crop );
+				}
 			}
 		}
 
@@ -94,7 +145,9 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 				);
 				$objects = apply_filters( $this->p->cf['lca'].'_post_cache_objects', $objects, $post_id, $lang, $sharing_url );
 
-				$this->flush_cache_objects( $transients, $objects );
+				$deleted = $this->flush_cache_objects( $transients, $objects );
+				if ( ! empty( $this->p->options['plugin_cache_info'] ) )
+					$this->p->notice->inf( $deleted.' items removed from the WordPress object and transient caches.', true );
 				break;
 			}
 		}
@@ -127,8 +180,7 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 					}
 				}
 			}
-			if ( ! empty( $this->p->options['plugin_cache_info'] ) )
-				$this->p->notice->inf( $deleted.' items removed from the WordPress object and transient caches.', true );
+			return $deleted;
 		}
 
 		public function get_topics() {
@@ -159,25 +211,8 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 			return $topics;
 		}
 
-		public function add_img_sizes_from_opts( $sizes ) {
-			foreach( $sizes as $opt_prefix => $size_suffix ) {
-				if ( ! empty( $this->p->options[$opt_prefix.'_width'] ) &&
-					! empty( $this->p->options[$opt_prefix.'_height'] ) ) {
-
-					$this->p->debug->log( 'image size '.$this->p->cf['lca'].'-'.$size_suffix.
-						' ('.$this->p->options[$opt_prefix.'_width'].'x'.$this->p->options[$opt_prefix.'_height'].
-						( empty( $this->p->options[$opt_prefix.'_crop'] ) ? '' : ' cropped' ).') added', 2 );
-
-					add_image_size( $this->p->cf['lca'].'-'.$size_suffix, 
-						$this->p->options[$opt_prefix.'_width'], 
-						$this->p->options[$opt_prefix.'_height'], 
-						( empty( $this->p->options[$opt_prefix.'_crop'] ) ? false : true ) );
-				}
-			}
-		}
-
-		public function sanitize_option_value( $key, $val, $def_val ) {
-			$option_type = apply_filters( $this->p->cf['lca'].'_option_type', false, $key );
+		public function sanitize_option_value( $key, $val, $def_val, $opts_type = false ) {
+			$option_type = apply_filters( $this->p->cf['lca'].'_option_type', false, $key, $opts_type );
 			$reset_msg = __( 'resetting the option to its default value.', NGFB_TEXTDOM );
 
 			// pre-filter most values to remove html
@@ -210,14 +245,14 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( $val !== '' ) {
 						$val = $this->cleanup_html_tags( $val );
 						if ( strpos( $val, '//' ) === false ) {
-							$this->p->notice->inf( 'The value of option \''.$key.'\' must be a URL'.' - '.$reset_msg, true );
+							$this->p->notice->err( 'The value of option \''.$key.'\' must be a URL'.' - '.$reset_msg, true );
 							$val = $def_val;
 						}
 					}
 					break;
 				case 'numeric':		// must be numeric (blank or zero is ok)
 					if ( $val !== '' && ! is_numeric( $val ) ) {
-						$this->p->notice->inf( 'The value of option \''.$key.'\' must be numeric'.' - '.$reset_msg, true );
+						$this->p->notice->err( 'The value of option \''.$key.'\' must be numeric'.' - '.$reset_msg, true );
 						$val = $def_val;
 					}
 					break;
@@ -227,8 +262,11 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 						$min_int = empty( $this->p->cf['head']['min_img_dim'] ) ? 
 							200 : $this->p->cf['head']['min_img_dim'];
 					else $min_int = 1;
-					if ( $val !== '' && ( ! is_numeric( $val ) || $val < $min_int ) ) {
-						$this->p->notice->inf( 'The value of option \''.$key.'\' must be greater or equal to '.$min_int.' - '.$reset_msg, true );
+
+					if ( $val === '' && $opts_type !== false )	// custom options allowed to have blanks
+						break;
+					elseif ( ! is_numeric( $val ) || $val < $min_int ) {
+						$this->p->notice->err( 'The value of option \''.$key.'\' must be greater or equal to '.$min_int.' - '.$reset_msg, true );
 						$val = $def_val;
 					}
 					break;
@@ -238,7 +276,7 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 					break;
 				case 'anu_case':	// must be alpha-numeric uppercase (hyphens and periods allowed as well)
 					if ( $val !== '' && preg_match( '/[^A-Z0-9\-\.]/', $val ) ) {
-						$this->p->notice->inf( '\''.$val.'\' is not an accepted value for option \''.$key.'\''.' - '.$reset_msg, true );
+						$this->p->notice->err( '\''.$val.'\' is not an accepted value for option \''.$key.'\''.' - '.$reset_msg, true );
 						$val = $def_val;
 					}
 					break;
@@ -250,7 +288,7 @@ if ( ! class_exists( 'NgfbUtil' ) && class_exists( 'SucomUtil' ) ) {
 				case 'not_blank':	// options that cannot be blank
 				case 'code':
 					if ( $val === '' ) {
-						$this->p->notice->inf( 'The value of option \''.$key.'\' cannot be empty'.' - '.$reset_msg, true );
+						$this->p->notice->err( 'The value of option \''.$key.'\' cannot be empty'.' - '.$reset_msg, true );
 						$val = $def_val;
 					}
 					break;

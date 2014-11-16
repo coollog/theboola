@@ -140,7 +140,7 @@ $sections = array();
 
 $sections[] = array(
 				'icon' => NHP_OPTIONS_URL.'img/glyphicons/gift.png',
-				'title' => __('How To Get Support', 'mythemeshop'),
+				'title' => __('Get FREE Support', 'mythemeshop'),
 				'desc' => '<p>Many thanks for trying a MyThemeShop theme and having a look around. We hope you liked what you\'ve seen so far. We pour everything we\'ve got into making it the best WordPress theme available on WordPress.org, and nothing makes us happier than seeing other people love it.</p>
 					<p><strong>1</strong> Please signup for <b>FREE</b> using the link below:<br>
 					<a href="https://mythemeshop.com/go/signup/free" target="_blank">https://mythemeshop.com/go/signup/free</a> (No Credit Card Required)</p>
@@ -160,21 +160,18 @@ $sections[] = array(
 						'type' => 'upload',
 						'title' => __('Logo Image', 'mythemeshop'), 
 						'sub_desc' => __('Upload your logo <strong>(Recommended size 152x60px)</strong> using the Upload Button or insert image URL.', 'mythemeshop'),
-						'std' => get_template_directory_uri().'/images/logo.png'
 						),
 					array(
 						'id' => 'mts_footer_logo',
 						'type' => 'upload',
 						'title' => __('Footer Logo Image', 'mythemeshop'), 
 						'sub_desc' => __('Upload your footer logo <strong>(Recommended size 152x43px)</strong> using the Upload Button or insert image URL.', 'mythemeshop'),
-						'std' => get_template_directory_uri().'/images/footerlogo.png'
 						),
 					array(
 						'id' => 'mts_favicon',
 						'type' => 'upload',
 						'title' => __('Favicon', 'mythemeshop'), 
 						'sub_desc' => __('Upload a <strong>16 x 16 px</strong> image that will represent your website\'s favicon. You can refer to this link for more information on how to make it: <a href="http://www.favicon.cc/" target="blank" rel="nofollow">http://www.favicon.cc/</a>', 'mythemeshop'),
-						'std' => get_template_directory_uri().'/favicon.png'
 						),
 					array(
 						'id' => 'mts_header_code',
